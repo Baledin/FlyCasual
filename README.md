@@ -2,7 +2,7 @@
 Fly Casual 2.5 UO is a fork of Sandrem's Fly Casual, inteded to update points, bugfixes, and additional gameplay mechanics as they are released by AMG. I intend to maintain the fork as long as necessary until Sandrem is able to continue his own project, and am submitting pull requests to keep them in sync.
 
 Forked App Features:
-* Points updated to February 2024 release documents
+* Points updated to AMG September 2024 release documents
 * Bug fixes
 
 # What is Fly Casual
