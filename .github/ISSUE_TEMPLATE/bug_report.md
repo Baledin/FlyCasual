@@ -7,8 +7,11 @@ assignees: ''
 
 ---
 
-** Fly Casual Release Version**
+**Fly Casual Release Version**
 Which version did the bug occur in?
+
+**Online Game Mode**
+Yes/No
 
 **Describe the bug**
 A clear and concise description of what the bug is.
