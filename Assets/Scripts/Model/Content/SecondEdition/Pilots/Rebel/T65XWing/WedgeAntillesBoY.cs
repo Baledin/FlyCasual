@@ -1,45 +1,21 @@
 ﻿using Abilities.SecondEdition;
 using BoardTools;
 using Conditions;
-using Content;
 using Ship;
-using System.Collections.Generic;
-using Upgrade;
 using UpgradesList.SecondEdition;
 
 namespace Ship
 {
     namespace SecondEdition.T65XWing
     {
-        public class WedgeAntillesBoY : T65XWing
+        public class WedgeAntillesBoY : WedgeAntilles
         {
             public WedgeAntillesBoY() : base()
             {
-                PilotInfo = new PilotCardInfo25
-                (
-                    "Wedge Antilles",
-                    "Battle of Yavin",
-                    Faction.Rebel,
-                    5,
-                    5,
-                    0,
-                    isLimited: true,
-                    abilityType: typeof(WedgeAntillesBoYAbility),
-                    extraUpgradeIcons: new List<UpgradeType>
-                    {
-                        UpgradeType.Talent,
-                        UpgradeType.Talent,
-                        UpgradeType.Torpedo,
-                        UpgradeType.Astromech,
-                        UpgradeType.Configuration
-                    },
-                    tags: new List<Tags>
-                    {
-                        Tags.XWing
-                    },
-                    skinName: "Wedge Antilles",
-                    isStandardLayout: true
-                );
+                PilotInfo.PilotTitle = "Battle of Yavin";
+                PilotInfo.AbilityType = typeof(WedgeAntillesBoYAbility);
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 0;
+                (PilotInfo as PilotCardInfo25).IsStandardLayout = true;
 
                 ShipAbilities.Add(new HopeAbility());
 
@@ -62,22 +38,23 @@ namespace Abilities.SecondEdition
     {
         public override void ActivateAbility()
         {
-            HostShip.OnAttackStartAsAttacker += AddWedgeAntillesAbility;
+            HostShip.OnAttackStartAsAttacker += AddWedgeAntillesBoYAbility;
         }
 
         public override void DeactivateAbility()
         {
-            HostShip.OnAttackStartAsAttacker -= AddWedgeAntillesAbility;
+            HostShip.OnAttackStartAsAttacker -= AddWedgeAntillesBoYAbility;
         }
 
-        public void AddWedgeAntillesAbility()
+        public void AddWedgeAntillesBoYAbility()
         {
-            foreach (GenericShip anotherFriednlyShip in HostShip.Owner.Ships.Values)
+            foreach (GenericShip anotherFriendlyShip in HostShip.Owner.Ships.Values)
             {
-                if (anotherFriednlyShip.ShipId == HostShip.ShipId) continue;
+                if (anotherFriendlyShip.ShipId == HostShip.ShipId) continue;
 
-                ShotInfo shotInfo = new ShotInfo(Combat.Defender, anotherFriednlyShip, Combat.Defender.PrimaryWeapons);
-                if (shotInfo.InArc)
+                ShotInfo shotInfo = new ShotInfo(Combat.Defender, anotherFriendlyShip, Combat.Defender.PrimaryWeapons);
+                DistanceInfo distanceInfo = new DistanceInfo(HostShip, Combat.Defender);
+                if (shotInfo.InArc && distanceInfo.Range > 0 && Combat.ChosenWeapon.WeaponType == WeaponTypes.PrimaryWeapon)
                 {
                     WedgeAntillesCondition condition = new WedgeAntillesCondition(Combat.Defender, HostShip);
                     Combat.Defender.Tokens.AssignCondition(condition);

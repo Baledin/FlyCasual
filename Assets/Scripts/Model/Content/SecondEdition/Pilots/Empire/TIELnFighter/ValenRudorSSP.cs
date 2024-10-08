@@ -32,7 +32,8 @@ namespace Ship
                     tags: new List<Tags>
                     {
                         Tags.Tie
-                    }
+                    },
+                    isStandardLayout: true
                 );
 
                 MustHaveUpgrades.Add(typeof(Disciplined));

@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>	Paste.ee - View paste 09qQA
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A free, easy to use Pastebin.">
+<meta name="author" content="Paste.ee">
+<meta property="og:site_name" content="Paste.ee" />
+<meta property="og:title" content="View Paste 09qQA" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://paste.ee/p/09qQA" />
+<meta property="og:image" content="https://paste.ee/img/icon.png" />
+<meta property="og:description" content="Paste.ee - View Paste 09qQA" />
+<link media="all" type="text/css" rel="stylesheet" href="https://paste.ee/build/css/app-6c1ac51d.css">
+<!--[if lt IE 9]>
+		  <script src="https://paste.ee/js/html5shiv/html5shiv.min.js"></script>
+		  <script src="https://paste.ee/js/respond.js/respond.min.js"></script>
+		<![endif]-->
+
+<script type="text/javascript">
+    var _paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+        var u="//analytics.paste.ee/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+</script>
+<noscript><p><img src="//analytics.paste.ee/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+
+</head>
+<body>
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+<div class="container">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="https://paste.ee">Paste.ee</a>
+</div>
+<div class="navbar-collapse collapse">
+<ul class="nav navbar-nav">
+<li><a href="https://paste.ee">Home</a></li>
+<li><a href="https://paste.ee/about">About</a></li>
+<li><a href="https://paste.ee/wiki">Wiki</a></li>
+<li><a href="https://paste.ee/contact">Contact</a></li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Not logged in <b class="caret"></b></a>
+<ul class="dropdown-menu">
+<li><a href="https://paste.ee/register"><span class="fa fa-user fa-fw"></span>&nbsp;Register</a></li>
+<li class="divider"></li>
+<li><a href="https://paste.ee/login"><span class="fa fa-sign-in fa-fw"></span>&nbsp;Login</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div> <div class="container">
+<div class="alert alert-info">
+<button id="hide-banner" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+Want to show your appreciation and help with hosting costs? Support us on <a class="alert-link" href="https://www.patreon.com/ccatss" target="_blank">Patreon</a>!
+</div>
+<div class="row">
+<noscript>
+			<div class="alert alert-danger">Paste.ee uses Javascript for highlighting and various other features. While the site will still function, you won't have any of the cool features we have.</div>
+		</noscript>
+<div class="row">
+<div class="col-sm-6 paste-info">
+Submitted by valadian
+on April 16, 2017
+</div>
+<br />
+</div>
+<div class="row">
+<div class="col-sm-12">
+<a id="download" href="https://paste.ee/d/09qQA" data-paste="09qQA"><i class="fa fa-download fa-fw"></i> Download</a>
+- <a id="report" href="#" data-paste="09qQA"><span class="fa fa-ban fa-fw"></span> Report</a>
+</div>
+</div>
+<div id="section0" class="row">
+<div class="col-sm-12 section-container" data-sectionid="0" data-syntax="text" data-name="New Paste">
+<div class="row">
+<div class="col-sm-8">
+<h3>
+<a id="s0" href="#section0" class="section-title">New Paste</a> (Text)
+</h3>
+</div>
+<div class="col-sm-4 text-right-sm">
+<h3>
+<a href="#" class="copy-button"><i class="fa fa-clipboard fa-fw"></i></a>
+<a class="download" href="https://paste.ee/d/09qQA/0" data-paste="09qQA"><i class="fa fa-download fa-fw"></i></a>
+<a class="raw" href="https://paste.ee/r/09qQA/0" data-paste="09qQA"><i class="fa fa-file-text fa-fw"></i></a>
+<a class="embed" href="https://paste.ee/e/09qQA/0"><i class="fa fa-plug fa-fw"></i></a>
+</h3>
+</div>
+</div>
+<div class="section-content">
+<div class="line-numbers">
+<a href="#" id="s0l1">1</a><a href="#" id="s0l2">2</a><a href="#" id="s0l3">3</a><a href="#" id="s0l4">4</a><a href="#" id="s0l5">5</a><a href="#" id="s0l6">6</a><a href="#" id="s0l7">7</a><a href="#" id="s0l8">8</a><a href="#" id="s0l9">9</a><a href="#" id="s0l10">10</a><a href="#" id="s0l11">11</a><a href="#" id="s0l12">12</a><a href="#" id="s0l13">13</a><a href="#" id="s0l14">14</a><a href="#" id="s0l15">15</a><a href="#" id="s0l16">16</a><a href="#" id="s0l17">17</a><a href="#" id="s0l18">18</a><a href="#" id="s0l19">19</a><a href="#" id="s0l20">20</a><a href="#" id="s0l21">21</a><a href="#" id="s0l22">22</a><a href="#" id="s0l23">23</a><a href="#" id="s0l24">24</a><a href="#" id="s0l25">25</a><a href="#" id="s0l26">26</a><a href="#" id="s0l27">27</a><a href="#" id="s0l28">28</a><a href="#" id="s0l29">29</a><a href="#" id="s0l30">30</a><a href="#" id="s0l31">31</a><a href="#" id="s0l32">32</a><a href="#" id="s0l33">33</a><a href="#" id="s0l34">34</a><a href="#" id="s0l35">35</a><a href="#" id="s0l36">36</a><a href="#" id="s0l37">37</a><a href="#" id="s0l38">38</a><a href="#" id="s0l39">39</a><a href="#" id="s0l40">40</a><a href="#" id="s0l41">41</a><a href="#" id="s0l42">42</a><a href="#" id="s0l43">43</a><a href="#" id="s0l44">44</a><a href="#" id="s0l45">45</a><a href="#" id="s0l46">46</a><a href="#" id="s0l47">47</a><a href="#" id="s0l48">48</a><a href="#" id="s0l49">49</a><a href="#" id="s0l50">50</a><a href="#" id="s0l51">51</a><a href="#" id="s0l52">52</a><a href="#" id="s0l53">53</a><a href="#" id="s0l54">54</a><a href="#" id="s0l55">55</a><a href="#" id="s0l56">56</a><a href="#" id="s0l57">57</a><a href="#" id="s0l58">58</a><a href="#" id="s0l59">59</a><a href="#" id="s0l60">60</a><a href="#" id="s0l61">61</a><a href="#" id="s0l62">62</a><a href="#" id="s0l63">63</a><a href="#" id="s0l64">64</a><a href="#" id="s0l65">65</a><a href="#" id="s0l66">66</a><a href="#" id="s0l67">67</a><a href="#" id="s0l68">68</a><a href="#" id="s0l69">69</a><a href="#" id="s0l70">70</a><a href="#" id="s0l71">71</a><a href="#" id="s0l72">72</a><a href="#" id="s0l73">73</a><a href="#" id="s0l74">74</a><a href="#" id="s0l75">75</a><a href="#" id="s0l76">76</a><a href="#" id="s0l77">77</a><a href="#" id="s0l78">78</a><a href="#" id="s0l79">79</a><a href="#" id="s0l80">80</a><a href="#" id="s0l81">81</a><a href="#" id="s0l82">82</a><a href="#" id="s0l83">83</a><a href="#" id="s0l84">84</a><a href="#" id="s0l85">85</a><a href="#" id="s0l86">86</a><a href="#" id="s0l87">87</a><a href="#" id="s0l88">88</a><a href="#" id="s0l89">89</a><a href="#" id="s0l90">90</a><a href="#" id="s0l91">91</a><a href="#" id="s0l92">92</a><a href="#" id="s0l93">93</a><a href="#" id="s0l94">94</a><a href="#" id="s0l95">95</a><a href="#" id="s0l96">96</a><a href="#" id="s0l97">97</a><a href="#" id="s0l98">98</a><a href="#" id="s0l99">99</a><a href="#" id="s0l100">100</a><a href="#" id="s0l101">101</a><a href="#" id="s0l102">102</a><a href="#" id="s0l103">103</a><a href="#" id="s0l104">104</a><a href="#" id="s0l105">105</a><a href="#" id="s0l106">106</a><a href="#" id="s0l107">107</a><a href="#" id="s0l108">108</a><a href="#" id="s0l109">109</a><a href="#" id="s0l110">110</a><a href="#" id="s0l111">111</a><a href="#" id="s0l112">112</a><a href="#" id="s0l113">113</a><a href="#" id="s0l114">114</a><a href="#" id="s0l115">115</a><a href="#" id="s0l116">116</a><a href="#" id="s0l117">117</a><a href="#" id="s0l118">118</a><a href="#" id="s0l119">119</a><a href="#" id="s0l120">120</a><a href="#" id="s0l121">121</a><a href="#" id="s0l122">122</a><a href="#" id="s0l123">123</a><a href="#" id="s0l124">124</a><a href="#" id="s0l125">125</a><a href="#" id="s0l126">126</a><a href="#" id="s0l127">127</a><a href="#" id="s0l128">128</a><a href="#" id="s0l129">129</a><a href="#" id="s0l130">130</a><a href="#" id="s0l131">131</a><a href="#" id="s0l132">132</a><a href="#" id="s0l133">133</a><a href="#" id="s0l134">134</a><a href="#" id="s0l135">135</a><a href="#" id="s0l136">136</a><a href="#" id="s0l137">137</a><a href="#" id="s0l138">138</a><a href="#" id="s0l139">139</a><a href="#" id="s0l140">140</a><a href="#" id="s0l141">141</a><a href="#" id="s0l142">142</a><a href="#" id="s0l143">143</a><a href="#" id="s0l144">144</a><a href="#" id="s0l145">145</a><a href="#" id="s0l146">146</a><a href="#" id="s0l147">147</a><a href="#" id="s0l148">148</a><a href="#" id="s0l149">149</a><a href="#" id="s0l150">150</a><a href="#" id="s0l151">151</a><a href="#" id="s0l152">152</a><a href="#" id="s0l153">153</a><a href="#" id="s0l154">154</a><a href="#" id="s0l155">155</a><a href="#" id="s0l156">156</a><a href="#" id="s0l157">157</a><a href="#" id="s0l158">158</a><a href="#" id="s0l159">159</a><a href="#" id="s0l160">160</a><a href="#" id="s0l161">161</a><a href="#" id="s0l162">162</a><a href="#" id="s0l163">163</a><a href="#" id="s0l164">164</a><a href="#" id="s0l165">165</a><a href="#" id="s0l166">166</a><a href="#" id="s0l167">167</a><a href="#" id="s0l168">168</a><a href="#" id="s0l169">169</a><a href="#" id="s0l170">170</a><a href="#" id="s0l171">171</a><a href="#" id="s0l172">172</a><a href="#" id="s0l173">173</a><a href="#" id="s0l174">174</a><a href="#" id="s0l175">175</a><a href="#" id="s0l176">176</a><a href="#" id="s0l177">177</a><a href="#" id="s0l178">178</a><a href="#" id="s0l179">179</a><a href="#" id="s0l180">180</a><a href="#" id="s0l181">181</a><a href="#" id="s0l182">182</a><a href="#" id="s0l183">183</a><a href="#" id="s0l184">184</a><a href="#" id="s0l185">185</a><a href="#" id="s0l186">186</a><a href="#" id="s0l187">187</a><a href="#" id="s0l188">188</a><a href="#" id="s0l189">189</a><a href="#" id="s0l190">190</a><a href="#" id="s0l191">191</a><a href="#" id="s0l192">192</a><a href="#" id="s0l193">193</a><a href="#" id="s0l194">194</a><a href="#" id="s0l195">195</a><a href="#" id="s0l196">196</a><a href="#" id="s0l197">197</a><a href="#" id="s0l198">198</a><a href="#" id="s0l199">199</a><a href="#" id="s0l200">200</a><a href="#" id="s0l201">201</a><a href="#" id="s0l202">202</a><a href="#" id="s0l203">203</a><a href="#" id="s0l204">204</a><a href="#" id="s0l205">205</a><a href="#" id="s0l206">206</a><a href="#" id="s0l207">207</a><a href="#" id="s0l208">208</a><a href="#" id="s0l209">209</a><a href="#" id="s0l210">210</a><a href="#" id="s0l211">211</a><a href="#" id="s0l212">212</a><a href="#" id="s0l213">213</a><a href="#" id="s0l214">214</a><a href="#" id="s0l215">215</a><a href="#" id="s0l216">216</a><a href="#" id="s0l217">217</a><a href="#" id="s0l218">218</a><a href="#" id="s0l219">219</a><a href="#" id="s0l220">220</a><a href="#" id="s0l221">221</a><a href="#" id="s0l222">222</a><a href="#" id="s0l223">223</a><a href="#" id="s0l224">224</a><a href="#" id="s0l225">225</a><a href="#" id="s0l226">226</a><a href="#" id="s0l227">227</a><a href="#" id="s0l228">228</a><a href="#" id="s0l229">229</a><a href="#" id="s0l230">230</a><a href="#" id="s0l231">231</a><a href="#" id="s0l232">232</a><a href="#" id="s0l233">233</a><a href="#" id="s0l234">234</a><a href="#" id="s0l235">235</a><a href="#" id="s0l236">236</a><a href="#" id="s0l237">237</a><a href="#" id="s0l238">238</a><a href="#" id="s0l239">239</a><a href="#" id="s0l240">240</a><a href="#" id="s0l241">241</a><a href="#" id="s0l242">242</a><a href="#" id="s0l243">243</a><a href="#" id="s0l244">244</a><a href="#" id="s0l245">245</a><a href="#" id="s0l246">246</a><a href="#" id="s0l247">247</a><a href="#" id="s0l248">248</a><a href="#" id="s0l249">249</a><a href="#" id="s0l250">250</a><a href="#" id="s0l251">251</a><a href="#" id="s0l252">252</a><a href="#" id="s0l253">253</a><a href="#" id="s0l254">254</a><a href="#" id="s0l255">255</a><a href="#" id="s0l256">256</a><a href="#" id="s0l257">257</a><a href="#" id="s0l258">258</a><a href="#" id="s0l259">259</a><a href="#" id="s0l260">260</a><a href="#" id="s0l261">261</a><a href="#" id="s0l262">262</a><a href="#" id="s0l263">263</a><a href="#" id="s0l264">264</a><a href="#" id="s0l265">265</a><a href="#" id="s0l266">266</a><a href="#" id="s0l267">267</a><a href="#" id="s0l268">268</a><a href="#" id="s0l269">269</a><a href="#" id="s0l270">270</a><a href="#" id="s0l271">271</a><a href="#" id="s0l272">272</a><a href="#" id="s0l273">273</a><a href="#" id="s0l274">274</a><a href="#" id="s0l275">275</a><a href="#" id="s0l276">276</a><a href="#" id="s0l277">277</a><a href="#" id="s0l278">278</a><a href="#" id="s0l279">279</a><a href="#" id="s0l280">280</a><a href="#" id="s0l281">281</a><a href="#" id="s0l282">282</a><a href="#" id="s0l283">283</a><a href="#" id="s0l284">284</a><a href="#" id="s0l285">285</a><a href="#" id="s0l286">286</a><a href="#" id="s0l287">287</a><a href="#" id="s0l288">288</a><a href="#" id="s0l289">289</a><a href="#" id="s0l290">290</a><a href="#" id="s0l291">291</a><a href="#" id="s0l292">292</a><a href="#" id="s0l293">293</a><a href="#" id="s0l294">294</a><a href="#" id="s0l295">295</a><a href="#" id="s0l296">296</a><a href="#" id="s0l297">297</a><a href="#" id="s0l298">298</a><a href="#" id="s0l299">299</a><a href="#" id="s0l300">300</a><a href="#" id="s0l301">301</a><a href="#" id="s0l302">302</a><a href="#" id="s0l303">303</a><a href="#" id="s0l304">304</a><a href="#" id="s0l305">305</a><a href="#" id="s0l306">306</a><a href="#" id="s0l307">307</a><a href="#" id="s0l308">308</a><a href="#" id="s0l309">309</a><a href="#" id="s0l310">310</a><a href="#" id="s0l311">311</a><a href="#" id="s0l312">312</a><a href="#" id="s0l313">313</a><a href="#" id="s0l314">314</a><a href="#" id="s0l315">315</a><a href="#" id="s0l316">316</a><a href="#" id="s0l317">317</a><a href="#" id="s0l318">318</a><a href="#" id="s0l319">319</a><a href="#" id="s0l320">320</a><a href="#" id="s0l321">321</a><a href="#" id="s0l322">322</a><a href="#" id="s0l323">323</a><a href="#" id="s0l324">324</a>
+</div>
+<div id="section-content-1420503">
+<pre class="editor no-highlight"><code># Blender v2.76 (sub 0) OBJ File: &#039;Minefield.blend&#039;
+# www.blender.org
+mtllib Minefield 1.mtl
+o Cylinder
+v 0.000000 -0.020000 -1.000000
+v 0.000000 0.020000 -1.000000
+v 0.195090 -0.020000 -0.980785
+v 0.195090 0.020000 -0.980785
+v 0.382683 -0.020000 -0.923880
+v 0.382683 0.020000 -0.923880
+v 0.555570 -0.020000 -0.831470
+v 0.555570 0.020000 -0.831470
+v 0.707107 -0.020000 -0.707107
+v 0.707107 0.020000 -0.707107
+v 0.831470 -0.020000 -0.555570
+v 0.831470 0.020000 -0.555570
+v 0.923880 -0.020000 -0.382683
+v 0.923880 0.020000 -0.382683
+v 0.980785 -0.020000 -0.195090
+v 0.980785 0.020000 -0.195090
+v 1.000000 -0.020000 -0.000000
+v 1.000000 0.020000 -0.000000
+v 0.980785 -0.020000 0.195090
+v 0.980785 0.020000 0.195090
+v 0.923880 -0.020000 0.382683
+v 0.923880 0.020000 0.382683
+v 0.831470 -0.020000 0.555570
+v 0.831470 0.020000 0.555570
+v 0.707107 -0.020000 0.707107
+v 0.707107 0.020000 0.707107
+v 0.555570 -0.020000 0.831470
+v 0.555570 0.020000 0.831470
+v 0.382683 -0.020000 0.923880
+v 0.382683 0.020000 0.923880
+v 0.195090 -0.020000 0.980785
+v 0.195090 0.020000 0.980785
+v -0.000000 -0.020000 1.000000
+v -0.000000 0.020000 1.000000
+v -0.195091 -0.020000 0.980785
+v -0.195091 0.020000 0.980785
+v -0.382684 -0.020000 0.923879
+v -0.382684 0.020000 0.923879
+v -0.555571 -0.020000 0.831469
+v -0.555571 0.020000 0.831469
+v -0.707107 -0.020000 0.707106
+v -0.707107 0.020000 0.707106
+v -0.831470 -0.020000 0.555570
+v -0.831470 0.020000 0.555570
+v -0.923880 -0.020000 0.382683
+v -0.923880 0.020000 0.382683
+v -0.980785 -0.020000 0.195089
+v -0.980785 0.020000 0.195089
+v -1.000000 -0.020000 -0.000001
+v -1.000000 0.020000 -0.000001
+v -0.980785 -0.020000 -0.195091
+v -0.980785 0.020000 -0.195091
+v -0.923879 -0.020000 -0.382684
+v -0.923879 0.020000 -0.382684
+v -0.831469 -0.020000 -0.555571
+v -0.831469 0.020000 -0.555571
+v -0.707106 -0.020000 -0.707108
+v -0.707106 0.020000 -0.707108
+v -0.555569 -0.020000 -0.831470
+v -0.555569 0.020000 -0.831470
+v -0.382682 -0.020000 -0.923880
+v -0.382682 0.020000 -0.923880
+v -0.195089 -0.020000 -0.980786
+v -0.195089 0.020000 -0.980786
+vt 0.873619 0.886269
+vt 0.871561 0.895305
+vt 0.857264 0.891039
+vt 0.857668 0.881509
+vt 0.854475 0.889770
+vt 0.841007 0.881402
+vt 0.842643 0.872174
+vt 0.838437 0.879341
+vt 0.826316 0.867194
+vt 0.829121 0.858621
+vt 0.824063 0.864419
+vt 0.813756 0.848958
+vt 0.817621 0.841371
+vt 0.811906 0.845578
+vt 0.803808 0.827398
+vt 0.808586 0.821088
+vt 0.802433 0.823542
+vt 0.796855 0.803341
+vt 0.802362 0.798550
+vt 0.796009 0.799156
+vt 0.793165 0.777711
+vt 0.799189 0.774624
+vt 0.792879 0.773359
+vt 0.792879 0.751495
+vt 0.799189 0.750230
+vt 0.793165 0.747143
+vt 0.796009 0.725698
+vt 0.802362 0.726304
+vt 0.796855 0.721513
+vt 0.802433 0.701312
+vt 0.808586 0.703766
+vt 0.803808 0.697456
+vt 0.811906 0.679276
+vt 0.817621 0.683483
+vt 0.813756 0.675895
+vt 0.824063 0.660434
+vt 0.829121 0.666233
+vt 0.826317 0.657661
+vt 0.838437 0.645513
+vt 0.842643 0.652680
+vt 0.841008 0.643452
+vt 0.854475 0.635085
+vt 0.857668 0.643345
+vt 0.857264 0.633815
+vt 0.871561 0.629550
+vt 0.873619 0.638586
+vt 0.874462 0.629121
+vt 0.889039 0.629121
+vt 0.889882 0.638586
+vt 0.891940 0.629549
+vt 0.906237 0.633815
+vt 0.905833 0.643345
+vt 0.909027 0.635085
+vt 0.922494 0.643452
+vt 0.920858 0.652681
+vt 0.925065 0.645514
+vt 0.937185 0.657662
+vt 0.934380 0.666234
+vt 0.939438 0.660436
+vt 0.949745 0.675897
+vt 0.945880 0.683484
+vt 0.951595 0.679277
+vt 0.959693 0.697457
+vt 0.954915 0.703767
+vt 0.961068 0.701314
+vt 0.966646 0.721515
+vt 0.961139 0.726305
+vt 0.967492 0.725699
+vt 0.970336 0.747144
+vt 0.964311 0.750231
+vt 0.970621 0.751496
+vt 0.970621 0.773361
+vt 0.964311 0.774626
+vt 0.970335 0.777713
+vt 0.967491 0.799157
+vt 0.961138 0.798551
+vt 0.966645 0.803342
+vt 0.961067 0.823542
+vt 0.954915 0.821089
+vt 0.959692 0.827399
+vt 0.951594 0.845578
+vt 0.945880 0.841372
+vt 0.949745 0.848959
+vt 0.939438 0.864419
+vt 0.934380 0.858621
+vt 0.937184 0.867194
+vt 0.925064 0.879341
+vt 0.920858 0.872174
+vt 0.922493 0.881402
+vt 0.909026 0.889770
+vt 0.905832 0.881509
+vt 0.808780 0.704145
+vt 0.921004 0.653081
+vt 0.842822 0.872481
+vt 0.889882 0.886269
+vt 0.889039 0.895734
+vt 0.874462 0.895734
+vt 0.906237 0.891039
+vt 0.891940 0.895305
+vt 0.955047 0.821417
+vt 0.946015 0.841692
+vt 0.934521 0.858934
+vt 0.921004 0.872481
+vt 0.905985 0.881813
+vt 0.890042 0.886570
+vt 0.873785 0.886570
+vt 0.857841 0.881813
+vt 0.829306 0.858934
+vt 0.817811 0.841692
+vt 0.808780 0.821417
+vt 0.802559 0.798889
+vt 0.799387 0.774973
+vt 0.799387 0.750589
+vt 0.802559 0.726673
+vt 0.817811 0.683870
+vt 0.829306 0.666628
+vt 0.842823 0.653081
+vt 0.857841 0.643749
+vt 0.873785 0.638992
+vt 0.890042 0.638992
+vt 0.905985 0.643749
+vt 0.934521 0.666628
+vt 0.946015 0.683870
+vt 0.955047 0.704145
+vt 0.961268 0.726673
+vt 0.964439 0.750589
+vt 0.964439 0.774973
+vt 0.961268 0.798889
+vn 0.098000 0.000000 -0.995200
+vn 0.290300 0.000000 -0.956900
+vn 0.471400 0.000000 -0.881900
+vn 0.634400 0.000000 -0.773000
+vn 0.773000 0.000000 -0.634400
+vn 0.881900 0.000000 -0.471400
+vn 0.956900 0.000000 -0.290300
+vn 0.995200 0.000000 -0.098000
+vn 0.995200 0.000000 0.098000
+vn 0.956900 0.000000 0.290300
+vn 0.881900 0.000000 0.471400
+vn 0.773000 0.000000 0.634400
+vn 0.634400 0.000000 0.773000
+vn 0.471400 0.000000 0.881900
+vn 0.290300 0.000000 0.956900
+vn 0.098000 0.000000 0.995200
+vn -0.098000 0.000000 0.995200
+vn -0.290300 0.000000 0.956900
+vn -0.471400 0.000000 0.881900
+vn -0.634400 0.000000 0.773000
+vn -0.773000 0.000000 0.634400
+vn -0.881900 0.000000 0.471400
+vn -0.956900 0.000000 0.290300
+vn -0.995200 0.000000 0.098000
+vn -0.995200 0.000000 -0.098000
+vn -0.956900 0.000000 -0.290300
+vn -0.881900 0.000000 -0.471400
+vn -0.773000 0.000000 -0.634400
+vn -0.634400 0.000000 -0.773000
+vn -0.471400 0.000000 -0.881900
+vn 0.000000 1.000000 0.000000
+vn -0.098000 0.000000 -0.995200
+vn -0.290300 0.000000 -0.956900
+vn 0.000000 -1.000000 0.000000
+usemtl None
+s off
+f 1/1/1 2/2/1 4/3/1 3/4/1
+f 3/4/2 4/5/2 6/6/2 5/7/2
+f 5/7/3 6/8/3 8/9/3 7/10/3
+f 7/10/4 8/11/4 10/12/4 9/13/4
+f 9/13/5 10/14/5 12/15/5 11/16/5
+f 11/16/6 12/17/6 14/18/6 13/19/6
+f 13/19/7 14/20/7 16/21/7 15/22/7
+f 15/22/8 16/23/8 18/24/8 17/25/8
+f 17/25/9 18/26/9 20/27/9 19/28/9
+f 19/28/10 20/29/10 22/30/10 21/31/10
+f 21/31/11 22/32/11 24/33/11 23/34/11
+f 23/34/12 24/35/12 26/36/12 25/37/12
+f 25/37/13 26/38/13 28/39/13 27/40/13
+f 27/40/14 28/41/14 30/42/14 29/43/14
+f 29/43/15 30/44/15 32/45/15 31/46/15
+f 31/46/16 32/47/16 34/48/16 33/49/16
+f 33/49/17 34/50/17 36/51/17 35/52/17
+f 35/52/18 36/53/18 38/54/18 37/55/18
+f 37/55/19 38/56/19 40/57/19 39/58/19
+f 39/58/20 40/59/20 42/60/20 41/61/20
+f 41/61/21 42/62/21 44/63/21 43/64/21
+f 43/64/22 44/65/22 46/66/22 45/67/22
+f 45/67/23 46/68/23 48/69/23 47/70/23
+f 47/70/24 48/71/24 50/72/24 49/73/24
+f 49/73/25 50/74/25 52/75/25 51/76/25
+f 51/76/26 52/77/26 54/78/26 53/79/26
+f 53/79/27 54/80/27 56/81/27 55/82/27
+f 55/82/28 56/83/28 58/84/28 57/85/28
+f 57/85/29 58/86/29 60/87/29 59/88/29
+f 59/88/30 60/89/30 62/90/30 61/91/30
+f 38/92/31 22/93/31 54/94/31
+f 63/95/32 64/96/32 2/97/32 1/1/32
+f 61/91/33 62/98/33 64/99/33 63/95/33
+f 31/46/34 47/70/34 15/22/34
+f 6/100/31 4/101/31 2/102/31
+f 2/102/31 64/103/31 6/100/31
+f 62/104/31 60/105/31 58/106/31
+f 58/106/31 56/107/31 54/94/31
+f 54/94/31 52/108/31 50/109/31
+f 50/109/31 48/110/31 54/94/31
+f 46/111/31 44/112/31 38/92/31
+f 42/113/31 40/114/31 38/92/31
+f 38/92/31 36/115/31 34/116/31
+f 34/116/31 32/117/31 30/118/31
+f 30/118/31 28/119/31 26/120/31
+f 26/120/31 24/121/31 22/93/31
+f 22/93/31 20/122/31 18/123/31
+f 18/123/31 16/124/31 22/93/31
+f 14/125/31 12/126/31 10/127/31
+f 10/127/31 8/128/31 6/100/31
+f 6/100/31 64/103/31 62/104/31
+f 62/104/31 58/106/31 6/100/31
+f 54/94/31 48/110/31 46/111/31
+f 44/112/31 42/113/31 38/92/31
+f 38/92/31 34/116/31 22/93/31
+f 30/118/31 26/120/31 22/93/31
+f 22/93/31 16/124/31 14/125/31
+f 14/125/31 10/127/31 22/93/31
+f 6/100/31 58/106/31 54/94/31
+f 54/94/31 46/111/31 38/92/31
+f 34/116/31 30/118/31 22/93/31
+f 22/93/31 10/127/31 6/100/31
+f 6/100/31 54/94/31 22/93/31
+f 63/95/34 1/1/34 3/4/34
+f 3/4/34 5/7/34 7/10/34
+f 7/10/34 9/13/34 11/16/34
+f 11/16/34 13/19/34 7/10/34
+f 15/22/34 17/25/34 19/28/34
+f 19/28/34 21/31/34 15/22/34
+f 23/34/34 25/37/34 31/46/34
+f 27/40/34 29/43/34 31/46/34
+f 31/46/34 33/49/34 35/52/34
+f 35/52/34 37/55/34 39/58/34
+f 39/58/34 41/61/34 43/64/34
+f 43/64/34 45/67/34 47/70/34
+f 47/70/34 49/73/34 51/76/34
+f 51/76/34 53/79/34 55/82/34
+f 55/82/34 57/85/34 63/95/34
+f 59/88/34 61/91/34 63/95/34
+f 63/95/34 3/4/34 15/22/34
+f 7/10/34 13/19/34 15/22/34
+f 15/22/34 21/31/34 23/34/34
+f 25/37/34 27/40/34 31/46/34
+f 31/46/34 35/52/34 47/70/34
+f 39/58/34 43/64/34 47/70/34
+f 47/70/34 51/76/34 63/95/34
+f 57/85/34 59/88/34 63/95/34
+f 3/4/34 7/10/34 15/22/34
+f 15/22/34 23/34/34 31/46/34
+f 35/52/34 39/58/34 47/70/34
+f 51/76/34 55/82/34 63/95/34
+f 63/95/34 15/22/34 47/70/34
+</code></pre>
+</div>
+</div>
+</div>
+</div> </div>
+<script type="text/javascript">window.workerPath = '/build/js/worker-af63c6d7.js';</script>
+<hr>
+<footer class="footer">
+<div class="row">
+<div class="col-sm-4 text-center-xs text-left-sm">
+&copy; 2022 Paste.ee
+</div>
+<div class="col-sm-4 text-center-xs">
+</div>
+<div class="col-sm-4 text-center-xs text-right-sm">
+<a href="#">Back to top</a> - <a href="https://paste.ee/wiki/AUP">AUP</a>
+</div>
+</div>
+</footer>
+</div> 
+<script src="https://paste.ee/build/js/app-40861000.js"></script>
+<script type="text/javascript">
+				$(document).ready(function() {
+					$('#hide-banner').click(function(e) {
+						var date = new Date();
+						date.setTime(date.getTime() + (30*24*60*60*1000));
+						document.cookie = "hide_affiliate_banner=true; expires=" + date.toUTCString() + "; path=/";
+					});
+				});
+			</script>
+</body>
+</html>

@@ -42,6 +42,8 @@ namespace Ship
                     isStandardLayout: true
                 );
 
+                ShipInfo.Shields++;
+
                 MustHaveUpgrades.Add(typeof(Hate));
                 MustHaveUpgrades.Add(typeof(IonMissiles));
                 MustHaveUpgrades.Add(typeof(AfterBurners));

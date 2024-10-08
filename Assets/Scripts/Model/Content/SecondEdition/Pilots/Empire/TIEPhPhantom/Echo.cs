@@ -35,8 +35,7 @@ namespace Ship
                         UpgradeType.Gunner,
                         UpgradeType.Modification
                     },
-                    seImageNumber: 132,
-                    legality: new List<Legality>() { Legality.ExtendedLegal }
+                    seImageNumber: 132
                 );
 
                 ModelInfo.SkinName = "Echo";

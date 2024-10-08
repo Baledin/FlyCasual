@@ -1,8 +1,4 @@
 ﻿using Content;
-using Mods.ModsList;
-using Ship;
-using SubPhases;
-using System;
 using System.Collections.Generic;
 using Upgrade;
 
@@ -20,8 +16,8 @@ namespace Ship
                     "Fulcrum",
                     Faction.Rebel,
                     5,
-                    5,
-                    12,
+                    4,
+                    7,
                     isLimited: true,
                     abilityType: typeof(Abilities.SecondEdition.AhsokaTanoRebelAbility),
                     force: 3,

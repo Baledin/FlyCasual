@@ -16,6 +16,7 @@ namespace SubPhases
         This,
         OtherFriendly,
         OtherAny,
+        AnyFriendly,
         Enemy,
         Any
     }

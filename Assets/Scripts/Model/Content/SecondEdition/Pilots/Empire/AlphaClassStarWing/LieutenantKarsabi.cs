@@ -1,5 +1,4 @@
-﻿using Content;
-using SubPhases;
+﻿using SubPhases;
 using System.Collections.Generic;
 using Tokens;
 using Upgrade;
@@ -30,8 +29,7 @@ namespace Ship
                         UpgradeType.Modification,
                         UpgradeType.Configuration
                     },
-                    seImageNumber: 136,
-                    legality: new List<Legality>() { Legality.ExtendedLegal }
+                    seImageNumber: 136
                 );
             }
         }

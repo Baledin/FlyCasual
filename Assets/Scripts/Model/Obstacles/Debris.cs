@@ -40,11 +40,6 @@ namespace Obstacles
             newPhase.Start();
         }
 
-        public override void OnShotObstructedExtra(GenericShip attacker, GenericShip defender)
-        {
-            // Only default effect
-        }
-
         public override void AfterObstacleRoll(GenericShip ship, DieSide side, Action callback)
         {
             if (side == DieSide.Crit

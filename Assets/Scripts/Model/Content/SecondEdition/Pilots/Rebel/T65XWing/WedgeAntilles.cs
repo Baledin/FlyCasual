@@ -60,8 +60,11 @@ namespace Abilities.SecondEdition
 
         public void AddWedgeAntillesAbility()
         {
-            WedgeAntillesCondition condition = new WedgeAntillesCondition(Combat.Defender, HostShip);
-            Combat.Defender.Tokens.AssignCondition(condition);
+            BoardTools.DistanceInfo distanceInfo = new BoardTools.DistanceInfo(HostShip, Combat.Defender);
+            if (distanceInfo.Range > 0) {
+                WedgeAntillesCondition condition = new WedgeAntillesCondition(Combat.Defender, HostShip);
+                Combat.Defender.Tokens.AssignCondition(condition);
+            }
         }
     }
 }

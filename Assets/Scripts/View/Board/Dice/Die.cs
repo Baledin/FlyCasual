@@ -120,7 +120,8 @@ public partial class Die
 
     public void SetInitialRotationForce(Vector3 rotationForce)
     {
-        Model.transform.Find("Dice").GetComponentInChildren<Rigidbody>().angularVelocity = new Vector3(rotationForce.x, rotationForce.y, rotationForce.z);
+        Quaternion rotation = Quaternion.Euler(rotationForce.x, rotationForce.y, rotationForce.z);
+        Model.transform.Find("Dice").GetComponentInChildren<Rigidbody>().MoveRotation(rotation);        
     }
 
     public void Roll()

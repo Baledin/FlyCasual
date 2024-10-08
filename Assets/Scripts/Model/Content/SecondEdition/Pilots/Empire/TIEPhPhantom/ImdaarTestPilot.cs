@@ -28,8 +28,7 @@ namespace Ship
                         UpgradeType.Gunner,
                         UpgradeType.Modification
                     },
-                    seImageNumber: 134,
-                    legality: new List<Legality>() { Legality.ExtendedLegal }
+                    seImageNumber: 134
                 );
             }
         }

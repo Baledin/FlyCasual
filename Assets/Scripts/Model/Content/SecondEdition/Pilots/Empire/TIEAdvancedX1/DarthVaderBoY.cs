@@ -40,6 +40,8 @@ namespace Ship
                     isStandardLayout: true
                 );
 
+                ShipInfo.Shields++;
+
                 MustHaveUpgrades.Add(typeof(Marksmanship));
                 MustHaveUpgrades.Add(typeof(Hate));
                 MustHaveUpgrades.Add(typeof(AfterBurners));

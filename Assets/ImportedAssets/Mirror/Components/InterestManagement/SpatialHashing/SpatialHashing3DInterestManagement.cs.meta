@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 120b4d6121d94e0280cd2ec536b0ea8f
+timeCreated: 1713534045
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 89.8.0
+  assetPath: Assets/ImportedAssets/Mirror/Components/InterestManagement/SpatialHashing/SpatialHashing3DInterestManagement.cs
+  uploadId: 670838

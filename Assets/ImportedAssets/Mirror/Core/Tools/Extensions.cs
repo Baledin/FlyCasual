@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -100,13 +101,27 @@ namespace Mirror
         }
 #endif
 
-#if !UNITY_2021_3_OR_NEWER
-        // Unity 2021.2 and earlier don't have transform.GetPositionAndRotation which we use for performance in some places
+#if !UNITY_2022_0_OR_NEWER
+        // Some patch versions of Unity 2021.3 and earlier don't have transform.GetPositionAndRotation which we use for performance in some places
         public static void GetPositionAndRotation(this Transform transform, out Vector3 position, out Quaternion rotation)
         {
             position = transform.position;
             rotation = transform.rotation;
         }
 #endif
+
+        // IPEndPoint address only to pretty string.
+        // useful for to get a connection's address for IP bans etc.
+        public static string PrettyAddress(this IPEndPoint endPoint)
+        {
+            if (endPoint == null) return "";
+
+            // Map to IPv4 if "IsIPv4MappedToIPv6" for readability
+            // "::ffff:127.0.0.1" -> "127.0.0.1"
+            return
+                endPoint.Address.IsIPv4MappedToIPv6
+                ? endPoint.Address.MapToIPv4().ToString()
+                : endPoint.Address.ToString();
+        }
     }
 }

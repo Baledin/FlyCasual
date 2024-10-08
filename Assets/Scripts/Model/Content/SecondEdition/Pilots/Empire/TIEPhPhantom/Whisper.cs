@@ -33,8 +33,7 @@ namespace Ship
                         UpgradeType.Modification,
                         UpgradeType.Modification
                     },
-                    seImageNumber: 131,
-                    legality: new List<Legality>() { Legality.ExtendedLegal }
+                    seImageNumber: 131
                 );
             }
         }

@@ -19,14 +19,9 @@ namespace Ship
                     Faction.Rebel,
                     3,
                     2,
-                    3,
+                    0,
                     isLimited: true,
                     abilityType: typeof(Abilities.SecondEdition.SabineWrenPilotAbility),
-                    extraUpgradeIcons: new List<UpgradeType>
-                    {
-                        UpgradeType.Talent,
-                        UpgradeType.Modification
-                    },
                     tags: new List<Tags>
                     {
                         Tags.Mandalorian,

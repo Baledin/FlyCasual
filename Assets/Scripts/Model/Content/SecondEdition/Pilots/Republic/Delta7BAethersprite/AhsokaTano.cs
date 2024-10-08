@@ -14,7 +14,7 @@ namespace Ship.SecondEdition.Delta7BAethersprite
                 "\"Snips\"",
                 Faction.Republic,
                 3,
-                6,
+                5,
                 10,
                 isLimited: true,
                 force: 2,

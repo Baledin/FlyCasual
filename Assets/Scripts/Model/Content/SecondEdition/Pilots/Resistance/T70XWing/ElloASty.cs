@@ -20,7 +20,7 @@ namespace Ship
                     Faction.Resistance,
                     5,
                     4,
-                    8,
+                    4,
                     isLimited: true,
                     abilityType: typeof(Abilities.SecondEdition.ElloAstyAbility),
                     extraUpgradeIcons: new List<UpgradeType>

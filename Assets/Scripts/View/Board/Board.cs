@@ -40,13 +40,13 @@ namespace BoardTools
             BoardTransform = GameObject.Find("SceneHolder/Board").transform;
             RulersHolderTransform = BoardTransform.Find("RulersHolder");
             ObstacleHolderTransform = BoardTransform.Find("ObstaclesZone/ObstaclesHolder");
-            StartingZone1 = BoardTransform.Find("Playmat/StaringZone1").gameObject;
-            StartingZone2 = BoardTransform.Find("Playmat/StaringZone2").gameObject;
-            StartingZone3 = BoardTransform.Find("Playmat/StaringZone3").gameObject;
-            StartingZone3a = BoardTransform.Find("Playmat/StaringZone3a").gameObject;
-            StartingZone4 = BoardTransform.Find("Playmat/StaringZone4").gameObject;
-            StartingZone4a = BoardTransform.Find("Playmat/StaringZone4a").gameObject;
-            StartingZone5 = BoardTransform.Find("Playmat/StaringZone5").gameObject;
+            StartingZone1 = BoardTransform.Find("Playmat/StartingZone1").gameObject;
+            StartingZone2 = BoardTransform.Find("Playmat/StartingZone2").gameObject;
+            StartingZone3 = BoardTransform.Find("Playmat/StartingZone3").gameObject;
+            StartingZone3a = BoardTransform.Find("Playmat/StartingZone3a").gameObject;
+            StartingZone4 = BoardTransform.Find("Playmat/StartingZone4").gameObject;
+            StartingZone4a = BoardTransform.Find("Playmat/StartingZone4a").gameObject;
+            StartingZone5 = BoardTransform.Find("Playmat/StartingZone5").gameObject;
 
             MovementTemplates.PrepareMovementTemplates();
 
@@ -345,7 +345,7 @@ namespace BoardTools
             {
                 GenericShip otherShip = kv.Value;
 
-                if (team == Team.Type.Friendly && ship.Owner.Id != otherShip.Owner.Id)
+                if (team == Team.Type.Friendly && !Tools.IsFriendly(ship, otherShip))
                     continue;
 
                 if (team == Team.Type.Enemy && ship.Owner.Id == otherShip.Owner.Id)
@@ -367,7 +367,7 @@ namespace BoardTools
             {
                 GenericShip otherShip = kv.Value;
 
-                if (team == Team.Type.Friendly && ship.Owner.Id != otherShip.Owner.Id)
+                if (team == Team.Type.Friendly && !Tools.IsFriendly(ship, otherShip))
                     continue;
 
                 if (team == Team.Type.Enemy && ship.Owner.Id == otherShip.Owner.Id)
@@ -394,7 +394,7 @@ namespace BoardTools
             {
                 GenericShip othership = kv.Value;
 
-                if (team == Team.Type.Friendly && ship.Owner.Id != othership.Owner.Id)
+                if (team == Team.Type.Friendly && !Tools.IsFriendly(ship, othership))
                     continue;
 
                 if (team == Team.Type.Enemy && ship.Owner.Id == othership.Owner.Id)
@@ -428,7 +428,7 @@ namespace BoardTools
 
         public static void HighlightOfStartingZoneOn()
         {
-            if (Roster.GetPlayer(Phases.CurrentSubPhase.RequiredPlayer) is HumanPlayer)
+            if (Roster.GetPlayer(Phases.CurrentSubPhase.RequiredPlayer).PlayerType == Players.PlayerType.Human)
             {
                 GameObject.Find("SceneHolder").transform.Find("Board").Find("ObstaclesZone").Find("ObstaclesZoneHighlight").gameObject.SetActive(true);
             }

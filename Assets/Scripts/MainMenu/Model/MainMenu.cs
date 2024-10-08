@@ -385,7 +385,7 @@ public class MainMenu : MonoBehaviour {
 
     public void OpenPatreon()
     {
-        Application.OpenURL("https://www.patreon.com/Sandrem");
+        Application.OpenURL("https://www.patreon.com/Baledin");
     }
 
     private void PrepareUpdateChecker()

@@ -17,7 +17,7 @@ namespace Ship.SecondEdition.Belbullab22Starfighter
                 Faction.Separatists,
                 4,
                 5,
-                11,
+                14,
                 isLimited: true,
                 abilityType: typeof(Abilities.SecondEdition.GeneralGrievousAbility),
                 extraUpgradeIcons: new List<UpgradeType>

@@ -99,13 +99,9 @@ namespace Mirror
         public Color overlayColor = new Color(0, 0, 0, 0.5f);
 
         // initialization //////////////////////////////////////////////////////
-        // make sure to call this when inheriting too!
-        protected virtual void Awake() { }
-
-        protected override void OnValidate()
+        // forcec configuration of some settings
+        protected virtual void Configure()
         {
-            base.OnValidate();
-
             // set target to self if none yet
             if (target == null) target = transform;
 
@@ -119,6 +115,22 @@ namespace Mirror
             // Unity doesn't support setting world scale.
             // OnValidate force disables syncScale in world mode.
             if (coordinateSpace == CoordinateSpace.World) syncScale = false;
+        }
+
+        // make sure to call this when inheriting too!
+        protected virtual void Awake()
+        {
+            // sometimes OnValidate() doesn't run before launching a project.
+            // need to guarantee configuration runs.
+            Configure();
+        }
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            // configure in awake
+            Configure();
         }
 
         // snapshot functions //////////////////////////////////////////////////
@@ -332,8 +344,7 @@ namespace Mirror
             // but server's last delta will have been reset, causing offsets.
             //
             // instead, simply clear snapshots.
-            serverSnapshots.Clear();
-            clientSnapshots.Clear();
+            ResetState();
 
             // TODO
             // what if we still receive a snapshot from before the interpolation?
@@ -358,8 +369,7 @@ namespace Mirror
             // but server's last delta will have been reset, causing offsets.
             //
             // instead, simply clear snapshots.
-            serverSnapshots.Clear();
-            clientSnapshots.Clear();
+            ResetState();
 
             // TODO
             // what if we still receive a snapshot from before the interpolation?

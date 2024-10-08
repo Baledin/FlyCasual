@@ -1,10 +1,8 @@
 ﻿using BoardTools;
-using Players;
 using Ship;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Tokens;
 using UnityEngine;
 
@@ -46,7 +44,9 @@ namespace Obstacles
             }
         }
 
-        public abstract void OnShotObstructedExtra(GenericShip attacker, GenericShip defender);
+        public virtual void OnShotObstructedExtra(GenericShip attacker, GenericShip defender) {
+            // Does nothing by default
+        }
 
         public void Spawn(string name, Transform obstacleHolder)
         {

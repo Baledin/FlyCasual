@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 703e39b5385ae2e479987ff4ec0707a1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 89.8.0
+  assetPath: Assets/ImportedAssets/Mirror/Editor/LagCompensatorInspector.cs
+  uploadId: 670838

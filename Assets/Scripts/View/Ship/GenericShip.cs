@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using ActionsList;
+using Movement;
 
 namespace Ship
 {
@@ -88,7 +90,7 @@ namespace Ship
         {
             TextMesh ShipIdText = model.transform.Find("RotationHelper/RotationHelper2/ShipAllParts/ShipIdText").GetComponent<TextMesh>();
             ShipIdText.text = ShipId.ToString();
-            ShipIdText.color = (Owner.PlayerNo == Players.PlayerNo.Player1) ? Color.green: Color.red;
+            ShipIdText.color = (Owner.PlayerNo == Players.PlayerNo.Player1) ? Color.green : Color.red;
         }
 
         protected void SetTagOfChildrenRecursive(Transform parent, string tag)
@@ -344,7 +346,7 @@ namespace Ship
 
         private string GetDefaultSkinName()
         {
-            GenericShip parentShip = (GenericShip) System.Activator.CreateInstance(this.GetType().BaseType);
+            GenericShip parentShip = (GenericShip)System.Activator.CreateInstance(this.GetType().BaseType);
             return parentShip.ModelInfo.SkinName;
         }
 
@@ -446,7 +448,7 @@ namespace Ship
             else
             {
                 callBack();
-            }            
+            }
         }
 
         public void MoveUpwards(float progress)

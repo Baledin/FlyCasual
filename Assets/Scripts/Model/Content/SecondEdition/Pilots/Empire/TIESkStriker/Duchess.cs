@@ -16,8 +16,8 @@ namespace Ship
                     "Urbane Ace",
                     Faction.Imperial,
                     5,
-                    5,
-                    18,
+                    4,
+                    7,
                     isLimited: true,
                     extraUpgradeIcons: new List<UpgradeType>
                     {

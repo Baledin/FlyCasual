@@ -41,11 +41,6 @@ namespace Obstacles
             newPhase.Start();
         }
 
-        public override void OnShotObstructedExtra(GenericShip attacker, GenericShip defender)
-        {
-            // Only default effect
-        }
-
         private void DealAutoAsteroidDamage(GenericShip ship, Action callback)
         {
             ship.Damage.TryResolveDamage(1, new DamageSourceEventArgs() { DamageType = DamageTypes.ObstacleCollision, Source = this }, callback);

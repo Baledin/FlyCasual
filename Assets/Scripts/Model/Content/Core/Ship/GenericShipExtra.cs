@@ -126,6 +126,8 @@ namespace Ship
 
         public event EventHandlerCheckRange OnCheckRange;
 
+        public event EventHandlerShipRefBool OnCheckIsFriendly;
+
         public event EventHandlerBool OnCheckForceRecurring;
 
         public event EventHandlerBool BeforeForceRecovers;
@@ -408,6 +410,12 @@ namespace Ship
         {
             if (OnCheckRange != null) OnCheckRange(anotherShip, minRange, maxRange, reason, ref isInRange);
             return isInRange;
+        }
+
+        public bool CallOnCheckIsFriendly(GenericShip anotherShip, bool isFriendly)
+        {
+            if (OnCheckIsFriendly != null) OnCheckIsFriendly(anotherShip, ref isFriendly);
+            return isFriendly;
         }
 
         public bool CallBeforeForceRecovers(ref bool doesRecover)

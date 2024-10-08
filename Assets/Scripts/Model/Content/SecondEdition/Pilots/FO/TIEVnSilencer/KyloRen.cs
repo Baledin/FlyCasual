@@ -23,7 +23,7 @@ namespace Ship
                     Faction.FirstOrder,
                     5,
                     7,
-                    22,
+                    24,
                     isLimited: true,
                     abilityType: typeof(Abilities.SecondEdition.KyloRenPilotAbility),
                     force: 2,

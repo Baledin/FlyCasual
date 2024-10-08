@@ -9,12 +9,12 @@ namespace Ship
     {
         private static Faction factionOverride;
 
-        public int LoadoutValue { get; }
+        public int LoadoutValue { get; set; }
         public string SkinName { get; set; }
-        public List<Tags> Tags { get; }
-        public List<Legality> LegalityInfo { get; }
-        public bool IsStandardLayout { get; }
-        public bool AffectedByStandardized { get; }
+        public List<Tags> Tags { get; set;  }
+        public List<Legality> LegalityInfo { get; set; }
+        public bool IsStandardLayout { get; set; }
+        public bool AffectedByStandardized { get; set; }
 
         public PilotCardInfo25(
             string pilotName,

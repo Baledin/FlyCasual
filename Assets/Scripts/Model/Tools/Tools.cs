@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Players;
+﻿using Players;
 using Ship;
-using System;
 using SubPhases;
+using System.Collections;
 
 public static partial class Tools
 {
@@ -46,7 +43,7 @@ public static partial class Tools
             result = result.Substring(0, result.IndexOf("("));
         }
 
-        string[] signsToReplace = new string[] { " ", "\"", "/", "'", "-" };
+        string[] signsToReplace = new string[] { " ", "\"", "/", "'", "-", "’" };
         foreach (var sign in signsToReplace)
         {
             result = result.Replace(sign, "");
@@ -64,6 +61,16 @@ public static partial class Tools
             frameCount--;
             yield return null;
         }
+    }
+
+    public static bool IsFriendly(GenericShip ship1, GenericShip ship2)
+    {
+        bool result =  IsSameTeam(ship1, ship2);
+
+        bool result1 = ship1.CallOnCheckIsFriendly(ship2, result);
+        bool result2 = ship2.CallOnCheckIsFriendly(ship1, result);
+
+        return result1 && result2;
     }
 
     public static bool IsSameTeam(GenericShip ship1, GenericShip ship2)
@@ -84,7 +91,7 @@ public static partial class Tools
 
     public static bool IsAnotherFriendly(GenericShip ship1, GenericShip ship2)
     {
-        return IsSameTeam(ship1, ship2) && !IsSameShip(ship1, ship2);
+        return IsFriendly(ship1, ship2) && !IsSameShip(ship1, ship2);
     }
 
     public static bool CheckShipsTeam(GenericShip ship1, GenericShip ship2, TargetTypes targetTypes)
@@ -95,6 +102,8 @@ public static partial class Tools
                 return (IsSameShip(ship1, ship2));
             case TargetTypes.OtherFriendly:
                 return (IsAnotherFriendly(ship1, ship2));
+            case TargetTypes.AnyFriendly:
+                return (IsFriendly(ship1, ship2));
             case TargetTypes.Enemy:
                 return (IsAnotherTeam(ship1, ship2));
             case TargetTypes.Any:

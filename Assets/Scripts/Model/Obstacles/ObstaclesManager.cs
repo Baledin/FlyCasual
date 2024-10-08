@@ -83,9 +83,9 @@ namespace Obstacles
             Instance.AllPossibleObstacles = Instance.AllPossibleObstacles.OrderBy(n => n.Name).ToList();
         }
 
-        public static void AddObstacle(Debris looseCargo)
+        public static void AddObstacle(GenericObstacle obstacle)
         {
-            Instance.ChosenObstacles.Add(looseCargo);
+            Instance.ChosenObstacles.Add(obstacle);
         }
 
         public static GenericObstacle GenerateObstacle(string shortName, PlayerNo playerNo)
@@ -95,7 +95,7 @@ namespace Obstacles
                 prefab.GetType(),
                 new object[] { prefab.Name, prefab.ShortName }
             );
-            Instance.ChosenObstacles.Add(newObstacle);            
+            Instance.ChosenObstacles.Add(newObstacle);
             return newObstacle;
         }
 
