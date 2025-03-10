@@ -1,11 +1,7 @@
 ﻿using GameCommands;
 using Mirror;
 using Players;
-using SquadBuilderNS;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public static class Network

@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Unity.Services.Core;
+using TMPro;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
 using UnityEngine.UI;
@@ -360,7 +360,7 @@ public class MainMenu : MonoBehaviour {
         Network.JoinRoom(password);
     }
 
-    public void JoinRoomByIp(Text ipText)
+    public void JoinRoomByIp(TMP_Text ipText)
     {
         Network.ServerUri = "tcp4://" + ipText.text;
         Network.JoinRoom(null);

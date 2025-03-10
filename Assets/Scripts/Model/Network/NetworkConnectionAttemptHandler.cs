@@ -1,20 +1,17 @@
 ﻿using Mirror;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class NetworkConnectionAttemptHandler : MonoBehaviour
 {
-    public InputField IpInput;
+    public TMP_Text IpInput;
     public GameObject BottomPanel;
     private bool IsTracking;
 
     public void StartAttempt()
     {
         BottomPanel.SetActive(false);
-        IpInput.interactable = false;
+        IpInput.enabled = false;
         IsTracking = true;
     }
 
@@ -40,6 +37,6 @@ public class NetworkConnectionAttemptHandler : MonoBehaviour
         Messages.ShowError("Connection attempt is failed");
         IsTracking = false;
         BottomPanel.SetActive(true);
-        IpInput.interactable = true;
+        IpInput.enabled = true;
     }
 }
