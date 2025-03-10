@@ -34,7 +34,7 @@ public class NetworkConnectionAttemptHandler : MonoBehaviour
     public void AbortAttempt()
     {
         NetworkManager.singleton.StopClient();
-        Messages.ShowError("Connection attempt is failed");
+        Messages.ShowError("Connection attempt has failed");
         IsTracking = false;
         BottomPanel.SetActive(true);
         IpInput.enabled = true;
