@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Bombs;
-using Ship;
-using SubPhases;
 using Upgrade;
 using BoardTools;
-using Bombs;
 using Movement;
 using Remote;
 using System.Linq;
 using UnityEngine;
-using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
     public class DropSeatBay : GenericUpgrade
     {
-        public DropSeatBay() : base()
+        public DropSeatBay()
         {
             UpgradeInfo = new UpgradeCardInfo("Drop Seat Bay",
                 UpgradeType.Modification,
@@ -24,8 +20,8 @@ namespace UpgradesList.SecondEdition
                 restriction: new ShipRestriction(typeof(Ship.SecondEdition.GauntletFighter.GauntletFighter)),
                 addSlots: new List<UpgradeSlot>
                 {
-                    new UpgradeSlot(UpgradeType.Crew),
-                    new UpgradeSlot(UpgradeType.Crew)
+                    new(UpgradeType.Crew),
+                    new(UpgradeType.Crew)
                 },
                 forbidSlot: UpgradeType.Device,
                 abilityType: typeof(Abilities.SecondEdition.DropSeatBayAbility)
@@ -44,13 +40,13 @@ namespace Abilities.SecondEdition
         public override void ActivateAbility()
         {
             HostShip.OnGetAvailableBombDropTemplatesOneCondition += DropSeatBayTemplate;
-            HostShip.OnGetGetAvailableDeviceSideDropTemplates += InitialDropSeatBayTemplate;
+            HostShip.OnGetAvailableDeviceSideDropTemplates += InitialDropSeatBayTemplate;
         }
 
         public override void DeactivateAbility()
         {
             HostShip.OnGetAvailableBombDropTemplatesOneCondition -= DropSeatBayTemplate;
-            HostShip.OnGetGetAvailableDeviceSideDropTemplates -= InitialDropSeatBayTemplate;
+            HostShip.OnGetAvailableDeviceSideDropTemplates -= InitialDropSeatBayTemplate;
         }
 
         private void InitialDropSeatBayTemplate(List<ManeuverTemplate> availableTemplates, GenericUpgrade upgrade)
@@ -78,7 +74,7 @@ namespace Abilities.SecondEdition
 
                     foreach (ManeuverTemplate newTemplate in newTemplates)
                     {
-                        if (!availableTemplates.Any(t => t.Name == newTemplate.Name))
+                        if (availableTemplates.All(t => t.Name != newTemplate.Name))
                         {
                             availableTemplates.Add(newTemplate);
                         }
@@ -91,7 +87,6 @@ namespace Abilities.SecondEdition
 
 namespace SubPhases
 {
-
     public class BombSideDropPlanningSubPhase : GenericSubPhase
     {
         private List<GenericDeviceGameObject> BombObjects = new List<GenericDeviceGameObject>();
@@ -121,7 +116,9 @@ namespace SubPhases
             GenericBomb bomb = BombsManager.CurrentDevice as GenericBomb;
 
             GenericDeviceGameObject prefab = Resources.Load<GenericDeviceGameObject>(bomb.bombPrefabPath);
-            var device = MonoBehaviour.Instantiate<GenericDeviceGameObject>(prefab, bombPosition, bombRotation, Board.GetBoard());
+            var device =
+                MonoBehaviour.Instantiate<GenericDeviceGameObject>(prefab, bombPosition, bombRotation,
+                    Board.GetBoard());
             device.Initialize(bomb);
             BombObjects.Add(device);
 
@@ -175,11 +172,12 @@ namespace SubPhases
 
         private void StartSelectTemplateDecision(object sender, System.EventArgs e)
         {
-            SelectBarrelRollTemplateDecisionSubPhase selectBarrelRollTemplateDecisionSubPhase = (SelectBarrelRollTemplateDecisionSubPhase)Phases.StartTemporarySubPhaseNew(
-                "Select template to launch the bomb",
-                typeof(SelectBarrelRollTemplateDecisionSubPhase),
-                Triggers.FinishTrigger
-            );
+            SelectBarrelRollTemplateDecisionSubPhase selectBarrelRollTemplateDecisionSubPhase =
+                (SelectBarrelRollTemplateDecisionSubPhase) Phases.StartTemporarySubPhaseNew(
+                    "Select template to launch the bomb",
+                    typeof(SelectBarrelRollTemplateDecisionSubPhase),
+                    Triggers.FinishTrigger
+                );
 
             selectBarrelRollTemplateDecisionSubPhase.ShowSkipButton = false;
 
@@ -194,7 +192,8 @@ namespace SubPhases
 
             selectBarrelRollTemplateDecisionSubPhase.DescriptionShort = "Select template to launch the bomb";
 
-            selectBarrelRollTemplateDecisionSubPhase.DefaultDecisionName = selectBarrelRollTemplateDecisionSubPhase.GetDecisions().First().Name;
+            selectBarrelRollTemplateDecisionSubPhase.DefaultDecisionName =
+                selectBarrelRollTemplateDecisionSubPhase.GetDecisions().First().Name;
 
             selectBarrelRollTemplateDecisionSubPhase.RequiredPlayer = Selection.ThisShip.Owner.PlayerNo;
 
@@ -215,11 +214,14 @@ namespace SubPhases
             DecisionSubPhase.ConfirmDecision();
         }
 
-        private class SelectBarrelRollTemplateDecisionSubPhase : DecisionSubPhase { }
+        private class SelectBarrelRollTemplateDecisionSubPhase : DecisionSubPhase
+        {
+        }
 
         private void GenerateAllowedDeviceSideDropDirections()
         {
-            List<ManeuverTemplate> allowedTemplates = Selection.ThisShip.GetAvailableDeviceSideDropTemplates(BombsManager.CurrentDevice);
+            List<ManeuverTemplate> allowedTemplates =
+                Selection.ThisShip.GetAvailableDeviceSideDropTemplates(BombsManager.CurrentDevice);
 
             foreach (ManeuverTemplate bombLaunchTemplate in allowedTemplates)
             {
@@ -229,7 +231,9 @@ namespace SubPhases
 
         private void ShowBombAndLaunchTemplate(ManeuverTemplate bombDropTemplate)
         {
-            Vector3 dropPosition = dropDirection == Direction.Right ? Selection.ThisShip.GetRight() : Selection.ThisShip.GetLeft();
+            Vector3 dropPosition = dropDirection == Direction.Right
+                ? Selection.ThisShip.GetRight()
+                : Selection.ThisShip.GetLeft();
             bombDropTemplate.ApplyTemplate(Selection.ThisShip, dropPosition, dropDirection);
 
             Vector3 bombPosition = bombDropTemplate.GetFinalPosition();
@@ -242,7 +246,9 @@ namespace SubPhases
 
         private void ShowRemoteAndLaunchTemplate(ManeuverTemplate bombDropTemplate)
         {
-            Vector3 dropPosition = dropDirection == Direction.Right ? Selection.ThisShip.GetRight() : Selection.ThisShip.GetLeft();
+            Vector3 dropPosition = dropDirection == Direction.Right
+                ? Selection.ThisShip.GetRight()
+                : Selection.ThisShip.GetLeft();
             bombDropTemplate.ApplyTemplate(Selection.ThisShip, dropPosition, dropDirection);
 
             Vector3 bombPosition = bombDropTemplate.GetFinalPosition();
@@ -250,7 +256,8 @@ namespace SubPhases
 
             // TODO: get type of remote from upgrade
             GenericRemote remote = ShipFactory.SpawnRemote(
-                (GenericRemote)Activator.CreateInstance(BombsManager.CurrentDevice.UpgradeInfo.RemoteType, Selection.ThisShip.Owner),
+                (GenericRemote) Activator.CreateInstance(BombsManager.CurrentDevice.UpgradeInfo.RemoteType,
+                    Selection.ThisShip.Owner),
                 bombPosition,
                 bombRotation
             );
@@ -315,5 +322,5 @@ namespace SubPhases
         {
             return false;
         }
-
     }
+}

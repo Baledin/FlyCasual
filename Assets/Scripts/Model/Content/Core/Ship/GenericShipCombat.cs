@@ -134,6 +134,7 @@ namespace Ship
         public event EventHandlerBombDropTemplates OnGetAvailableBombLaunchTemplates;
         public event EventHandlerBombDropTemplates OnGetAvailableBombLaunchTemplatesModifications;
         public event EventHandlerDirection OnGetBombTemplateDirection;
+        public event EventHandlerBombDropTemplates OnGetAvailableDeviceSideDropTemplates;
 
         public event EventHandlerBarrelRollTemplates OnGetAvailableBarrelRollTemplates;
         public event EventHandlerDecloakTemplates OnGetAvailableDecloakTemplates;
@@ -812,6 +813,18 @@ namespace Ship
             OnGetAvailableBombLaunchTemplates?.Invoke(availableTemplates, upgrade);
 
             OnGetAvailableBombLaunchTemplatesModifications?.Invoke(availableTemplates, upgrade);
+
+            return availableTemplates;
+        }
+
+        public List<ManeuverTemplate> GetAvailableDeviceSideDropTemplates(GenericUpgrade upgrade)
+        {
+            List<ManeuverTemplate> availableTemplates = new List<ManeuverTemplate>();
+
+            OnGetAvailableDeviceSideDropTemplates?.Invoke(availableTemplates, upgrade);
+            OnGetAvailableBombDropTemplatesNoConditions?.Invoke(availableTemplates, upgrade);
+            OnGetAvailableBombDropTemplatesTwoConditions?.Invoke(availableTemplates, upgrade);
+            OnGetAvailableBombDropTemplatesOneCondition?.Invoke(availableTemplates, upgrade);
 
             return availableTemplates;
         }
