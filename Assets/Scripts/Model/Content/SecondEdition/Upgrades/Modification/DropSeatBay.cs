@@ -16,7 +16,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo = new UpgradeCardInfo("Drop Seat Bay",
                 UpgradeType.Modification,
-                cost: 1,
+                cost: 5,
                 restriction: new ShipRestriction(typeof(Ship.SecondEdition.GauntletFighter.GauntletFighter)),
                 addSlots: new List<UpgradeSlot>
                 {
