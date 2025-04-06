@@ -25,7 +25,6 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(Abilities.SecondEdition.DropSeatBayAbility)
             );
         }
-
     }
 }
 
@@ -123,7 +122,7 @@ namespace Abilities.SecondEdition
 
                     foreach (ManeuverTemplate newTemplate in newTemplates)
                     {
-                        if (!availableTemplates.Any(t => t.Name == newTemplate.Name))
+                        if (availableTemplates.All(t => t.Name != newTemplate.Name))
                         {
                             availableTemplates.Add(newTemplate);
                         }
