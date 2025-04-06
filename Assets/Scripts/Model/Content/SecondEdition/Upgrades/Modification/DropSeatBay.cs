@@ -4,9 +4,7 @@ using Bombs;
 using Upgrade;
 using BoardTools;
 using Movement;
-using Remote;
 using System.Linq;
-using UnityEngine;
 
 namespace UpgradesList.SecondEdition
 {
