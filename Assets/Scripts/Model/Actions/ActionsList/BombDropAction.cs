@@ -46,6 +46,7 @@ namespace SubPhases
         List<ManeuverTemplate> AvailableBombDropTemplates = new List<ManeuverTemplate>();
         public ManeuverTemplate SelectedBombDropHelper;
         private List<GenericDeviceGameObject> BombObjects = new List<GenericDeviceGameObject>();
+        public bool useFrontGuides { get; set; }
 
         public override void Start()
         {
@@ -138,17 +139,33 @@ namespace SubPhases
 
         private void ShowRemoteAndDropTemplate(ManeuverTemplate bombDropTemplate)
         {
-            bombDropTemplate.ApplyTemplate(Selection.ThisShip, Selection.ThisShip.GetBack(), Direction.Bottom);
+            Direction direction = Direction.Bottom;
+            Selection.ThisShip.CallOnGetBombTemplateDirection(ref direction);
+
+            Vector3 position = direction switch
+            {
+                Direction.Left => Selection.ThisShip.GetLeft(),
+                Direction.Right => Selection.ThisShip.GetRight(),
+                _ => Selection.ThisShip.GetBack(),
+            };
+
+            bombDropTemplate.ApplyTemplate(Selection.ThisShip, position, direction);
 
             Vector3 bombPosition = bombDropTemplate.GetFinalPosition();
             Quaternion bombRotation = bombDropTemplate.GetFinalRotation();
 
             // TODO: get type of remote from upgrade
-            ShipFactory.SpawnRemote(
-                (GenericRemote) Activator.CreateInstance(BombsManager.CurrentDevice.UpgradeInfo.RemoteType, Selection.ThisShip.Owner),
+            GenericRemote remote = ShipFactory.SpawnRemote(
+                (GenericRemote)Activator.CreateInstance(BombsManager.CurrentDevice.UpgradeInfo.RemoteType, Selection.ThisShip.Owner),
                 bombPosition,
                 bombRotation
             );
+
+            if (useFrontGuides)
+            {
+                remote.SetAngles(remote.GetAngles() + new Vector3(0, 180, 0));
+                remote.SetPosition(remote.GetPosition() + (remote.GetJointPosition(1) - remote.GetJointPosition(2)));
+            }
 
             SelectedBombDropHelper = bombDropTemplate;
         }
