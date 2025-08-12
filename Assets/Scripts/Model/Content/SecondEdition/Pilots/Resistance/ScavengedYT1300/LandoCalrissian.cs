@@ -236,7 +236,7 @@ namespace Abilities.SecondEdition
 
         private bool FilterSelection(GenericShip ship)
         {
-            return FilterByTargetType(ship, TargetTypes.OtherFriendly) && FilterTargetsByRange(ship, 0, 2);
+            return FilterByTargetType(ship, TargetTypes.AnyFriendly) && FilterTargetsByRange(ship, 0, 2);
         }
 
         private int GetAiPriority(GenericShip ship)
