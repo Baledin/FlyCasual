@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using BoardTools;
+using Movement;
 using System.Collections.Generic;
-using UnityEngine;
-using GameModes;
+using System.Linq;
 using Tokens;
 
 namespace ActionsList
@@ -11,6 +11,7 @@ namespace ActionsList
     {
         private bool canBePerformedAsFreeAction = false;
         public override bool CanBePerformedAsAFreeAction { get { return canBePerformedAsFreeAction; } }
+        private List<ManeuverTemplate> allowedManeuverTemplates;
 
         public SlamAction()
         {
@@ -33,10 +34,12 @@ namespace ActionsList
             {
                 Phases.CurrentSubPhase.Pause();
 
+                allowedManeuverTemplates = Selection.ThisShip.GetAvailableSlamTemplates(this);
+
                 Selection.ThisShip.Owner.SelectManeuver(
                     ShipMovementScript.SendAssignManeuverCommand,
                     ExecuteSelectedManeuver,
-                    IsSameSpeed
+                    IsAllowedTemplate
                 );
             }
         }
@@ -65,15 +68,17 @@ namespace ActionsList
             Selection.ThisShip.AssignedManeuver.Perform();
         }
 
-        private bool IsSameSpeed(string maneuverString)
+        private bool IsAllowedTemplate(string maneuverString)
         {
-            bool result = false;
-            Movement.ManeuverHolder movementStruct = new Movement.ManeuverHolder(maneuverString);
-            if (movementStruct.Speed == Selection.ThisShip.AssignedManeuver.ManeuverSpeed)
-            {
-                result = true;
-            }
-            return result;
+            ManeuverHolder maneuverStruct = new ManeuverHolder(maneuverString);
+            return allowedManeuverTemplates.Any(a => AreManeuversEqual(a, maneuverStruct));
+        }
+
+        private bool AreManeuversEqual(ManeuverTemplate a, ManeuverHolder b)
+        {
+            return a.Bearing == b.Bearing
+                && a.Direction == b.Direction
+                && a.Speed == b.Speed;
         }
 
         public override int GetActionPriority()

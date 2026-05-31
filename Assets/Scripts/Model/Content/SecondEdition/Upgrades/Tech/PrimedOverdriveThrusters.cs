@@ -1,7 +1,6 @@
 using ActionsList;
 using BoardTools;
 using Content;
-using Movement;
 using SubPhases;
 using System;
 using System.Collections.Generic;
@@ -37,14 +36,14 @@ namespace Abilities.SecondEdition
         {
             HostShip.OnGetAvailableBoostTemplates += UpdateBoostTemplate;
             HostShip.OnGetAvailableBarrelRollTemplates += UpdateBarrelRollTemplate;
-            HostShip.OnUpdateChosenSlamTemplate += UpdateSlamTemplate;
+            HostShip.OnGetAvailableSlamTemplates += UpdateSlamTemplate;
         }
 
         public override void DeactivateAbility()
         {
             HostShip.OnGetAvailableBoostTemplates -= UpdateBoostTemplate;
             HostShip.OnGetAvailableBarrelRollTemplates -= UpdateBarrelRollTemplate;
-            HostShip.OnUpdateChosenSlamTemplate -= UpdateSlamTemplate;
+            HostShip.OnGetAvailableSlamTemplates -= UpdateSlamTemplate;
         }
 
         private void UpdateBoostTemplate(List<BoostMove> availableTemplates, GenericAction action)
@@ -84,14 +83,15 @@ namespace Abilities.SecondEdition
             }
         }
 
-        private void UpdateSlamTemplate(GenericMovement movement)
+        private void UpdateSlamTemplate(List<ManeuverTemplate> availableTemplates, GenericAction action)
         {
-            if (ActionsHolder.CurrentAction.IsRed)
+            if (action.IsRed)
             {
-                if (movement.TryIncreaseSpeed())
+                foreach (ManeuverTemplate template in availableTemplates)
                 {
-                    Messages.ShowInfo("Primed Overdrive Thursters: Template of 1 speed higher is used");
+                    template.TryIncreaseSpeed();
                 }
+
                 AddAskSwapStressForStrainTriggers();
             }
         }

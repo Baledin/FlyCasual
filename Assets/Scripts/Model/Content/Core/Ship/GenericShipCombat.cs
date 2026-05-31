@@ -4,6 +4,7 @@ using BoardTools;
 using Movement;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Tokens;
 using UnityEngine;
 using Upgrade;
@@ -143,6 +144,7 @@ namespace Ship
         public event EventHandlerDecloakTemplates OnGetAvailableDecloakBarrelRollTemplates;
         public event EventHandlerDecloakTemplates OnGetAvailableDecloakBoostTemplates;
         public event EventHandlerBoostTemplates OnGetAvailableBoostTemplates;
+        public event EventHandlerSlamTemplates OnGetAvailableSlamTemplates;
         public event EventHandlerRefString OnUpdateChosenBoostTemplate;
         public event EventHandlerRefManeuverTemplate OnUpdateChosenBarrelRollTemplate;
         public event EventHandlerMovement OnUpdateChosenSlamTemplate;
@@ -885,6 +887,19 @@ namespace Ship
             OnGetAvailableBoostTemplates?.Invoke(availableMoves, action);
 
             return availableMoves;
+        }
+
+        public List<ManeuverTemplate> GetAvailableSlamTemplates(GenericAction action)
+        {
+            List<ManeuverTemplate> availableTemplates = new();
+            foreach (ManeuverHolder template in Maneuvers.Keys.Select(a => new ManeuverHolder(a)).Where(a => a.Speed == AssignedManeuver.ManeuverSpeed))
+            {
+                availableTemplates.Add(new ManeuverTemplate(template.Bearing,template.Direction,template.Speed));
+            }
+
+            OnGetAvailableSlamTemplates?.Invoke(availableTemplates, action);
+
+            return availableTemplates;
         }
 
         public void CallUpdateChosenBoostTemplate(ref string boosterTemplateName)

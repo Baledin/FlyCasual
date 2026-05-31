@@ -6,7 +6,6 @@ using BoardTools;
 using Content;
 using Movement;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Tokens;
 using UnityEngine;
@@ -53,6 +52,7 @@ namespace Ship
         public delegate void EventHandlerBarrelRollTemplates(List<ManeuverTemplate> availableTemplates, GenericAction action);
         public delegate void EventHandlerDecloakTemplates(List<ManeuverTemplate> availableTemplates);
         public delegate void EventHandlerBoostTemplates(List<BoostMove> availableTemplates, GenericAction action);
+        public delegate void EventHandlerSlamTemplates(List<ManeuverTemplate> availableTemplates, GenericAction action);
         public delegate void EventHandlerRefString(ref string name);
         public delegate void EventHandlerRefManeuverTemplate(ref ManeuverTemplate maneuverTemplate);
         public delegate void EventHandlerMovement(GenericMovement movement);
