@@ -1,6 +1,7 @@
 using ActionsList;
 using BoardTools;
 using Content;
+using Movement;
 using SubPhases;
 using System;
 using System.Collections.Generic;
@@ -83,13 +84,32 @@ namespace Abilities.SecondEdition
             }
         }
 
-        private void UpdateSlamTemplate(List<ManeuverTemplate> availableTemplates, GenericAction action)
+        private void UpdateSlamTemplate(ref List<ManeuverHolder> availableTemplates, GenericAction action)
         {
             if (action.IsRed)
             {
-                foreach (ManeuverTemplate template in availableTemplates)
+                for (int i = 0; i < availableTemplates.Count; i++)
                 {
-                    template.TryIncreaseSpeed();
+                    bool result = false;
+                    switch (availableTemplates[i].Speed)
+                    {
+                        case ManeuverSpeed.Speed1:
+                        case ManeuverSpeed.Speed2:
+                            result = true;
+                            break;
+                        case ManeuverSpeed.Speed3:
+                        case ManeuverSpeed.Speed4:
+                            result = availableTemplates[i].Direction == ManeuverDirection.Forward;
+                            break;
+                        case ManeuverSpeed.Speed5:
+                            break;
+                    }
+                    if (result)
+                    {
+                        ManeuverHolder temp = availableTemplates[i];
+                        temp.Speed++;
+                        availableTemplates[i] = temp;
+                    }
                 }
 
                 AddAskSwapStressForStrainTriggers();

@@ -58,6 +58,41 @@ public static class DirectionsMenu
         }
     }
 
+    public static void ShowManeuversFromList(Action<string> doWithSelectedManeuver, Action callback, Dictionary<string, MovementComplexity> list)
+    {
+        UI.HideNextButton();
+
+        PrepareSubphase(doWithSelectedManeuver, callback);
+
+        GameObject prefab = (GameObject)Resources.Load("Prefabs/UI/DirectionsWindow", typeof(GameObject));
+        DirectionsWindow = MonoBehaviour.Instantiate(prefab, GameObject.Find("UI/DirectionsPanel").transform);
+
+        if (Selection.ThisShip.Owner is Players.HumanPlayer)
+        {
+            GameObject.Find("UI").transform.Find("ContextMenuPanel").gameObject.SetActive(false);
+            CustomizeDirectionsMenuFromList(list);
+            CustomizeForStressed();
+            DirectionsWindow.transform.localPosition = FixMenuPosition(
+                DirectionsWindow.transform.gameObject,
+                Input.mousePosition
+            );
+        }
+        else
+        {
+            DirectionsMenu.Hide();
+        }
+
+        Phases.CurrentSubPhase.IsReadyForCommands = true;
+
+        if (!HasAnyAvailableManeuver)
+        {
+            Messages.ShowError("No available maneuvers!");
+
+            DirectionsMenu.Hide();
+            DirectionsMenu.FinishManeuverSelections();
+        }
+    }
+
     public static void ShowForAll(Action<string> doWithSelectedManeuver, Action callback, Func<string, bool> filter = null)
     {
         /*PrepareSubphase(doWithSelectedManeuver, callback);
@@ -203,6 +238,51 @@ public static class DirectionsMenu
                 number.SetActive(true);
             }
 
+        }
+
+        HideExtraElements(linesExist);
+    }
+
+    private static void CustomizeDirectionsMenuFromList(Dictionary<string, MovementComplexity> list)
+    {
+        List<char> linesExist = new List<char>();
+        HasAnyAvailableManeuver = false;
+
+        foreach (KeyValuePair<string, MovementComplexity> maneuverData in list)
+        {
+            string[] parameters = maneuverData.Key.Split('.');
+            char maneuverSpeed = parameters[0].ToCharArray()[0];
+            if (parameters[2] == "V")
+            {
+                switch (maneuverSpeed)
+                {
+                    case '1':
+                        maneuverSpeed = '-';
+                        break;
+                    case '2':
+                        maneuverSpeed = '=';
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            GameObject button = DirectionsWindow.transform.Find("Directions").Find("Speed" + maneuverSpeed).Find(maneuverData.Key).gameObject;
+            if (maneuverData.Value != MovementComplexity.None)
+            {
+                HasAnyAvailableManeuver = true;
+
+                if (!linesExist.Contains(maneuverSpeed)) linesExist.Add(maneuverSpeed);
+
+                SetManeuverColor(button, maneuverData);
+                button.SetActive(true);
+                button.GetComponent<Button>().onClick.AddListener(
+                    delegate { UI.AssignManeuverButtonPressed(button.name); }
+                );
+
+                GameObject number = DirectionsWindow.transform.Find("Numbers").Find("Speed" + maneuverSpeed).Find("Number").gameObject;
+                number.SetActive(true);
+            }
         }
 
         HideExtraElements(linesExist);

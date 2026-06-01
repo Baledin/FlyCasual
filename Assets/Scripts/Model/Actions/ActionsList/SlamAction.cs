@@ -11,7 +11,7 @@ namespace ActionsList
     {
         private bool canBePerformedAsFreeAction = false;
         public override bool CanBePerformedAsAFreeAction { get { return canBePerformedAsFreeAction; } }
-        private List<ManeuverTemplate> allowedManeuverTemplates;
+        private List<ManeuverHolder> allowedManeuverTemplates;
 
         public SlamAction()
         {
@@ -36,10 +36,10 @@ namespace ActionsList
 
                 allowedManeuverTemplates = Selection.ThisShip.GetAvailableSlamTemplates(this);
 
-                Selection.ThisShip.Owner.SelectManeuver(
+                Selection.ThisShip.Owner.SelectManeuverFromList(
                     ShipMovementScript.SendAssignManeuverCommand,
                     ExecuteSelectedManeuver,
-                    IsAllowedTemplate
+                    allowedManeuverTemplates.ToDictionary(a=>a.ToString(),a=>a.ColorComplexity)
                 );
             }
         }
@@ -66,19 +66,6 @@ namespace ActionsList
         private void PerformSlamManeuver(object sender, System.EventArgs e)
         {
             Selection.ThisShip.AssignedManeuver.Perform();
-        }
-
-        private bool IsAllowedTemplate(string maneuverString)
-        {
-            ManeuverHolder maneuverStruct = new ManeuverHolder(maneuverString);
-            return allowedManeuverTemplates.Any(a => AreManeuversEqual(a, maneuverStruct));
-        }
-
-        private bool AreManeuversEqual(ManeuverTemplate a, ManeuverHolder b)
-        {
-            return a.Bearing == b.Bearing
-                && a.Direction == b.Direction
-                && a.Speed == b.Speed;
         }
 
         public override int GetActionPriority()

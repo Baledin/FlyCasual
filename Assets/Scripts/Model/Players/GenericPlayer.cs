@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Ship;
-using ActionsList;
-using GameModes;
-using SubPhases;
-using GameCommands;
+﻿using Movement;
 using Obstacles;
-using System.Linq;
 using Remote;
+using Ship;
+using SubPhases;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public enum Faction
 {
@@ -174,6 +171,11 @@ namespace Players
         public virtual void ChangeManeuver(Action<string> doWithManeuverString, Action callback, Func<string, bool> filter = null) { }
 
         public virtual void SelectManeuver(Action<string> doWithManeuverString, Action callback, Func<string, bool> filter = null)
+        {
+            Phases.CurrentSubPhase.IsReadyForCommands = true;
+        }
+
+        public virtual void SelectManeuverFromList(Action<string> doWithManeuverString, Action callback, Dictionary<string,MovementComplexity> list)
         {
             Phases.CurrentSubPhase.IsReadyForCommands = true;
         }

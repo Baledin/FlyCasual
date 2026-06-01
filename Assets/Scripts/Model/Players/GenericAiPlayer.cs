@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
-using Ship;
-using ActionsList;
+﻿using ActionsList;
 using BoardTools;
-using SubPhases;
-using GameModes;
 using GameCommands;
+using GameModes;
+using Movement;
+using Ship;
+using SubPhases;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Players
 {
@@ -323,6 +323,19 @@ namespace Players
             doWithManeuverString(Selection.ThisShip.AssignedManeuver.ToString());
 
             callback();
+        }
+
+        public override void SelectManeuverFromList(Action<string> doWithManeuverString, Action callback, Dictionary<string, MovementComplexity> list)
+        {
+            // Currently assumes this is only called from Slam.
+            doWithManeuverString(SelectManeuverToExecuteNow(list));
+
+            callback();
+        }
+
+        protected virtual string SelectManeuverToExecuteNow(Dictionary<string, MovementComplexity> list)
+        {
+            return list.First().Key;
         }
 
         public override void StartExtraAttack()

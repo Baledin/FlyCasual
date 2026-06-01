@@ -52,7 +52,7 @@ namespace Ship
         public delegate void EventHandlerBarrelRollTemplates(List<ManeuverTemplate> availableTemplates, GenericAction action);
         public delegate void EventHandlerDecloakTemplates(List<ManeuverTemplate> availableTemplates);
         public delegate void EventHandlerBoostTemplates(List<BoostMove> availableTemplates, GenericAction action);
-        public delegate void EventHandlerSlamTemplates(List<ManeuverTemplate> availableTemplates, GenericAction action);
+        public delegate void EventHandlerSlamTemplates(ref List<ManeuverHolder> availableTemplates, GenericAction action);
         public delegate void EventHandlerRefString(ref string name);
         public delegate void EventHandlerRefManeuverTemplate(ref ManeuverTemplate maneuverTemplate);
         public delegate void EventHandlerMovement(GenericMovement movement);

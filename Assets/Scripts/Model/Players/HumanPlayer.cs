@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using ActionsList;
-using GameCommands;
+﻿using GameCommands;
 using GameModes;
+using Movement;
 using Ship;
 using SubPhases;
-using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Players
 {
@@ -69,6 +67,13 @@ namespace Players
             DirectionsMenu.Show(doWithManeuverString, callback, filter);
 
             base.SelectManeuver(doWithManeuverString, callback, filter);
+        }
+
+        public override void SelectManeuverFromList(Action<string> doWithManeuverString, Action callback, Dictionary<string, MovementComplexity> list)
+        {
+            DirectionsMenu.ShowManeuversFromList(doWithManeuverString, callback, list);
+
+            base.SelectManeuverFromList(doWithManeuverString, callback, list);
         }
 
         public override void SelectShipForAbility()

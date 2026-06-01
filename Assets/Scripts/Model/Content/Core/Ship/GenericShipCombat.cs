@@ -889,15 +889,15 @@ namespace Ship
             return availableMoves;
         }
 
-        public List<ManeuverTemplate> GetAvailableSlamTemplates(GenericAction action)
+        public List<ManeuverHolder> GetAvailableSlamTemplates(GenericAction action)
         {
-            List<ManeuverTemplate> availableTemplates = new();
+            List<ManeuverHolder> availableTemplates = new();
             foreach (ManeuverHolder template in Maneuvers.Keys.Select(a => new ManeuverHolder(a)).Where(a => a.Speed == AssignedManeuver.ManeuverSpeed))
             {
-                availableTemplates.Add(new ManeuverTemplate(template.Bearing,template.Direction,template.Speed));
+                availableTemplates.Add(template);
             }
 
-            OnGetAvailableSlamTemplates?.Invoke(availableTemplates, action);
+            OnGetAvailableSlamTemplates?.Invoke(ref availableTemplates, action);
 
             return availableTemplates;
         }
