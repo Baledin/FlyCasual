@@ -16,10 +16,11 @@ namespace Actions
         public bool SameShipTypeLimit { get; set; }
         public bool TargetLowerInitiave { get; set; }
         public bool SameActionLimit { get; set; }
-        public Func<GenericShip, int> GetAiPriority;
         public bool TreatCoordinatedActionAsRed { get; set; }
         public GenericShip CoordinateProvider { get; protected set; }
         public GenericAction FirstChosenAction { get; set; }
+        public Func<GenericShip, bool> Filter { get; set; }
+        public Func<GenericShip, int> GetAiPriority;
 
         public int MinRange = 1;
         public int MaxRange = 2;
@@ -28,6 +29,17 @@ namespace Actions
         {
             CoordinateProvider = coordinateProvider;
             MaxTargets = 1;
+            Filter = FilterCoordinateTargets;
+        }
+
+        protected bool FilterCoordinateTargets(GenericShip ship)
+        {
+            return ship.Owner.PlayerNo == Selection.ThisShip.Owner.PlayerNo
+                && Board.CheckInRange(CoordinateProvider, ship, MinRange, MaxRange, RangeCheckReason.CoordinateAction)
+                && ship.CanBeCoordinated
+                && (!TargetLowerInitiave || ship.PilotInfo.Initiative < CoordinateProvider.PilotInfo.Initiative)
+                && (!SameShipTypeLimit || Selection.MultiSelectedShips.Count == 0 || ship.ShipInfo.ShipName == Selection.MultiSelectedShips.First().ShipInfo.ShipName)
+                && CoordinateProvider.CallCheckCanCoordinate(ship);
         }
     }
 }
@@ -69,7 +81,7 @@ namespace ActionsList
 
                 subphase.RequiredPlayer = HostShip.Owner.PlayerNo;
 
-                subphase.Filter = FilterCoordinateTargets;
+                subphase.Filter = CoordinateActionData.Filter;
                 subphase.MaxToSelect = CoordinateActionData.MaxTargets;
                 subphase.WhenDone = CoordinateTargets;
                 subphase.CoordinateActionData = CoordinateActionData;
@@ -190,16 +202,6 @@ namespace ActionsList
             }
 
             return result;
-        }
-
-        protected bool FilterCoordinateTargets(GenericShip ship)
-        {
-            return ship.Owner.PlayerNo == Selection.ThisShip.Owner.PlayerNo
-                && Board.CheckInRange(CoordinateActionData.CoordinateProvider, ship, CoordinateActionData.MinRange, CoordinateActionData.MaxRange, RangeCheckReason.CoordinateAction)
-                && ship.CanBeCoordinated
-                && (!CoordinateActionData.TargetLowerInitiave || ship.PilotInfo.Initiative < HostShip.PilotInfo.Initiative)
-                && (!CoordinateActionData.SameShipTypeLimit || Selection.MultiSelectedShips.Count == 0 || ship.ShipInfo.ShipName == Selection.MultiSelectedShips.First().ShipInfo.ShipName)
-                && CoordinateActionData.CoordinateProvider.CallCheckCanCoordinate(ship);
         }
 
         public override void RevertActionOnFail(bool hasSecondChance = false)

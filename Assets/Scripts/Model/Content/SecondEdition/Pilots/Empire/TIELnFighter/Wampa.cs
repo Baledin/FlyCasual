@@ -86,7 +86,7 @@ namespace Abilities.SecondEdition
                     HostShip.PilotInfo.PilotName,
                     AlwaysUseByDefault,
                     UseAbility,
-                    descriptionLong: "Do you want ot spend 1 Charge to roll 1 additional attack die?",
+                    descriptionLong: "Do you want to spend 1 Charge to roll 1 additional attack die?",
                     imageHolder: HostShip
                 );
             }

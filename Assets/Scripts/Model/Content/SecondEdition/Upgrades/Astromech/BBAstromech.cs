@@ -80,6 +80,7 @@ namespace Abilities.SecondEdition
 
         private void SpendCharge(GenericAction action)
         {
+            HostShip.OnActionIsPerformed -= SpendCharge;
             Sounds.PlayShipSound("BB-8-Sound");
             HostUpgrade.State.SpendCharge();
         }

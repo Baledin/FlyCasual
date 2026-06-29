@@ -97,21 +97,27 @@ namespace Abilities.SecondEdition
 
         private void PerformAction(object sender, System.EventArgs e)
         {
-            HostShip.BeforeActionIsPerformed += PayChargeCost;
+            if (HostShip.State.Charges > 0) {
+                HostShip.BeforeActionIsPerformed += PayChargeCost;
 
-            List<GenericAction> actions = Selection.ThisShip.GetAvailableActions();
-            List<GenericAction> whiteActionBarActionsAsRed = actions
-                .Where(n => n.Color == Actions.ActionColor.White)
-                .Select(n => n.AsRedAction)
-                .ToList();
+                List<GenericAction> actions = Selection.ThisShip.GetAvailableActions();
+                List<GenericAction> whiteActionBarActionsAsRed = actions
+                    .Where(n => n.Color == Actions.ActionColor.White)
+                    .Select(n => n.AsRedAction)
+                    .ToList();
 
-            HostShip.AskPerformFreeAction(
-                whiteActionBarActionsAsRed,
-                CleanUp,
-                HostShip.PilotInfo.PilotName,
-                "After you perform an action, you may spend 1 Charge to perform a white action, treating it as red",
-                HostShip
-            );
+                HostShip.AskPerformFreeAction(
+                    whiteActionBarActionsAsRed,
+                    CleanUp,
+                    HostShip.PilotInfo.PilotName,
+                    "After you perform an action, you may spend 1 Charge to perform a white action, treating it as red",
+                    HostShip
+                );
+            }
+            else
+            {
+                Triggers.FinishTrigger();
+            }
         }
 
         private void PayChargeCost(GenericAction action, ref bool isFreeAction)

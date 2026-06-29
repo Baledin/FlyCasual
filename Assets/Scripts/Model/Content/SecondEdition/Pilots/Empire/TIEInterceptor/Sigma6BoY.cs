@@ -96,7 +96,7 @@ namespace Abilities.SecondEdition
 
                 HostShip.AskPerformFreeAction
                 (
-                    new SlamAction(canBePerformedAsFreeAction: true) { HostShip = HostShip },
+                    new SlamAction(HostShip),
                     CleanUp,
                     HostShip.PilotInfo.PilotName,
                     "You may spend 1 charge to perform an SLAM action"

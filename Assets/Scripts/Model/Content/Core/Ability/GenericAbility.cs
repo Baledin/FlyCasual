@@ -109,7 +109,7 @@ namespace Abilities
             HostUpgrade = hostUpgrade;
             if (HostUpgrade.UpgradeInfo.Limited == 0)
             {
-                Name ??= $"{hostUpgrade.UpgradeInfo.Name}'s ({HostShip.PilotInfo.PilotName}) ability";
+                Name ??= $"{HostShip.PilotInfo.PilotName}: {hostUpgrade.UpgradeInfo.Name}";
             }
             else
             {

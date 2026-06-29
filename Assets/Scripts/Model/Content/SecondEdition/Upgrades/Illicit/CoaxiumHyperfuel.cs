@@ -72,7 +72,7 @@ namespace Abilities.SecondEdition
         {
             HostShip.BeforeActionIsPerformed += RegisterSlamActionDamageTrigger;
             HostShip.AskPerformFreeAction(
-                new SlamAction(true),
+                new SlamAction(HostShip),
                 delegate
                 {
                     HostShip.BeforeActionIsPerformed -= RegisterSlamActionDamageTrigger;

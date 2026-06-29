@@ -36,9 +36,7 @@ namespace Ship.SecondEdition.BTANR2WYWing
                 legality: new List<Legality> { Legality.XWA }
             );
 
-            PilotNameCanonical = "kijimispicerunner-btanr2wywing";
-
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/kijimispicerunner-wartime.png";
+            PilotNameCanonical = "kijimispicerunner-wartime";
         }
     }
 }

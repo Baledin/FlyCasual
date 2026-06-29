@@ -3,6 +3,7 @@ using ActionsList;
 using Arcs;
 using Movement;
 using Ship.CardInfo;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -84,6 +85,77 @@ namespace Ship
 
                 ShipIconLetter = 'Z';
             }
+        }
+    }
+}
+
+namespace Abilities.SecondEdition
+{
+    // When you drop a device, you may set the template with its middle line aligned with the hashmark on the base in your left or right side.
+    public class ModularBombingMagazine : GenericAbility
+    {
+        Direction selectedDirection = Direction.Bottom;
+
+        public override void ActivateAbility()
+        {
+            HostShip.BeforeBombWillBeDropped += RegisterDeviceDropAbility;
+        }
+
+        public override void DeactivateAbility()
+        {
+            HostShip.BeforeBombWillBeDropped -= RegisterDeviceDropAbility;
+        }
+
+        private void RegisterDeviceDropAbility()
+        {
+            RegisterAbilityTrigger(TriggerTypes.BeforeBombWillBeDropped, AskToUseDeviceDropAbility);
+        }
+        private void AskToUseDeviceDropAbility(object sender, EventArgs e)
+        {
+            AskForDecision(
+                descriptionShort: "Modular Bombing Magazine",
+                descriptionLong: "Drop device using left or right side instead of rear guides?",
+                imageHolder: HostShip,
+                decisions: new() {
+                    { "Left", UseDeviceAbilityLeft },
+                    { "Right", UseDeviceAbilityRight },
+                    { "No", SkipUseAbility }
+                },
+                tooltips: new(),
+                defaultDecision: "No",
+                callback: Triggers.FinishTrigger,
+                showSkipButton: true
+            );
+        }
+
+        private void UseDeviceAbility()
+        {
+            HostShip.OnGetBombTemplateDirection += GetDeviceDirection;
+            Triggers.FinishTrigger();
+        }
+
+        private void SkipUseAbility(object sender, EventArgs e)
+        {
+            Triggers.FinishTrigger();
+        }
+
+        private void UseDeviceAbilityLeft(object sender, EventArgs e)
+        {
+            selectedDirection = Direction.Left;
+            UseDeviceAbility();
+        }
+
+        private void UseDeviceAbilityRight(object sender, EventArgs e)
+        {
+            selectedDirection = Direction.Right;
+            UseDeviceAbility();
+        }
+
+        private void GetDeviceDirection(ref Direction direction)
+        {
+            HostShip.OnGetBombTemplateDirection -= GetDeviceDirection;
+            direction = selectedDirection;
+            selectedDirection = Direction.Bottom;
         }
     }
 }

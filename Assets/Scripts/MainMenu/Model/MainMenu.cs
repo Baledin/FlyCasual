@@ -325,6 +325,10 @@ public class MainMenu : MonoBehaviour
             case "BrowseAvatarsPanel":
                 AvatarsManager.LoadAvatars(Faction.None);
                 break;
+            case "AiDecisionPanel":
+                Button randomSquadButton = GameObject.Find("UI/Panels/AiDecisionPanel/Background/RandomSquad").GetComponent<Button>();
+                randomSquadButton.interactable = Options.ListFormat == Legality.XWA;
+                break;
         }
     }
 

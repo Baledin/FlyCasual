@@ -162,7 +162,7 @@ namespace Conditions
 
         private void AddSlam(GenericShip ship)
         {
-            ship.AddAvailableAction(new SlamAction());
+            ship.AddAvailableAction(new SlamAction(ship));
         }
 
         private void CheckAbility()

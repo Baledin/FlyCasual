@@ -87,7 +87,7 @@ namespace Abilities.SecondEdition
         {
             HostShip.BeforeActionIsPerformed += RegisterSpendChargeTrigger;
             HostShip.AskPerformFreeAction(
-                new SlamAction(true) { CanBePerformedWhileStressed = true },
+                new SlamAction(HostShip),
                 CleanUp,
                 HostShip.PilotInfo.PilotName,
                 "After you fully execute a maneuver you may spend 1 Charge to perform a Slam action, even while stressed.",

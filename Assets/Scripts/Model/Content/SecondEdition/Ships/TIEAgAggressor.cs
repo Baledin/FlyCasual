@@ -83,6 +83,8 @@ namespace Ship
                     },
                     "TIE-Fire", 2
                 );
+
+                ShipIconLetter = '`';
             }
         }
     }

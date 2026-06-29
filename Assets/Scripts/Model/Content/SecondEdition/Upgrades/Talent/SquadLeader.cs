@@ -85,7 +85,6 @@ namespace Abilities.SecondEdition
 
                     subphase.RequiredPlayer = HostShip.Owner.PlayerNo;
 
-                    subphase.Filter = base.FilterCoordinateTargets;
                     subphase.MaxToSelect = CoordinateActionData.MaxTargets;
                     subphase.WhenDone = CoordinateTargets;
                     subphase.CoordinateActionData = CoordinateActionData;

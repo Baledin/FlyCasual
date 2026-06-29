@@ -40,7 +40,8 @@ namespace RulesList
                         Name = "Collision: Roll for damage",
                         TriggerType = TriggerTypes.OnMovementFinish,
                         TriggerOwner = Selection.ThisShip.Owner.PlayerNo,
-                        EventHandler = StartRollForDamage
+                        EventHandler = StartRollForDamage,
+                        IsPriority = true
                     }
                 );
             }
@@ -55,7 +56,8 @@ namespace RulesList
                         Name = "Collision: Perform Red Action",
                         TriggerType = TriggerTypes.OnMovementFinish,
                         TriggerOwner = Selection.ThisShip.Owner.PlayerNo,
-                        EventHandler = AskPerformRedAction
+                        EventHandler = AskPerformRedAction,
+                        IsPriority = true
                     }
                 );
             }
@@ -73,6 +75,7 @@ namespace RulesList
                     Phases.FinishSubPhase(typeof(OverlappedFriendlyShipDamageCheckSubPhase));
                     Triggers.FinishTrigger();
                 });
+
             newPhase.TheShip = Selection.ThisShip;
             newPhase.Start();
         }

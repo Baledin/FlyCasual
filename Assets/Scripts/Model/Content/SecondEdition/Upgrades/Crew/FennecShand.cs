@@ -34,7 +34,7 @@ namespace UpgradesList.SecondEdition
 
 namespace Abilities.SecondEdition
 {
-    // After you fully execute a maneuver, or perform a barrel roll or boost action, you may spend 1 charge. If you do, choose an enemy ship in your front arc.
+    // After you fully execute a maneuver, or perform a barrel roll or boost action, you may spend 1 charge. If you do, choose an enemy ship in your bullseye arc.
     // That ship gains 1 strain token, and you may acquire a lock on it.
     public class FennecShandAbility : GenericAbility
     {
@@ -60,7 +60,7 @@ namespace Abilities.SecondEdition
 
         private void AskUseAbility(GenericAction action)
         {
-            if (HostUpgrade.State.Charges > 0 && (action is BarrelRollAction || action is BoostAction))
+            if (HostUpgrade.State.Charges > 0 && (action is BarrelRollAction || action is BoostAction) && Roster.AllShips.Values.Any(s => Tools.IsAnotherTeam(HostShip, s) && IsInArc(s)))
             {
                 RegisterAbilityTrigger(TriggerTypes.OnActionIsPerformed, UseAbility);
             }
@@ -73,7 +73,7 @@ namespace Abilities.SecondEdition
                 AlwaysUseByDefault,
                 StrainAndTargetLockShip,
                 callback: Triggers.FinishTrigger,
-                descriptionLong: $"You may spend 1 charge. If you do, you may strain 1 ship in your front arc and acquire a target lock on it."
+                descriptionLong: $"You may spend 1 charge. If you do, you may strain 1 ship in your bullseye arc and acquire a target lock on it."
             );
         }
 
@@ -102,7 +102,7 @@ namespace Abilities.SecondEdition
 
         private bool IsInArc(GenericShip ship)
         {
-            return HostShip.SectorsInfo.IsShipInSector(ship, ArcType.Front);
+            return HostShip.SectorsInfo.IsShipInSector(ship, ArcType.Bullseye);
         }
     }
 }

@@ -38,9 +38,7 @@ namespace Ship.SecondEdition.BTANR2WYWing
                 legality: new List<Legality> { Legality.XWA }
             );
 
-            PilotNameCanonical = "coruskapellim-btanr2wywing";
-
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/coruskapellim-wartime.png";
+            PilotNameCanonical = "coruskapellim-wartime";
         }
     }
 }

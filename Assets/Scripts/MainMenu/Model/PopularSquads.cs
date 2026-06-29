@@ -1,10 +1,6 @@
-﻿using Editions;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -15,24 +11,17 @@ namespace SquadBuilderNS
     {
         public const float FREE_SPACE = 25f;
         public static string LastChosenFaction { get; set; }
-        public static int SelectedSquadId { get; private set; }
+        public static long SelectedSquadId { get; private set; }
 
         private static JSONObject Data;
         private static JSONObject VariantsData;
-        
+
 
         public static void LoadPopularSquads()
         {
             ClearPage("BrowsePopularSquadsPanel");
 
-            if (Edition.Current is Editions.SecondEdition)
-            {
-                Global.Instance.StartCoroutine(LoadPopularArchetypesAsync());
-            }
-            else
-            {
-                Messages.ShowError("Only for Second Edition");
-            }
+            Global.Instance.StartCoroutine(LoadPopularArchetypesAsync());
         }
 
         private static void ClearPage(string pageName)
@@ -40,6 +29,7 @@ namespace SquadBuilderNS
             GameObject archetypesPanel = GameObject.Find("UI/Panels").transform.Find(pageName).Find("Scroll View/Viewport/Content").gameObject;
             RectTransform contentTransform = archetypesPanel.GetComponent<RectTransform>();
             contentTransform.localPosition = new Vector3(contentTransform.localPosition.x, 0, contentTransform.localPosition.z);
+
             foreach (Transform transform in contentTransform.transform)
             {
                 GameObject.Destroy(transform.gameObject);
@@ -51,13 +41,13 @@ namespace SquadBuilderNS
 
         public static IEnumerator LoadPopularArchetypesAsync()
         {
-            UnityWebRequest www;
-            www = UnityWebRequest.Get("https://flycasualdataserver.azurewebsites.net/api/populararchetypes");
+            UnityWebRequest www = UnityWebRequest.Get("https://meta.listfortress.com/ship_combos.json?");
             yield return www.SendWebRequest();
 
             Data = new JSONObject(www.downloadHandler.text);
 
             HideLoadingStub("BrowsePopularSquadsPanel");
+
             if (Data.list != null)
             {
                 ShowListOfArchetypes();
@@ -95,37 +85,41 @@ namespace SquadBuilderNS
                 GameObject archetypeRecord;
 
                 archetypeRecord = MonoBehaviour.Instantiate(prefab, archetypesPanel.transform);
+
                 archetypeRecord.name = archetype["name"].str;
 
                 archetypeRecord.transform.Find("Name").GetComponent<Text>().text = archetype["name"].str;
 
                 archetypesPanelRectTransform.sizeDelta = new Vector2(archetypesPanelRectTransform.sizeDelta.x, archetypesPanelRectTransform.sizeDelta.y + 120f + FREE_SPACE);
 
-                string factionText = FactionToChar(archetype["faction"].str.ToLower()).ToString();
+                string factionText = FactionToChar(archetype["faction"].str).ToString();
                 archetypeRecord.transform.Find("Faction").GetComponent<Text>().text = factionText;
 
                 string shipIcons = "";
                 foreach (JSONObject ship in archetype["ships"].list)
                 {
-                    ShipRecord shipRecord = Global.SquadBuilder.Database.AllShips.FirstOrDefault(n => n.ShipName == ship.str);
+                    ShipRecord shipRecord = Global.SquadBuilder.Database.AllShips.FirstOrDefault(n => n.ShipNameCanonical.Equals(ship["xws"].str, System.StringComparison.OrdinalIgnoreCase));
+
                     if (shipRecord != null)
                     {
                         shipIcons += shipRecord.Instance.ShipIconLetter;
                     }
                 }
+
                 if (shipIcons.Length > 5)
                 {
                     shipIcons = shipIcons.Insert((shipIcons.Length - shipIcons.Length % 2) / 2, "\n");
                     archetypeRecord.transform.Find("Ships").GetComponent<Text>().fontSize = 90; // 150 for 1 row
                 }
+
                 archetypeRecord.transform.Find("Ships").GetComponent<Text>().text = shipIcons;
 
                 archetypeRecord.transform.Find("LoadButton").GetComponent<Button>().onClick.AddListener
                 (
                     () =>
                     {
-                        SelectedSquadId = int.Parse(archetype["id"].str);
-                        MainMenu.CurrentMainMenu.ChangePanel("BrowsePopularSquadsVariantsPanel"); 
+                        SelectedSquadId = archetype["id"].i;
+                        MainMenu.CurrentMainMenu.ChangePanel("BrowsePopularSquadsVariantsPanel");
                     }
                 ); ;
             }
@@ -148,25 +142,17 @@ namespace SquadBuilderNS
 
         private static char FactionToChar(string faction)
         {
-            switch (faction)
+            return faction.ToLower() switch
             {
-                case "rebel":
-                    return '!';
-                case "imperial":
-                    return '@';
-                case "scum":
-                    return '#';
-                case "resistance":
-                    return '-';
-                case "firstorder":
-                    return '+';
-                case "republic":
-                    return '/';
-                case "separatists":
-                    return '.';
-                default:
-                    return ' ';
-            }
+                "rebel alliance" => '!',
+                "galactic empire" => '@',
+                "scum and villainy" => '#',
+                "resistance" => '-',
+                "first order" => '+',
+                "galactic republic" => '/',
+                "separatist alliance" => '.',
+                _ => ' ',
+            };
         }
 
         public static void LoadPopularSquadsVariants()
@@ -178,8 +164,7 @@ namespace SquadBuilderNS
 
         public static IEnumerator LoadPopularSquadsVariantsAsync()
         {
-            UnityWebRequest www;
-            www = UnityWebRequest.Get("https://flycasualdataserver.azurewebsites.net/api/ArchetypeVariants/" + SelectedSquadId);
+            UnityWebRequest www = UnityWebRequest.Get($"https://meta.listfortress.com/ship_combos/{SelectedSquadId}/squadrons.json?");
             yield return www.SendWebRequest();
 
             VariantsData = new JSONObject(www.downloadHandler.text);
@@ -207,14 +192,16 @@ namespace SquadBuilderNS
                 GameObject.Destroy(transform.gameObject);
             }
 
-            List<string> existingLists = new List<string>();
+            List<string> existingLists = new();
 
-            foreach (var squadJson in VariantsData.list)
+            foreach (JSONObject squadJson in VariantsData.list)
             {
-                SquadList squadList = new SquadList(Players.PlayerNo.PlayerNone);
-                
-                JSONObject squadJsonFixed = new JSONObject(squadJson["json"].str);
+                SquadList squadList = new(Players.PlayerNo.PlayerNone);
+
+                JSONObject squadJsonFixed = new(squadJson["xws"].str);
+
                 if (existingLists.Contains(squadJsonFixed.ToString())) continue;
+
                 existingLists.Add(squadJsonFixed.ToString());
 
                 squadList.SetPlayerSquadFromImportedJson(squadJsonFixed);
@@ -223,11 +210,13 @@ namespace SquadBuilderNS
 
                 SquadListRecord = MonoBehaviour.Instantiate(prefab, contentTransform);
 
-                SquadListRecord.transform.Find("Name").GetComponent<Text>().text = "Example"; //squadList["name"].str;
+                SquadListRecord.transform.Find("Name").GetComponent<Text>().text = squadList.Name;
 
                 Text descriptionText = SquadListRecord.transform.Find("Description").GetComponent<Text>();
+
                 RectTransform descriptionRectTransform = SquadListRecord.transform.Find("Description").GetComponent<RectTransform>();
-                if (squadJson.HasField("json"))
+
+                if (squadJson.HasField("xws"))
                 {
                     descriptionText.text = SquadJsonHelper.GetDescriptionOfSquadJson(squadJsonFixed).Replace("\\\"", "\"");
                 }
@@ -237,17 +226,19 @@ namespace SquadBuilderNS
                 }
 
                 float descriptionPreferredHeight = descriptionText.preferredHeight;
+
                 descriptionRectTransform.sizeDelta = new Vector2(descriptionRectTransform.sizeDelta.x, descriptionPreferredHeight);
 
-                SquadListRecord.transform.Find("PointsValue").GetComponent<Text>().text = squadList.Points.ToString();
+                SquadListRecord.transform.Find("PointsContainer/PointsValue").GetComponent<Text>().text = squadList.Points.ToString();
+                SquadListRecord.transform.Find("PointsContainer/FormatValue").GetComponent<Text>().text = squadList.Format.ToString();
 
                 SquadListRecord.GetComponent<RectTransform>().sizeDelta = new Vector2(
                     SquadListRecord.GetComponent<RectTransform>().sizeDelta.x,
                     15 + 70 + 10 + descriptionPreferredHeight + 10 + 55 + 10
                 );
 
-                SquadListRecord.transform.Find("DeleteButton").gameObject.SetActive(false);
-                SquadListRecord.transform.Find("LoadButton").GetComponent<Button>().onClick.AddListener(delegate { Global.SquadBuilder.View.LoadSavedSquadAndReturn(squadJsonFixed); });
+                SquadListRecord.transform.Find("ButtonContainer/DeleteButton").gameObject.SetActive(false);
+                SquadListRecord.transform.Find("ButtonContainer/LoadButton").GetComponent<Button>().onClick.AddListener(delegate { Global.SquadBuilder.View.LoadSavedSquadAndReturn(squadJsonFixed); });
             }
 
             OrganizePanels(contentTransform, FREE_SPACE);
@@ -265,6 +256,7 @@ namespace SquadBuilderNS
                     totalHeight += transform.GetComponent<RectTransform>().sizeDelta.y + freeSpace;
                 }
             }
+
             RectTransform contRect = contentTransform.GetComponent<RectTransform>();
             contRect.sizeDelta = new Vector2(contRect.sizeDelta.x, totalHeight + 25);
 
@@ -280,4 +272,3 @@ namespace SquadBuilderNS
         }
     }
 }
-

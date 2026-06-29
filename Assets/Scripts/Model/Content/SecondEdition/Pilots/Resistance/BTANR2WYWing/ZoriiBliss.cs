@@ -40,8 +40,8 @@ namespace Ship.SecondEdition.BTANR2WYWing
                 skinName: "Red",
                 legality: new List<Legality> { Legality.XWA }
             );
-
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/zoriibliss-wartime.png";
+            
+            PilotNameCanonical = "zoriibliss-wartime";
         }
     }
 }

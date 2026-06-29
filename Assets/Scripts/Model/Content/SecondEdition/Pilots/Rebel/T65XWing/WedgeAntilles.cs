@@ -73,13 +73,16 @@ namespace Abilities.SecondEdition
 
         protected void AddWedgeAntillesAbility()
         {
+            if (Combat.ShotInfo.Range < 1) return;
+
             Combat.Defender.AfterGotNumberOfDefenceDice += ReduceDefenseDice;
         }
 
         protected void ReduceDefenseDice(ref int count)
         {
-            Messages.ShowInfo($"{HostShip.PilotInfo.PilotName}: The defender's defense dice have been decreased by 1.");
             Combat.Defender.AfterGotNumberOfDefenceDice -= ReduceDefenseDice;
+
+            Messages.ShowInfo($"{HostShip.PilotInfo.PilotName}: The defender's defense dice have been decreased by 1.");
 
             count--;
         }

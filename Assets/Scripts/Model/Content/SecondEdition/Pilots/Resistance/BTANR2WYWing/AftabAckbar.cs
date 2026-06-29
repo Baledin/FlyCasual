@@ -37,9 +37,7 @@ namespace Ship.SecondEdition.BTANR2WYWing
                 legality: new List<Legality> { Legality.XWA }
             );
 
-            PilotNameCanonical = "aftabackbar-btanr2wywing";
-
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/aftabackbar-wartime.png";
+            PilotNameCanonical = "aftabackbar-wartime";
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using GameModes;
+﻿using Ship;
 using Tokens;
 
 namespace ActionsList
@@ -9,18 +6,23 @@ namespace ActionsList
 
     public class SlamAction : GenericAction
     {
-        private bool canBePerformedAsFreeAction = false;
-        public override bool CanBePerformedAsAFreeAction { get { return canBePerformedAsFreeAction; } }
-
         public SlamAction()
         {
             Name = DiceModificationName = "SLAM";
             ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/SlamAction.png";
         }
 
-        public SlamAction(bool canBePerformedAsFreeAction) : this()
+        public SlamAction(GenericShip hostShip)
         {
-            this.canBePerformedAsFreeAction = canBePerformedAsFreeAction;
+            Name = DiceModificationName = "SLAM";
+            ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/SlamAction.png";
+            HostShip = hostShip;
+        }
+
+        public override bool IsActionAvailable()
+        {
+            return Phases.CurrentPhase is MainPhases.ActivationPhase
+                && (Phases.CurrentPhase as MainPhases.ActivationPhase).ActivationShip == HostShip;
         }
 
         public override void ActionTake()

@@ -53,9 +53,7 @@ namespace Abilities.SecondEdition
         private void CheckAbility(GenericShip ship)
         {
             if (HostUpgrade.State.Charges > 0 &&
-                ship.AssignedManeuver.Bearing == ManeuverBearing.Turn &&
-                (HostShip.AssignedManeuver.ColorComplexity == MovementComplexity.Easy ||
-                (!HostShip.IsStressed && HostShip.AssignedManeuver.ColorComplexity != MovementComplexity.Complex)))
+                ship.AssignedManeuver.Bearing == ManeuverBearing.Turn)
             {
                 RegisterAbilityTrigger(TriggerTypes.OnManeuverIsRevealed, RegisterAbility);
             }
@@ -93,7 +91,7 @@ namespace Abilities.SecondEdition
             maneuverKey = HostShip.AssignedManeuver.ToString()[..4] + "E";
             originalColor = HostShip.Maneuvers.ContainsKey(maneuverKey) ? HostShip.Maneuvers[maneuverKey] : MovementComplexity.None;
 
-            HostShip.Maneuvers[maneuverKey] = HostShip.AssignedManeuver.ColorComplexity + 1;
+            HostShip.Maneuvers[maneuverKey] = GenericMovement.IncreaseComplexity(HostShip.AssignedManeuver.ColorComplexity);
 
             HostShip.SetAssignedManeuver(ShipMovementScript.MovementFromString(maneuverKey));
 
