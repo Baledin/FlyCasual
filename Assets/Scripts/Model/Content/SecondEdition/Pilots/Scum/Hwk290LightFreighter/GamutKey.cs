@@ -68,7 +68,6 @@ namespace Abilities.SecondEdition
     public class GamutKeyPilotAbility : GenericAbility
     {
         GenericShip ShipThatKeepTokens { get; set; }
-        private bool IsDelayed = false;
 
         public override void ActivateAbility()
         {
@@ -101,7 +100,7 @@ namespace Abilities.SecondEdition
                 GetAiPriority,
                 HostShip.Owner.PlayerNo,
                 name: GetAbilityName(),
-                description: "Choose a ship - during the End Phase circular tokens are not removed from it",
+                description: "2 charges: Choose a ship, during the End Phase circular tokens are not removed from it",
                 imageSource: GetAbilityImage()
             );
         }
@@ -124,9 +123,8 @@ namespace Abilities.SecondEdition
             Messages.ShowInfo($"{GetAbilityName()}: {TargetShip.PilotInfo.PilotName} doesn't remove cirular tokens during this End Phase");
             ShipThatKeepTokens = TargetShip;
 
-            IsDelayed = true;
             ShipThatKeepTokens.BeforeRemovingTokenInEndPhase += DontRemoveCircularTokens;
-            ShipThatKeepTokens.OnRoundEnd += UnsubscribeGainedAbility;
+            Phases.Events.OnPlanningPhaseStart += UnsubscribeGainedAbility;
 
             Triggers.FinishTrigger();
         }
@@ -141,20 +139,13 @@ namespace Abilities.SecondEdition
             if (token.TokenShape == TokenShapes.Cirular) willBeRemoved = false;
         }
 
-        private void UnsubscribeGainedAbility(GenericShip ship)
+        private void UnsubscribeGainedAbility()
         {
-            //Don't remove ability in the same turn
-            if (!IsDelayed)
-            {
-                ShipThatKeepTokens.BeforeRemovingTokenInEndPhase -= DontRemoveCircularTokens;
-                ShipThatKeepTokens.OnRoundEnd -= UnsubscribeGainedAbility;
+            // Reset ability for new round
+            Phases.Events.OnPlanningPhaseStart -= UnsubscribeGainedAbility;
 
-                ShipThatKeepTokens = null;
-            }
-            else
-            {
-                IsDelayed = false;
-            }
+            ShipThatKeepTokens.BeforeRemovingTokenInEndPhase -= DontRemoveCircularTokens;
+            ShipThatKeepTokens = null;
         }
 
         protected virtual bool FilterTargets(GenericShip ship)
