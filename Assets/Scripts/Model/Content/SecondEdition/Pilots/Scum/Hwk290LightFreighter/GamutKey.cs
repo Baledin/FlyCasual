@@ -120,7 +120,7 @@ namespace Abilities.SecondEdition
             SelectShipSubPhase.FinishSelectionNoCallback();
 
             SpendChargesForAbility();
-            Messages.ShowInfo($"{GetAbilityName()}: {TargetShip.PilotInfo.PilotName} doesn't remove cirular tokens during this End Phase");
+            Messages.ShowInfo($"{GetAbilityName()}: {TargetShip.PilotInfo.PilotName} doesn't remove circular tokens during this End Phase");
             ShipThatKeepTokens = TargetShip;
 
             ShipThatKeepTokens.BeforeRemovingTokenInEndPhase += DontRemoveCircularTokens;
