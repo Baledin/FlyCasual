@@ -8,9 +8,11 @@
             {
                 Name = "No Default Squadrons for the AI";
                 Description =
-                    "If this option is ON, the app only uses custom AI Squadrons instead of including Default AI Squadrons. Custom AI Squadrons can be placed in the following location:\n" +
-                    "(Folders path (Windows): %userprofile%\\AppData\\LocalLow\\Baledin\\Fly Casual\\Second Edition\\AiSquadrons)\n" +
-                    "(Folders path (MacOS): ~/Library/Application Support/unity.Baledin.Fly-Casual/Second Edition/AiSquadrons)";
+                    "Only uses custom AI Squadrons instead of including Default AI Squadrons. Custom AI Squadrons can be placed in the following locations:\n\n" +
+                    "Windows: %userprofile%\\AppData\\LocalLow\\Baledin\\Fly Casual\\Second Edition\\AiSquadrons\n\n" +
+                    "MacOS: ~/Library/Application Support/unity.Baledin.Fly-Casual/Second Edition/AiSquadrons\n\n" +
+                    "Linux: ~/.config/unity3d/Baledin/Fly Casual/Second Edition/AiSquadrons\n\n" +
+                    "Android: Android\\data\\com.Baledin.FlyCasual\\files\\Second Edition\\AiSquadrons";
             }
 
             protected override void Activate()

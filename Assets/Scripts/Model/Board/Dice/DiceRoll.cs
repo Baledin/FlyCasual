@@ -1,16 +1,17 @@
-﻿using GameCommands;
-using Editions;
+﻿using Editions;
+using GameCommands;
+using Players;
+using SubPhases;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Players;
-using SubPhases;
 
 public partial class DiceRoll
 {
-    public static readonly Dictionary<DiceKind, DieSide[]> PossibleSides = new Dictionary<DiceKind, DieSide[]>()
+    private readonly static WaitForSeconds _waitForSeconds1 = new(1);
+    public static readonly Dictionary<DiceKind, DieSide[]> PossibleSides = new()
     {
         {
             DiceKind.Attack,
@@ -67,7 +68,7 @@ public partial class DiceRoll
 
     public Die AddDice(DieSide side = DieSide.Unknown)
     {
-        Die newDice = new Die(this, this.Type, side);
+        Die newDice = new(this, Type, side);
         DiceList.Add(newDice);
         return newDice;
     }
@@ -87,7 +88,7 @@ public partial class DiceRoll
         {
             if (DebugManager.BatchAiSquadTestingModeActive)
             {
-                GenerateRangomResultsQuick();
+                GenerateRandomResultsQuick();
             }
             else
             {
@@ -97,10 +98,11 @@ public partial class DiceRoll
         }
     }
 
-    private void GenerateRangomResultsQuick()
+    private void GenerateRandomResultsQuick()
     {
-        System.Random random = new System.Random();
+        System.Random random = new();
         DieSide[] sides = PossibleSides[Type];
+
         foreach (Die die in DiceList)
         {
             die.TrySetSide(sides[random.Next(0, 8)], isInitial: true);
@@ -119,16 +121,19 @@ public partial class DiceRoll
     {
         Phases.CurrentSubPhase.IsReadyForCommands = false;
 
-        yield return new WaitForSeconds(1);
+        yield return _waitForSeconds1;
         yield return CheckDiceMovementFinish();
-        yield return new WaitForSeconds(1);
+        yield return _waitForSeconds1;
+
         CalculateWaitedResults();
     }
 
     private IEnumerator CheckDiceMovementFinish()
     {
         int diceStillRolling = DiceList.Count;
-        foreach (var die in DiceList) if (die.IsModelRollingFinished()) diceStillRolling--;
+
+        foreach (Die die in DiceList) if (die.IsModelRollingFinished()) diceStillRolling--;
+
         yield return diceStillRolling == 0;
     }
 
@@ -167,6 +172,7 @@ public partial class DiceRoll
             "DiceSync Subphase",
             ExecuteCallback
         );
+
         subphase.Start();
 
         Roster.GetPlayer(PlayerNo.Player1).SyncDiceResults();
@@ -176,9 +182,9 @@ public partial class DiceRoll
     {
         bool wasFixed = false;
 
-        for (int i = 0; i < DiceRoll.CurrentDiceRoll.DiceList.Count; i++)
+        for (int i = 0; i < CurrentDiceRoll.DiceList.Count; i++)
         {
-            Die die = DiceRoll.CurrentDiceRoll.DiceList[i];
+            Die die = CurrentDiceRoll.DiceList[i];
 
             if (die.Model == null) die.ShowWithoutRoll();
 
@@ -191,13 +197,13 @@ public partial class DiceRoll
             }
         }
 
-        if (DiceRoll.CurrentDiceRoll.IsDiceFacesVisibilityWrong() || wasFixed)
+        if (CurrentDiceRoll.IsDiceFacesVisibilityWrong() || wasFixed)
         {
-            DiceRoll.CurrentDiceRoll.OrganizeDicePositions();
+            CurrentDiceRoll.OrganizeDicePositions();
         }
         else
         {
-            DiceRoll.CurrentDiceRoll.UpdateDiceCompareHelperPrediction();
+            CurrentDiceRoll.UpdateDiceCompareHelperPrediction();
         }
     }
 
@@ -257,13 +263,15 @@ public partial class DiceRoll
     {
         DiceWereSelectedForRerollCount = SelectedCount;
         DiceRerolled = DiceList.Where(n => n.IsSelected).ToList();
+
         foreach (Die die in DiceRerolled) die.Reroll();
+
         GameManagerScript.Instance.StartCoroutine(CalculateResultsCororutine());
     }
 
     public void ToggleRerolledLocks(bool isActive)
     {
-        foreach (var dice in DiceList) dice.ToggleRerolledLock(isActive);
+        foreach (Die dice in DiceList) dice.ToggleRerolledLock(isActive);
     }
 
     // DICE MODIFICATIONS
@@ -281,8 +289,8 @@ public partial class DiceRoll
     }
 
     public int Change(DieSide oldSide, DieSide newSide, int count = 0, bool cannotBeRerolled = false, bool cannotBeModified = false)
-	{
-        var changedDiceCount = 0;
+    {
+        int changedDiceCount = 0;
         if (count == 0) // = change all
         {
             changedDiceCount += ChangeAll(oldSide, newSide, cannotBeRerolled, cannotBeModified);
@@ -291,7 +299,7 @@ public partial class DiceRoll
         {
             changedDiceCount = Math.Min(count, DiceList.Count(n => n.Side == oldSide));
             for (int i = 0; i < changedDiceCount; i++) ChangeOne(oldSide, newSide, cannotBeRerolled, cannotBeModified);
-		}
+        }
 
         OrganizeDicePositions();
         return changedDiceCount;
@@ -315,9 +323,12 @@ public partial class DiceRoll
 
     private int ChangeDice(DieSide oldSide, DieSide newSide, bool onlyOne, bool cannotBeRerolled = false, bool cannotBeModified = false)
     {
-        var changedDiceCount = 0;
+        int changedDiceCount = 0;
+
         foreach (Die die in DiceList)
         {
+            if (die.CannotBeModified) continue;
+
             if (die.Side == oldSide)
             {
                 if (die.TrySetSide(newSide, isInitial: false))
@@ -371,6 +382,7 @@ public partial class DiceRoll
                 if (Blanks > 0) return DieSide.Blank;
             }
         }
+
         return DieSide.Unknown; // We never should get here
     }
 
@@ -378,7 +390,7 @@ public partial class DiceRoll
 
     public Dictionary<string, int> CancelHitsByDefence(int countToCancel, bool dryRun = false)
     {
-        Dictionary<string, int> results = new Dictionary<string, int>
+        Dictionary<string, int> results = new()
         {
             ["crits"] = 0,
             ["hits"] = 0
@@ -386,13 +398,14 @@ public partial class DiceRoll
 
         for (int i = 0; i < countToCancel; i++)
         {
-            DieSide result = CancelHit(isCancelByDefenceDice:true, dryRun);
+            DieSide result = CancelHit(isCancelByDefenceDice: true, dryRun);
             switch (result)
             {
                 case DieSide.Success: { results["hits"]++; break; }
                 case DieSide.Crit: { results["crits"]++; break; }
             }
         }
+
         return results;
     }
 
@@ -402,7 +415,8 @@ public partial class DiceRoll
     }
 
     private DieSide CancelHit(bool isCancelByDefenceDice, bool dryRun)
-    {;
+    {
+        ;
         DieSide cancelFirst = (!CancelCritsFirst) ? DieSide.Success : DieSide.Crit;
         DieSide cancelLast = (!CancelCritsFirst) ? DieSide.Crit : DieSide.Success;
         DieSide cancelResult = DieSide.Unknown;
@@ -418,6 +432,7 @@ public partial class DiceRoll
         {
             cancelResult = cancelFirst;
         }
+
         return cancelResult;
     }
 
@@ -437,12 +452,13 @@ public partial class DiceRoll
                 }
             }
         }
+
         return found;
     }
 
     public void RemoveAllFailures()
     {
-        List<Die> diceCopy = new List<Die>(DiceList);
+        List<Die> diceCopy = new(DiceList);
         foreach (Die die in diceCopy) if (die.IsFailure) DiceList.Remove(die);
     }
 
@@ -480,8 +496,8 @@ public partial class DiceRoll
 
     public void CancelAllResults()
     {
-        List<Die> diceListCopy = new List<Die>(DiceList);
-        foreach (var die in diceListCopy) die.Cancel();
+        List<Die> diceListCopy = new(DiceList);
+        foreach (Die die in diceListCopy) die.Cancel();
     }
 
     // VIEW
@@ -492,7 +508,7 @@ public partial class DiceRoll
         {
             if (DiceList[i].Model == null) continue;
 
-            DiceList[i].SetPosition(FinalPositionPoint.position + DiceManager.DicePositions[DiceList.Count-1][i]);
+            DiceList[i].SetPosition(FinalPositionPoint.position + DiceManager.DicePositions[DiceList.Count - 1][i]);
             if (DiceList[i].IsDiceFaceVisibilityWrong()) DiceList[i].SetModelSide(DiceList[i].Side);
         }
 
@@ -509,7 +525,7 @@ public partial class DiceRoll
 
     public bool IsDiceFacesVisibilityWrong()
     {
-        foreach (var dice in DiceList)
+        foreach (Die dice in DiceList)
         {
             if (dice.IsDiceFaceVisibilityWrong()) return true;
         }
@@ -521,12 +537,12 @@ public partial class DiceRoll
 
     public void SelectAll()
     {
-        foreach (var dice in DiceList) dice.ToggleSelected(true);
+        foreach (Die dice in DiceList) dice.ToggleSelected(true);
     }
 
     private void DeselectAll()
     {
-        foreach (var dice in DiceList) dice.ToggleSelected(false);
+        foreach (Die dice in DiceList) dice.ToggleSelected(false);
     }
 
     private bool CanDieBeSelected(Die die, ref string error)
@@ -566,20 +582,22 @@ public partial class DiceRoll
 
         if (alreadySelected < maxCanBeSelected)
         {
-            foreach (var dieSide in dieSides)
+            foreach (DieSide dieSide in dieSides)
             {
                 //from blanks to focuses
-                foreach (var die in DiceList)
+                foreach (Die die in DiceList)
                 {
                     if (die.Side == dieSide)
                     {
                         string selectionErrors = "";
                         bool canSelect = CanDieBeSelected(die, ref selectionErrors);
+
                         if (canSelect)
                         {
                             die.ToggleSelected(true);
                             alreadySelected++;
                         }
+
                         if (alreadySelected == maxCanBeSelected)
                         {
                             return;
@@ -592,7 +610,7 @@ public partial class DiceRoll
 
     public void TrySelectDiceByModel(GameObject diceModel)
     {
-        foreach (var die in DiceList)
+        foreach (Die die in DiceList)
         {
             if (die.Model.name == diceModel.transform.parent.name)
             {
@@ -614,16 +632,18 @@ public partial class DiceRoll
     public static GameCommand GenerateSyncDiceCommand()
     {
         JSONObject[] diceResultArray = new JSONObject[DiceRoll.CurrentDiceRoll.DiceList.Count];
+
         for (int i = 0; i < DiceRoll.CurrentDiceRoll.DiceList.Count; i++)
         {
             DieSide side = DiceRoll.CurrentDiceRoll.DiceList[i].Side;
             string sideName = side.ToString();
-            JSONObject sideJson = new JSONObject();
+            JSONObject sideJson = new();
             sideJson.AddField("side", sideName);
             diceResultArray[i] = sideJson;
         }
-        JSONObject dieSides = new JSONObject(diceResultArray);
-        JSONObject parameters = new JSONObject();
+
+        JSONObject dieSides = new(diceResultArray);
+        JSONObject parameters = new();
         parameters.AddField("sides", dieSides);
 
         return GameController.GenerateGameCommand(

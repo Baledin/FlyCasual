@@ -33,14 +33,14 @@ namespace Abilities.SecondEdition
     {
         public override void ActivateAbility()
         {
-            HostShip.OnGetAvailableBarrelRollTemplates += AddBarrelRollTemplates;
+            HostShip.OnGetAvailableBarrelRollActionTemplates += AddBarrelRollTemplates;
             HostShip.OnActionIsPerformed += CheckForGainStrain;
             HostShip.OnActionIsReallyFailed += CheckForGainStrain;
         }
 
         public override void DeactivateAbility()
         {
-            HostShip.OnGetAvailableBarrelRollTemplates -= AddBarrelRollTemplates;
+            HostShip.OnGetAvailableBarrelRollActionTemplates -= AddBarrelRollTemplates;
             HostShip.OnActionIsPerformed -= CheckForGainStrain;
             HostShip.OnActionIsReallyFailed -= CheckForGainStrain;
         }

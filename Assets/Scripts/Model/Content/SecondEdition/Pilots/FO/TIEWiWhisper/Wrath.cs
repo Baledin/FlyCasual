@@ -90,7 +90,7 @@ namespace Abilities.SecondEdition
         private void CheckWrathAbility(GenericShip ship)
         {
             if (Combat.ArcForShot.ArcType == Arcs.ArcType.Bullseye
-                && HasOrangeOrRedeNonLockTokens()
+                && HasOrangeOrRedNonLockTokens()
                 && !IsAbilityUsed)
             {
                 IsAbilityUsed = true;
@@ -99,7 +99,7 @@ namespace Abilities.SecondEdition
             }
         }
 
-        private bool HasOrangeOrRedeNonLockTokens()
+        private bool HasOrangeOrRedNonLockTokens()
         {
             if (HostShip.Tokens.CountTokensByColor(TokenColors.Orange) > 0) return true;
             if (HostShip.Tokens.GetTokensByColor(TokenColors.Red).Count(n => n is not RedTargetLockToken) > 0) return true;
@@ -115,17 +115,18 @@ namespace Abilities.SecondEdition
 
         private bool AnotherTargetsPresent()
         {
-            bool result = false;
-
             foreach (GenericShip ship in HostShip.Owner.EnemyShips.Values)
             {
                 if (Tools.IsSameShip(ship, OriginalDefender)) continue;
 
-                ShotInfo shotInfo = new ShotInfo(HostShip, ship, HostShip.PrimaryWeapons);
-                if (shotInfo.IsShotAvailable) return true;
+                foreach (IShipWeapon weapon in HostShip.GetAllWeapons())
+                {
+                    ShotInfo shotInfo = new (HostShip, ship, weapon);
+                    if (shotInfo.IsShotAvailable) return true;
+                }
             }
 
-            return result;
+            return false;
         }
 
         private void UseWrathAbility(object sender, EventArgs e)

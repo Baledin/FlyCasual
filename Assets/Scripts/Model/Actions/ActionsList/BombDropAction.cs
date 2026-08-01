@@ -1,16 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using BoardTools;
+﻿using BoardTools;
 using Bombs;
-using System.Linq;
-using Upgrade;
 using Remote;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using Upgrade;
 
 namespace ActionsList
 {
-
     public class BombDropAction : GenericAction
     {
         public BombDropAction()
@@ -22,7 +20,8 @@ namespace ActionsList
         {
             Phases.CurrentSubPhase.Pause();
 
-            BombsManager.CurrentDevice = Source as Upgrade.GenericBomb;
+            BombsManager.CurrentDevice = Source as GenericBomb;
+
             Phases.StartTemporarySubPhaseOld(
                 "Bomb drop planning",
                 typeof(SubPhases.BombDropPlanningSubPhase),
@@ -35,17 +34,17 @@ namespace ActionsList
             return !Selection.ThisShip.IsBombAlreadyDropped;
         }
     }
-
 }
 
 namespace SubPhases
 {
-
     public class BombDropPlanningSubPhase : GenericSubPhase
     {
-        List<ManeuverTemplate> AvailableBombDropTemplates = new List<ManeuverTemplate>();
         public ManeuverTemplate SelectedBombDropHelper;
-        private List<GenericDeviceGameObject> BombObjects = new List<GenericDeviceGameObject>();
+        private readonly List<ManeuverTemplate> AvailableBombDropTemplates = new();
+        private readonly List<GenericDeviceGameObject> BombObjects = new();
+
+        public bool UseFrontGuides = false;
 
         public override void Start()
         {
@@ -60,26 +59,46 @@ namespace SubPhases
         {
             GenerateAllowedBombDropTemplates();
 
+            bool canUseFrontGuides = IsAllowedToUseFrontGuides();
+
             if (AvailableBombDropTemplates.Count == 1)
             {
                 if (BombsManager.CurrentDevice is GenericBomb)
                 {
                     ShowBombAndDropTemplate(AvailableBombDropTemplates.First());
+                    WaitAndSelectBombPosition();
                 }
                 else if (BombsManager.CurrentDevice.UpgradeInfo.SubType == UpgradeSubType.Remote)
                 {
-                    ShowRemoteAndDropTemplate(AvailableBombDropTemplates.First());
+                    if (canUseFrontGuides)
+                    {
+                        AskSelectOrientation(delegate
+                        {
+                            ShowRemoteAndDropTemplate(AvailableBombDropTemplates.First());
+                            WaitAndSelectBombPosition();
+                        });
+                    }
+                    else
+                    {
+                        ShowRemoteAndDropTemplate(AvailableBombDropTemplates.First());
+                        WaitAndSelectBombPosition();
+                    }
                 }
-
-                WaitAndSelectBombPosition();
             }
             else
             {
-                AskSelectTemplate();
+                if (canUseFrontGuides)
+                {
+                    AskSelectOrientation(delegate { AskSelectTemplate(WaitAndSelectBombPosition); });
+                }
+                else
+                {
+                    AskSelectTemplate(WaitAndSelectBombPosition);
+                }
             }
         }
 
-        private void AskSelectTemplate()
+        private void AskSelectTemplate(Action callback)
         {
             Triggers.RegisterTrigger(new Trigger()
             {
@@ -89,35 +108,48 @@ namespace SubPhases
                 EventHandler = StartSelectTemplateDecision
             });
 
-            Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, WaitAndSelectBombPosition);
+            Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, callback);
         }
 
-        private void StartSelectTemplateDecision(object sender, System.EventArgs e)
+        private void AskSelectOrientation(Action callback)
         {
-            SelectBombDropTemplateDecisionSubPhase selectBoostTemplateDecisionSubPhase = (SelectBombDropTemplateDecisionSubPhase)Phases.StartTemporarySubPhaseNew(
+            Triggers.RegisterTrigger(new Trigger()
+            {
+                Name = "Select orientation",
+                TriggerType = TriggerTypes.OnAbilityDirect,
+                TriggerOwner = Selection.ThisShip.Owner.PlayerNo,
+                EventHandler = StartSelectOrientationDecision
+            });
+
+            Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, callback);
+        }
+
+        private void StartSelectTemplateDecision(object sender, EventArgs e)
+        {
+            SelectBombDropTemplateDecisionSubPhase subphase = (SelectBombDropTemplateDecisionSubPhase)Phases.StartTemporarySubPhaseNew(
                 "Select template to drop the bomb",
                 typeof(SelectBombDropTemplateDecisionSubPhase),
                 Triggers.FinishTrigger
             );
 
-            selectBoostTemplateDecisionSubPhase.ShowSkipButton = false;
+            subphase.ShowSkipButton = false;
 
-            foreach (var bombDropTemplate in AvailableBombDropTemplates)
+            foreach (ManeuverTemplate bombDropTemplate in AvailableBombDropTemplates)
             {
-                selectBoostTemplateDecisionSubPhase.AddDecision(
+                subphase.AddDecision(
                     bombDropTemplate.Name,
                     delegate { SelectTemplate(bombDropTemplate); },
                     isCentered: (bombDropTemplate.Direction == Movement.ManeuverDirection.Forward)
                 );
             }
 
-            selectBoostTemplateDecisionSubPhase.DescriptionShort = "Select template to drop the device";
+            subphase.DescriptionShort = "Select template to drop the device";
 
-            selectBoostTemplateDecisionSubPhase.DefaultDecisionName = "Straight 1";
+            subphase.DefaultDecisionName = "Straight 1";
 
-            selectBoostTemplateDecisionSubPhase.RequiredPlayer = Selection.ThisShip.Owner.PlayerNo;
+            subphase.RequiredPlayer = Selection.ThisShip.Owner.PlayerNo;
 
-            selectBoostTemplateDecisionSubPhase.Start();
+            subphase.Start();
         }
 
         private void SelectTemplate(ManeuverTemplate selectedTemplate)
@@ -132,43 +164,89 @@ namespace SubPhases
             {
                 ShowRemoteAndDropTemplate(selectedTemplate);
             }
-            
+
+            DecisionSubPhase.ConfirmDecision();
+        }
+
+        private void StartSelectOrientationDecision(object sender, EventArgs e)
+        {
+            SelectBombDropOrientationDecisionSubPhase subphase = (SelectBombDropOrientationDecisionSubPhase)Phases.StartTemporarySubPhaseNew(
+                "Place using Front or Rear guides?",
+                typeof(SelectBombDropOrientationDecisionSubPhase),
+                Triggers.FinishTrigger
+            );
+
+            subphase.AddDecision("Front", delegate { SelectOrientation(true); });
+            subphase.AddDecision("Rear", delegate { SelectOrientation(false); });
+
+            subphase.ShowSkipButton = false;
+
+            subphase.DescriptionShort = "Place using Front or Rear guides?";
+
+            subphase.DefaultDecisionName = "Front";
+
+            subphase.RequiredPlayer = Selection.ThisShip.Owner.PlayerNo;
+
+            subphase.Start();
+        }
+
+        private void SelectOrientation(bool useFrontGuides)
+        {
+            UseFrontGuides = useFrontGuides;
+
             DecisionSubPhase.ConfirmDecision();
         }
 
         private void ShowRemoteAndDropTemplate(ManeuverTemplate bombDropTemplate)
         {
-            bombDropTemplate.ApplyTemplate(Selection.ThisShip, Selection.ThisShip.GetBack(), Direction.Bottom);
+            Direction direction = Direction.Bottom;
+            Selection.ThisShip.CallOnGetBombTemplateDirection(ref direction);
+
+            Vector3 position = direction switch
+            {
+                Direction.Left => Selection.ThisShip.GetLeft(),
+                Direction.Right => Selection.ThisShip.GetRight(),
+                _ => Selection.ThisShip.GetBack(),
+            };
+
+            bombDropTemplate.ApplyTemplate(Selection.ThisShip, position, direction);
 
             Vector3 bombPosition = bombDropTemplate.GetFinalPosition();
             Quaternion bombRotation = bombDropTemplate.GetFinalRotation();
 
-            // TODO: get type of remote from upgrade
-            ShipFactory.SpawnRemote(
-                (GenericRemote) Activator.CreateInstance(BombsManager.CurrentDevice.UpgradeInfo.RemoteType, Selection.ThisShip.Owner),
+            GenericRemote remote = ShipFactory.SpawnRemote(
+                (GenericRemote)Activator.CreateInstance(BombsManager.CurrentDevice.UpgradeInfo.RemoteType, Selection.ThisShip.Owner),
                 bombPosition,
                 bombRotation
             );
+
+            if (UseFrontGuides)
+            {
+                remote.SetAngles(remote.GetAngles() + new Vector3(0, 180, 0));
+                remote.SetPosition(remote.GetPosition() + (remote.GetJointPosition(1) - remote.GetJointPosition(2)));
+            }
 
             SelectedBombDropHelper = bombDropTemplate;
         }
 
         private class SelectBombDropTemplateDecisionSubPhase : DecisionSubPhase { }
 
+        private class SelectBombDropOrientationDecisionSubPhase : DecisionSubPhase { }
+
         private void CreateBombObject(Vector3 bombPosition, Quaternion bombRotation)
         {
             GenericBomb bomb = BombsManager.CurrentDevice as GenericBomb;
 
             GenericDeviceGameObject prefab = Resources.Load<GenericDeviceGameObject>(bomb.bombPrefabPath);
-            var device = MonoBehaviour.Instantiate(prefab, bombPosition, bombRotation, Board.GetBoard());
+            GenericDeviceGameObject device = MonoBehaviour.Instantiate(prefab, bombPosition, bombRotation, Board.GetBoard());
             device.Initialize(bomb);
             BombObjects.Add(device);
 
             if (!string.IsNullOrEmpty(bomb.bombSidePrefabPath))
             {
                 GenericDeviceGameObject prefabSide = Resources.Load<GenericDeviceGameObject>(bomb.bombSidePrefabPath);
-                var extraPiece1 = MonoBehaviour.Instantiate(prefabSide, bombPosition, bombRotation, Board.GetBoard());
-                var extraPiece2 = MonoBehaviour.Instantiate(prefabSide, bombPosition, bombRotation, Board.GetBoard());
+                GenericDeviceGameObject extraPiece1 = MonoBehaviour.Instantiate(prefabSide, bombPosition, bombRotation, Board.GetBoard());
+                GenericDeviceGameObject extraPiece2 = MonoBehaviour.Instantiate(prefabSide, bombPosition, bombRotation, Board.GetBoard());
                 BombObjects.Add(extraPiece1);
                 BombObjects.Add(extraPiece2);
                 extraPiece1.Initialize(bomb);
@@ -184,6 +262,11 @@ namespace SubPhases
             {
                 AvailableBombDropTemplates.Add(bombDropTemplate);
             }
+        }
+
+        private bool IsAllowedToUseFrontGuides()
+        {
+            return Selection.ThisShip.AllowBombDropFrontGuides(BombsManager.CurrentDevice);
         }
 
         private void ShowBombAndDropTemplate(ManeuverTemplate bombDropTemplate)
@@ -292,7 +375,5 @@ namespace SubPhases
         {
             return false;
         }
-
     }
-
 }

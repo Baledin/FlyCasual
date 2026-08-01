@@ -29,7 +29,7 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Separatists,
-                new Vector2(209, 1)
+                new Vector2(259, 7)
             );
         }
     }
@@ -92,7 +92,7 @@ namespace Abilities.SecondEdition
 
             if (!ship.Tokens.HasToken<CalculateToken>()) return false;
 
-            DistanceInfo distInfo = new DistanceInfo(HostShip, ship);
+            DistanceInfo distInfo = new(HostShip, ship);
             if (distInfo.Range > 3) return false;
 
             return true;
@@ -104,6 +104,7 @@ namespace Abilities.SecondEdition
             {
                 ship.BeforeRemovingTokenInEndPhase += KeepOneCalculateToken;
             }
+
             callback();
         }
 

@@ -1,4 +1,5 @@
-﻿using Content;
+﻿using BoardTools;
+using Content;
 using Ship;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,8 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Imperial,
-                new Vector2(385, 11)
+                new Vector2(336, 0),
+                new Vector2(143, 143)
             );
         }
     }
@@ -42,6 +44,7 @@ namespace UpgradesList.SecondEdition
         }
     }
 }
+
 namespace Abilities.SecondEdition
 {
     //After another friendly ship at range 0-3 defends, if it is destroyed, the attacker gains 2 stress tokens.
@@ -93,7 +96,7 @@ namespace Abilities.SecondEdition
             if (Combat.Attacker.Owner != HostShip.Owner) return false;
             if (!Combat.Defender.IsStressed) return false;
 
-            BoardTools.DistanceInfo positionInfo = new BoardTools.DistanceInfo(HostShip, Combat.Attacker);
+            DistanceInfo positionInfo = new(HostShip, Combat.Attacker);
             if (positionInfo.Range > 3) return false;
 
             return true;
@@ -105,7 +108,7 @@ namespace Abilities.SecondEdition
 
             if (Combat.AttackStep == CombatStep.Attack)
             {
-                var friendlyShip = Combat.Attacker;
+                GenericShip friendlyShip = Combat.Attacker;
                 int focuses = Combat.DiceRollAttack.FocusesNotRerolled;
                 int blanks = Combat.DiceRollAttack.BlanksNotRerolled;
 

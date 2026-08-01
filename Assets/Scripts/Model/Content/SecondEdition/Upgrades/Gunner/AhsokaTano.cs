@@ -26,7 +26,8 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(194, 10)
+                new Vector2(262, 35),
+                new Vector2(68, 68)
             );
         }
     }

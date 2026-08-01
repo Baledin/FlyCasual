@@ -63,7 +63,7 @@ namespace Abilities.SecondEdition
         {
             if (Combat.DiceRollAttack.Successes < Combat.Defender.State.ShieldsCurrent) return 100; // crit would be eaten by shield anyway
 
-            if (Combat.DiceRollAttack.Successes - Combat.Defender.GetNumberOfDefenceDice(Combat.Attacker) == Combat.Defender.State.HullCurrent - 1) return 100; // The extra success would ensure a kill
+            if (Combat.DiceRollAttack.Successes - Combat.Defender.GetNumberOfDefenceDice() == Combat.Defender.State.HullCurrent - 1) return 100; // The extra success would ensure a kill
 
             return 0;
         }

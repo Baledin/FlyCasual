@@ -84,7 +84,7 @@ namespace Abilities.SecondEdition
                 HostShip.OnActionIsSkipped += Cleanup;
                 HostShip.OnActionIsPerformed += SpendCharge;
 
-                HostShip.OnGetAvailableBarrelRollTemplates += ReplaceBarrelRollTemplates;
+                HostShip.OnGetAvailableBarrelRollActionTemplates += ReplaceBarrelRollTemplates;
                 HostShip.OnGetAvailableBoostTemplates += ReplaceBoostTemplates;
             }
 
@@ -141,7 +141,7 @@ namespace Abilities.SecondEdition
             HostShip.OnActionIsSkipped -= Cleanup;
             HostShip.OnActionIsPerformed -= SpendCharge;
 
-            HostShip.OnGetAvailableBarrelRollTemplates -= ReplaceBarrelRollTemplates;
+            HostShip.OnGetAvailableBarrelRollActionTemplates -= ReplaceBarrelRollTemplates;
             HostShip.OnGetAvailableBoostTemplates -= ReplaceBoostTemplates;
 
             savedAction.Color = ActionColor.White; // Reset color or it will persist

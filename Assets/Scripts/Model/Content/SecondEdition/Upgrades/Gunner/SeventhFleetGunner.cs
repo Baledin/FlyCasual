@@ -25,8 +25,7 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(289, 59),
-                new Vector2(50, 50)
+                new Vector2(264, 46)
             );
         }
     }
@@ -89,7 +88,7 @@ namespace Abilities.SecondEdition
 
         private void RestoreAbility(object sender, EventArgs e)
         {
-            SubPhases.DecisionSubPhase.ConfirmDecisionNoCallback();
+            DecisionSubPhase.ConfirmDecisionNoCallback();
 
             HostUpgrade.State.RestoreCharge();
 
@@ -107,7 +106,8 @@ namespace Abilities.SecondEdition
                 && HostUpgrade.State.Charges > 0
             )
             {
-                ShotInfo shotInfo = new ShotInfo(HostShip, Combat.Defender, HostShip.PrimaryWeapons.First());
+                ShotInfo shotInfo = new(HostShip, Combat.Defender, HostShip.PrimaryWeapons.First());
+
                 if (shotInfo.InArc)
                 {
                     RegisterAbilityTrigger(TriggerTypes.OnAttackStart, AskToUseGunnerAbility);

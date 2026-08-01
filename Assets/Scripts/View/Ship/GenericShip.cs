@@ -13,9 +13,9 @@ namespace Ship
     public partial class GenericShip
     {
         protected Transform ShipAllParts;
-        private Transform modelCenter;
+        protected Transform modelCenter;
 
-        private string originalSkinName;
+        private readonly string originalSkinName;
 
         protected string SpecialModel;
 
@@ -27,7 +27,7 @@ namespace Ship
         {
             Model = CreateShipModel(position);
             ShipAllParts = Model.transform.Find("RotationHelper/RotationHelper2/ShipAllParts").transform;
-            modelCenter = ShipAllParts.Find("ShipModels/" + (SpecialModel ?? FixTypeName(ModelInfo.ModelName)) + "/ModelCenter").transform;
+            modelCenter = ShipAllParts.Find($"ShipModels/{SpecialModel ?? FixTypeName(ModelInfo.ModelName)}/ModelCenter").transform;
             InitializeShipBase();
             SetCollider();
             SetRaycastTarget(true);
@@ -59,7 +59,6 @@ namespace Ship
 
         public GameObject CreateShipModel(Vector3 position)
         {
-
             Vector3 facing = (Owner.PlayerNo == Players.PlayerNo.Player1) ? ShipFactory.ROTATION_FORWARD : ShipFactory.ROTATION_BACKWARD;
 
             position = new Vector3(0, 0, (Owner.PlayerNo == Players.PlayerNo.Player1) ? -4 : 4);
@@ -81,7 +80,7 @@ namespace Ship
 
         public GameObject GetShipModelPrefab()
         {
-            return Resources.Load<GameObject>("Prefabs/ShipModel/ShipModels/" + (SpecialModel ?? FixTypeName(ModelInfo.ModelName)));
+            return Resources.Load<GameObject>($"Prefabs/ShipModel/ShipModels/{SpecialModel ?? FixTypeName(ModelInfo.ModelName)}");
         }
 
         protected void SetShipIdText(GameObject model)
@@ -107,18 +106,18 @@ namespace Ship
         {
             foreach (Transform spotlight in Model.transform.Find("RotationHelper/RotationHelper2/ShipAllParts/Spotlight").transform)
             {
-                spotlight.GetComponent<Light>().cullingMask |= 1 << LayerMask.NameToLayer("ShipId:" + ShipId);
+                spotlight.GetComponent<Light>().cullingMask |= 1 << LayerMask.NameToLayer($"ShipId:{ShipId}");
             }
         }
 
         private Material CreateMaterial(string texturePath)
         {
-            var texture = Resources.Load<Texture2D>(texturePath);
+            Texture2D texture = Resources.Load<Texture2D>(texturePath);
 
             if (texture == null)
                 return null;
 
-            var material = new Material(Shader.Find("Standard"));
+            Material material = new(Shader.Find("Standard"));
             material.SetTexture("_MainTex", texture);
 
             return material;
@@ -136,8 +135,8 @@ namespace Ship
             materialName = materialName.Replace('"', '_');
             materialName = materialName.Replace("'", "");
 
-            var pathToResource = "ShipStandInsert/" + FixTypeName(ModelInfo.ModelName) + "/" + materialName;
-            var shipBaseInsert = CreateMaterial(pathToResource);
+            string pathToResource = $"ShipStandInsert/{FixTypeName(ModelInfo.ModelName)}/{materialName}";
+            Material shipBaseInsert = CreateMaterial(pathToResource);
 
             if (shipBaseInsert != null)
             {
@@ -146,9 +145,9 @@ namespace Ship
             }
             else
             {
-                string materialNameAlt = materialName + "_" + Faction.ToString();
+                string materialNameAlt = $"{materialName}_{Faction}";
 
-                var pathToResourceAlt = "ShipStandInsert/" + FixTypeName(ModelInfo.ModelName) + "/" + materialNameAlt;
+                string pathToResourceAlt = $"ShipStandInsert/{FixTypeName(ModelInfo.ModelName)}/{materialNameAlt}";
                 shipBaseInsert = CreateMaterial(pathToResourceAlt);
 
                 if (shipBaseInsert != null)
@@ -158,7 +157,7 @@ namespace Ship
                 }
                 else
                 {
-                    Debug.Log("Cannot find: " + pathToResource + " or " + pathToResourceAlt);
+                    Debug.Log($"Cannot find: {pathToResource} or {pathToResourceAlt}");
                     ShipAllParts.Find("ShipBase/ShipStandInsert").gameObject.SetActive(false);
                 }
             }
@@ -166,13 +165,13 @@ namespace Ship
 
         public void SetShipBaseImageSecondEdition()
         {
-            string newTexture = "ShipStandInsert/Universal/SecondEdition/" + this.ShipInfo.BaseSize.ToString() + "/Base";
+            string newTexture = $"ShipStandInsert/Universal/SecondEdition/{ShipInfo.BaseSize}/Base";
             Material newMaterial = CreateMaterial(newTexture);
             ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/default").GetComponent<Renderer>().material = newMaterial;
             ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/default").GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
             //Ship Info
-            newTexture = "ShipStandInsert/Universal/SecondEdition/" + this.ShipInfo.BaseSize.ToString() + "/" + this.Faction.ToString() + "/Info";
+            newTexture = $"ShipStandInsert/Universal/SecondEdition/{ShipInfo.BaseSize}/{Faction}/Info";
             newMaterial = CreateMaterial(newTexture);
             StandardShaderUtils.ChangeRenderMode(newMaterial, StandardShaderUtils.BlendMode.Cutout);
             ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/ShipInfo").GetComponent<Renderer>().material = newMaterial;
@@ -183,7 +182,7 @@ namespace Ship
             ArcFront arcPrimary = ArcsInfo.GetArc<ArcFront>();
             if (arcPrimary != null && !ArcsInfo.HasArc(ArcType.FullFront))
             {
-                newTexture = "ShipStandInsert/Universal/SecondEdition/" + this.ShipInfo.BaseSize.ToString() + "/" + this.Faction.ToString() + "/Front";
+                newTexture = $"ShipStandInsert/Universal/SecondEdition/{ShipInfo.BaseSize}/{Faction}/Front";
                 newMaterial = CreateMaterial(newTexture);
                 StandardShaderUtils.ChangeRenderMode(newMaterial, StandardShaderUtils.BlendMode.Fade);
                 ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/FirstArc").GetComponent<Renderer>().material = newMaterial;
@@ -193,7 +192,7 @@ namespace Ship
             }
             else if (ArcsInfo.HasArc(ArcType.FullFront))
             {
-                newTexture = "ShipStandInsert/Universal/SecondEdition/" + this.ShipInfo.BaseSize.ToString() + "/" + this.Faction.ToString() + "/FullFront";
+                newTexture = $"ShipStandInsert/Universal/SecondEdition/{ShipInfo.BaseSize}/{Faction}/FullFront";
                 newMaterial = CreateMaterial(newTexture);
                 StandardShaderUtils.ChangeRenderMode(newMaterial, StandardShaderUtils.BlendMode.Fade);
                 ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/FirstArc").GetComponent<Renderer>().material = newMaterial;
@@ -203,7 +202,7 @@ namespace Ship
             }
             else if (ArcsInfo.HasArc(ArcType.Bullseye))
             {
-                newTexture = "ShipStandInsert/Universal/SecondEdition/" + this.ShipInfo.BaseSize.ToString() + "/" + this.Faction.ToString() + "/Bullseye";
+                newTexture = $"ShipStandInsert/Universal/SecondEdition/{ShipInfo.BaseSize}/{Faction}/Bullseye";
                 newMaterial = CreateMaterial(newTexture);
                 StandardShaderUtils.ChangeRenderMode(newMaterial, StandardShaderUtils.BlendMode.Fade);
                 ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/FirstArc").GetComponent<Renderer>().material = newMaterial;
@@ -215,7 +214,7 @@ namespace Ship
             //Rear arc
             if (ArcsInfo.Arcs.Any(n => n.Facing == ArcFacing.Rear))
             {
-                newTexture = "ShipStandInsert/Universal/SecondEdition/" + this.ShipInfo.BaseSize.ToString() + "/" + this.Faction.ToString() + "/Rear";
+                newTexture = $"ShipStandInsert/Universal/SecondEdition/{ShipInfo.BaseSize}/{Faction}/Rear";
                 newMaterial = CreateMaterial(newTexture);
                 StandardShaderUtils.ChangeRenderMode(newMaterial, StandardShaderUtils.BlendMode.Fade);
                 ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/SecondArc").GetComponent<Renderer>().material = newMaterial;
@@ -228,8 +227,8 @@ namespace Ship
                 ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/SecondArc").GetComponent<MeshRenderer>().enabled = false;
             }
 
-            ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/PilotName").GetComponent<TextMesh>().text = ShortenPilotName(this.PilotInfo.PilotName);
-            ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/PilotSkill").GetComponent<TextMesh>().text = this.State.Initiative.ToString();
+            ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/PilotName").GetComponent<TextMesh>().text = ShortenPilotName(PilotInfo.PilotName);
+            ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/PilotSkill").GetComponent<TextMesh>().text = State.Initiative.ToString();
             ShipAllParts.Find("ShipBase/ShipStandInsert/ShipStandInsertImage/ShipIcon").GetComponent<TextMesh>().text = (ShipIconLetter != '*') ? ShipIconLetter.ToString() : "";
         }
 
@@ -242,7 +241,7 @@ namespace Ship
         public void ShowMobileFiringArcHighlight(ArcFacing facing)
         {
             //Mobile arc
-            string newTexture = "ShipStandInsert/Universal/SecondEdition/" + this.ShipInfo.BaseSize.ToString() + "/" + this.Faction.ToString() + "/" + facing.ToString();
+            string newTexture = $"ShipStandInsert/Universal/SecondEdition/{ShipInfo.BaseSize}/{Faction}/{facing}";
             Material newMaterial = CreateMaterial(newTexture);
 
             StandardShaderUtils.ChangeRenderMode(newMaterial, StandardShaderUtils.BlendMode.Fade);
@@ -254,7 +253,7 @@ namespace Ship
         public void ShowMobileFiringArcAltHighlight(ArcFacing facing)
         {
             //Mobile arc alt
-            string newTexture = "ShipStandInsert/Universal/SecondEdition/" + this.ShipInfo.BaseSize.ToString() + "/" + this.Faction.ToString() + "/" + facing.ToString();
+            string newTexture = $"ShipStandInsert/Universal/SecondEdition/{ShipInfo.BaseSize}/{Faction}/{facing}";
             Material newMaterial = CreateMaterial(newTexture);
 
             StandardShaderUtils.ChangeRenderMode(newMaterial, StandardShaderUtils.BlendMode.Fade);
@@ -270,14 +269,13 @@ namespace Ship
 
             foreach (string goName in goNames)
             {
-                TextMesh ShipIdText = ShipAllParts.Find("ShipBase/ShipPeg/XWingNumberMarker" + goName + "/" + idColor).GetComponent<TextMesh>();
+                TextMesh ShipIdText = ShipAllParts.Find($"ShipBase/ShipPeg/XWingNumberMarker{goName}/{idColor}").GetComponent<TextMesh>();
                 ShipIdText.text = ShipId.ToString();
                 if (Owner.PlayerNo == Players.PlayerNo.Player2)
                 {
-                    ShipAllParts.Find("ShipBase/ShipPeg/XWingNumberMarker" + goName).transform.localEulerAngles += new Vector3(0, 180, 0);
+                    ShipAllParts.Find($"ShipBase/ShipPeg/XWingNumberMarker{goName}").transform.localEulerAngles += new Vector3(0, 180, 0);
                 }
             }
-
         }
 
         public void SetShipSkin(Transform shipTransform, Texture skin)
@@ -303,14 +301,14 @@ namespace Ship
 
         public Texture GetSkinTexture()
         {
-            string skinName = (this.PilotInfo as PilotCardInfo25).SkinName ?? ModelInfo.SkinName;
+            string skinName = (PilotInfo as PilotCardInfo25).SkinName ?? ModelInfo.SkinName;
             Texture skin = GetAvailableSkins().FirstOrDefault(n => n.name == skinName);
 
             if (skin == null)
             {
-                Debug.Log("Warning: Skin \"" + ModelInfo.SkinName + "\" not found, default skin is used ");
+                Debug.Log($"Warning: Skin \"{ModelInfo.SkinName}\" not found, default skin is used ");
                 string defaultSkinName = GetDefaultSkinName();
-                skin = (Texture)Resources.Load("ShipSkins/" + FixTypeName(ModelInfo.ModelName) + "/" + defaultSkinName, typeof(Texture));
+                skin = (Texture)Resources.Load($"ShipSkins/{FixTypeName(ModelInfo.ModelName)}/{defaultSkinName}", typeof(Texture));
             }
 
             return skin;
@@ -318,8 +316,8 @@ namespace Ship
 
         public List<Texture> GetAvailableSkins()
         {
-            List<Texture> textures = new List<Texture>();
-            textures.AddRange(Resources.LoadAll<Texture>("ShipSkins/" + FixTypeName(ModelInfo.ModelName)).ToList());
+            List<Texture> textures = new();
+            textures.AddRange(Resources.LoadAll<Texture>($"ShipSkins/{FixTypeName(ModelInfo.ModelName)}").ToList());
 
             string customizableSkinsPath = Application.dataPath + "/../Customizable/Ship Skins/";
             if (Directory.Exists(customizableSkinsPath))
@@ -332,7 +330,7 @@ namespace Ship
                     if (existsingTexture != null) textures.Remove(existsingTexture);
 
                     byte[] fileData = File.ReadAllBytes(filePath);
-                    Texture2D texture = new Texture2D(1, 1);
+                    Texture2D texture = new(1, 1);
                     texture.LoadImage(fileData);
                     texture.name = fileName;
                     textures.Add(texture);
@@ -344,13 +342,13 @@ namespace Ship
 
         private string GetDefaultSkinName()
         {
-            GenericShip parentShip = (GenericShip)System.Activator.CreateInstance(this.GetType().BaseType);
+            GenericShip parentShip = (GenericShip)System.Activator.CreateInstance(GetType().BaseType);
             return parentShip.ModelInfo.SkinName;
         }
 
         public void ToggleCollisionDetection(bool value)
         {
-            if (!(this is GenericRemote))
+            if (this is not GenericRemote)
             {
                 ShipAllParts.Find("ShipBase/ShipBaseCollider/ObstaclesStayDetector").GetComponent<ObstaclesStayDetector>().checkCollisions = value;
                 ShipAllParts.Find("ShipBase/ObstaclesHitsDetector").GetComponent<ObstaclesHitsDetector>().checkCollisions = value;
@@ -380,7 +378,7 @@ namespace Ship
 
         public void SetRaycastTarget(bool value)
         {
-            int layer = (value) ? LayerMask.NameToLayer("ShipId:" + ShipId) : LayerMask.NameToLayer("Ignore Raycast");
+            int layer = (value) ? LayerMask.NameToLayer($"ShipId:{ShipId}") : LayerMask.NameToLayer("Ignore Raycast");
             SetLayerRecursive(Model.transform, layer);
         }
 
@@ -395,9 +393,9 @@ namespace Ship
 
         public void ToggleDamaged(bool isDamaged)
         {
-            if (!(this is GenericRemote))
+            if (this is not GenericRemote)
             {
-                ShipAllParts.Find("ShipModels/" + (SpecialModel ?? FixTypeName(ModelInfo.ModelName)) + "/ModelCenter/DamageParticles").gameObject.SetActive(isDamaged);
+                ShipAllParts.Find($"ShipModels/{SpecialModel ?? FixTypeName(ModelInfo.ModelName)}/ModelCenter/DamageParticles").gameObject.SetActive(isDamaged);
             }
         }
 
@@ -418,8 +416,8 @@ namespace Ship
         {
             foreach (Transform transform in parentTransform)
             {
-                Renderer renderer = transform.GetComponent<Renderer>();
-                if (renderer != null)
+
+                if (transform.TryGetComponent<Renderer>(out Renderer renderer))
                 {
                     renderer.material.shader = (isTransparent) ? Shader.Find("VR/SpatialMapping/Occlusion") : Shader.Find("Standard");
                 }
@@ -607,7 +605,7 @@ namespace Ship
             Transform launchOrigin = modelCenter.Find("MunitionsLauncherPoint/MunitionsLauncherDirection");
             if (launchOrigin != null)
             {
-                ShotInfo shotInfo = new ShotInfo(Combat.Attacker, Combat.Defender, Combat.ChosenWeapon);
+                ShotInfo shotInfo = new(Combat.Attacker, Combat.Defender, Combat.ChosenWeapon);
                 float distance = shotInfo.DistanceReal;
 
                 Vector3 targetPoint = Selection.AnotherShip.GetModelCenter();
@@ -652,7 +650,7 @@ namespace Ship
 
         public virtual Transform GetModelTransform()
         {
-            return ShipAllParts.Find("ShipModels/" + (SpecialModel ?? FixTypeName(ModelInfo.ModelName)) + "/ModelCenter/Model");
+            return ShipAllParts.Find($"ShipModels/{SpecialModel ?? FixTypeName(ModelInfo.ModelName)}/ModelCenter/Model");
         }
 
         public string FixTypeName(string inputName)
@@ -661,5 +659,4 @@ namespace Ship
             return result;
         }
     }
-
 }

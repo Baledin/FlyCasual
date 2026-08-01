@@ -196,7 +196,7 @@ namespace SubPhases
         public override void Prepare()
         {
             diceType = DiceKind.Defence;
-            diceCount = Combat.Defender.GetNumberOfDefenceDice(Combat.Attacker);
+            diceCount = Combat.Defender.GetNumberOfDefenceDice();
 
             checkResults = CheckResults;
 

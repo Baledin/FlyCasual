@@ -1,10 +1,7 @@
-﻿using System;
+﻿using Arcs;
+using BoardTools;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Arcs;
-using BoardTools;
-using Remote;
 
 namespace Ship
 {
@@ -15,7 +12,8 @@ namespace Ship
         public SectorsHolder(GenericShip hostShip) : base(hostShip)
         {
             Arcs = new List<GenericArc>();
-            if (!(HostShip is GenericRemote))
+
+            if (HostShip.ShipInfo.ArcInfo.Arcs.Any(a => a.ArcType != ArcType.None))
             {
                 Arcs.AddRange(
                     new List<GenericArc>()
@@ -29,19 +27,19 @@ namespace Ship
                         new ArcFullRear(hostShip.ShipBase)
                     }
                 );
-            };
+            }
         }
 
         public Dictionary<ArcFacing, List<GenericShip>> GetEnemiesInAllSectors()
         {
-            Dictionary<ArcFacing, List<GenericShip>> EnemiesInAllSectors = new Dictionary<ArcFacing, List<GenericShip>>();
+            Dictionary<ArcFacing, List<GenericShip>> EnemiesInAllSectors = new();
 
             foreach (GenericArc sector in Sectors)
             {
                 EnemiesInAllSectors.Add(sector.Facing, new List<GenericShip>());
                 foreach (GenericShip enemyShip in HostShip.Owner.AnotherPlayer.Ships.Values)
                 {
-                    ShotInfoArc sectorInfo = new ShotInfoArc(HostShip, enemyShip, sector);
+                    ShotInfoArc sectorInfo = new(HostShip, enemyShip, sector);
                     if (sectorInfo.InArc && sectorInfo.Range != 0)
                     {
                         EnemiesInAllSectors[sector.Facing].Add(enemyShip);
@@ -55,6 +53,7 @@ namespace Ship
         public bool IsShipInSector(GenericShip anotherShip, ArcType arcType)
         {
             ShotInfoArc arcInfo = GetSectorInfo(anotherShip, arcType);
+
             if (arcInfo != null)
             {
                 bool result = arcInfo.InArc;
@@ -71,6 +70,7 @@ namespace Ship
         public int RangeToShipBySector(GenericShip anotherShip, ArcType arcType)
         {
             ShotInfoArc arcInfo = GetSectorInfo(anotherShip, arcType);
+
             if (arcInfo != null)
             {
                 bool result = arcInfo.IsShotAvailable;
@@ -87,6 +87,7 @@ namespace Ship
         public ShotInfoArc GetSectorInfo(GenericShip anotherShip, ArcType arcType)
         {
             GenericArc arc = Arcs.FirstOrDefault(n => n.ArcType == arcType);
+
             if (arc != null)
             {
                 return new ShotInfoArc(HostShip, anotherShip, arc);

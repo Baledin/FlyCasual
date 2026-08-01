@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
+﻿using GameCommands;
+using GameModes;
 using Ship;
 using System;
-using GameModes;
-using BoardTools;
-using GameCommands;
-using Remote;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace SubPhases
 {
@@ -80,7 +77,7 @@ namespace SubPhases
         {
             bool result = false;
 
-            var pilotSkillResults =
+            IEnumerable<KeyValuePair<string, GenericShip>> pilotSkillResults =
                 from n in Roster.AllUnits
                 where n.Value.State.CombatActivationAtInitiative == initiative
                 where n.Value.HasCombatActivation
@@ -91,7 +88,7 @@ namespace SubPhases
                 RequiredInitiative = initiative;
                 CurrentInitiative = RequiredInitiative;
 
-                var playerNoResults =
+                IEnumerable<KeyValuePair<string, GenericShip>> playerNoResults =
                     from n in pilotSkillResults
                     where n.Value.Owner.PlayerNo == Phases.PlayerWithInitiative
                     select n;
@@ -159,6 +156,7 @@ namespace SubPhases
                     Messages.ShowErrorToHuman("This ship cannot be selected:\nIt has already performed an attack");
                     return result;
                 }
+
                 result = true;
             }
             else
@@ -182,8 +180,9 @@ namespace SubPhases
 
         public static GameCommand GenerateCombatActivationCommand(int shipId)
         {
-            JSONObject parameters = new JSONObject();
+            JSONObject parameters = new();
             parameters.AddField("id", shipId.ToString());
+
             return GameController.GenerateGameCommand(
                 GameCommandTypes.CombatActivation,
                 typeof(CombatSubPhase),
@@ -221,7 +220,7 @@ namespace SubPhases
 
         private static void StartTargetSelection()
         {
-            if (!(Selection.ThisShip is GenericRemote))
+            if (Selection.ThisShip.PrimaryWeapons.Count > 0)
             {
                 Combat.StartSelectAttackTarget(
                     Selection.ThisShip,
@@ -242,6 +241,7 @@ namespace SubPhases
         public override bool AnotherShipCanBeSelected(GenericShip targetShip, int mouseKeyIsPressed)
         {
             bool result = false;
+
             if (Roster.GetPlayer(RequiredPlayer).GetType() != typeof(Players.NetworkOpponentPlayer))
             {
                 if (Selection.ThisShip != null)
@@ -252,20 +252,22 @@ namespace SubPhases
                     }
                     else
                     {
-                        Messages.ShowErrorToHuman(targetShip.PilotInfo.PilotName + " cannot be selected as a target, it is a friendly ship");
+                        Messages.ShowErrorToHuman($"{targetShip.PilotInfo.PilotName} cannot be selected as a target, it is a friendly ship");
                     }
                 }
                 else
                 {
-                    Messages.ShowErrorToHuman(targetShip.PilotInfo.PilotName + " cannot be selected as a target, first select the attacking ship");
+                    Messages.ShowErrorToHuman($"{targetShip.PilotInfo.PilotName} cannot be selected as a target, first select the attacking ship");
                 }
             }
+
             return result;
         }
 
         public override int CountActiveButtons(GenericShip ship)
         {
             int result = 0;
+
             if (Selection.ThisShip != null)
             {
                 if (ship.Owner.PlayerNo != Phases.CurrentSubPhase.RequiredPlayer)
@@ -281,6 +283,7 @@ namespace SubPhases
                     }
                 }
             }
+
             return result;
         }
 
@@ -316,7 +319,7 @@ namespace SubPhases
 
         private static bool TargetsAreAvailable()
         {
-            foreach (var ship in Roster.GetPlayer(Phases.CurrentPhasePlayer).Ships.Values)
+            foreach (GenericShip ship in Roster.GetPlayer(Phases.CurrentPhasePlayer).Ships.Values)
             {
                 if (ship.State.CombatActivationAtInitiative == Phases.CurrentSubPhase.RequiredInitiative && !ship.IsAttackPerformed)
                 {
@@ -362,9 +365,9 @@ namespace SubPhases
 
         private void SkipCombatByShipsWithCurrentInitiative()
         {
-            List<GenericShip> shipsToSkipCombat = new List<GenericShip>();
+            List<GenericShip> shipsToSkipCombat = new();
 
-            foreach (var shipHolder in Roster.GetPlayer(Phases.CurrentPhasePlayer).Ships)
+            foreach (KeyValuePair<string, GenericShip> shipHolder in Roster.GetPlayer(Phases.CurrentPhasePlayer).Ships)
             {
                 if (shipHolder.Value.State.CombatActivationAtInitiative == Phases.CurrentSubPhase.RequiredInitiative)
                 {
@@ -387,7 +390,8 @@ namespace SubPhases
                 {
                     Selection.ChangeActiveShip(shipToSkipCombat);
                     shipToSkipCombat.CallCombatActivation(
-                    delegate {
+                    delegate
+                    {
                         AfterSkippedCombatActivation(shipToSkipCombat);
                         shipToSkipCombat.CallCombatDeactivation(
                             delegate { SkipCombatByShips(shipsToSkipCombat, callback); }
@@ -412,7 +416,7 @@ namespace SubPhases
 
             Selection.DeselectThisShip();
             Selection.DeselectAnotherShip();
-            
+
             //TODO: From select target to select ship
         }
 
@@ -453,5 +457,4 @@ namespace SubPhases
             }
         }
     }
-
 }

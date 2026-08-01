@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 public partial class Die
 {
@@ -14,7 +12,7 @@ public partial class Die
     public bool IsUncancelable { get; set; }
     public bool IsAddedResult { get; set; }
 
-    private bool cannotBeModified { get; set; }
+    private bool cannotBeModified;
     public bool CannotBeModified
     {
         get
@@ -46,6 +44,13 @@ public partial class Die
                 Model.transform.Find("DiceOverlay/LockedSprite").gameObject.SetActive(isActive);
             }
         }
+    }
+
+    public void ShowRerolledLock(bool isActive)
+    {
+        IsShowRerolledLock = isActive;
+        TurnOnDiceOverlay();
+        Model.transform.Find("DiceOverlay/LockedSprite").gameObject.SetActive(isActive);
     }
 
     private void TurnOnDiceOverlay()

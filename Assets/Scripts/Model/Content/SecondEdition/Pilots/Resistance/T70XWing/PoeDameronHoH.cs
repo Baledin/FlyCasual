@@ -106,21 +106,27 @@ namespace Abilities.SecondEdition
 
         private void PerformAction(object sender, System.EventArgs e)
         {
-            Selection.ThisShip.BeforeActionIsPerformed += PayChargeCost;
+            if (HostShip.State.Charges >= 2) {
+                Selection.ThisShip.BeforeActionIsPerformed += PayChargeCost;
 
-            List<GenericAction> actions = Selection.ThisShip.GetAvailableActions();
-            List<GenericAction> whiteActionBarActionsAsRed = actions
-                .Where(n => n.Color == Actions.ActionColor.White)
-                .Select(n => n.AsRedAction)
-                .ToList();
+                List<GenericAction> actions = Selection.ThisShip.GetAvailableActions();
+                List<GenericAction> whiteActionBarActionsAsRed = actions
+                    .Where(n => n.Color == Actions.ActionColor.White)
+                    .Select(n => n.AsRedAction)
+                    .ToList();
 
-            Selection.ThisShip.AskPerformFreeAction(
-                whiteActionBarActionsAsRed,
-                CleanUp,
-                HostShip.PilotInfo.PilotName,
-                "After a friendly ship performs an action, Poe Dameron may spend 2 Charges to allow that ship to perform a white action, treating it as red",
-                HostShip
-            );
+                Selection.ThisShip.AskPerformFreeAction(
+                    whiteActionBarActionsAsRed,
+                    CleanUp,
+                    HostShip.PilotInfo.PilotName,
+                    "After a friendly ship performs an action, Poe Dameron may spend 2 Charges to allow that ship to perform a white action, treating it as red",
+                    HostShip
+                );
+            }
+            else
+            {
+                Triggers.FinishTrigger();
+            }
         }
 
         private void PayChargeCost(GenericAction action, ref bool isFreeAction)

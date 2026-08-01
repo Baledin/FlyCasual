@@ -23,10 +23,10 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(241, 0),
-                new Vector2(125, 125)
+                new Vector2(301, 2),
+                new Vector2(148, 148)
             );
-        }        
+        }
     }
 }
 
@@ -40,7 +40,7 @@ namespace Abilities.SecondEdition
         {
             GenericShip.OnMovementFinishSuccessfullyGlobal += CheckAbilityManeuver;
             GenericShip.OnActionIsPerformedGlobal += CheckAbilityAction;
-            
+
         }
 
         public override void DeactivateAbility()
@@ -49,12 +49,11 @@ namespace Abilities.SecondEdition
             GenericShip.OnActionIsPerformedGlobal -= CheckAbilityAction;
         }
 
-
         private void CheckAbilityManeuver(GenericShip ship)
         {
             if (HostShip.State.Force > 0
                 && ship != HostShip
-                && ship.GetLastManeuverColor() == Movement.MovementComplexity.Purple 
+                && ship.GetLastManeuverColor() == Movement.MovementComplexity.Purple
                 && ship.Owner == HostShip.Owner
                 && ship.GetRangeToShip(HostShip) <= 2)
             {
@@ -62,12 +61,11 @@ namespace Abilities.SecondEdition
             }
         }
 
-
         private void CheckAbilityAction(GenericAction action)
         {
             if (HostShip.State.Force > 0
                 && action.HostShip != HostShip
-                && action.Color == ActionColor.Purple 
+                && action.Color == ActionColor.Purple
                 && action.HostShip.Owner == HostShip.Owner
                 && action.HostShip.GetRangeToShip(HostShip) <= 2)
             {

@@ -34,14 +34,14 @@ namespace Abilities.SecondEdition
         public override void ActivateAbility()
         {
             HostShip.OnGetAvailableBoostTemplates += ChangeBoostTemplates;
-            HostShip.OnGetAvailableBarrelRollTemplates += ChangeBarrelRollTemplates;
+            HostShip.OnGetAvailableBarrelRollActionTemplates += ChangeBarrelRollTemplates;
             HostShip.OnActionIsPerformed += CheckCost;
         }
 
         public override void DeactivateAbility()
         {
             HostShip.OnGetAvailableBoostTemplates -= ChangeBoostTemplates;
-            HostShip.OnGetAvailableBarrelRollTemplates -= ChangeBarrelRollTemplates;
+            HostShip.OnGetAvailableBarrelRollActionTemplates -= ChangeBarrelRollTemplates;
             HostShip.OnActionIsPerformed -= CheckCost;
         }
 

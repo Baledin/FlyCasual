@@ -176,7 +176,7 @@ namespace SubPhases
 
         protected virtual void GenerateListOfAvailableTemplates()
         {
-            List<ManeuverTemplate> allowedTemplates = Selection.ThisShip.GetAvailableBarrelRollTemplates(HostAction);
+            List<ManeuverTemplate> allowedTemplates = Selection.ThisShip.GetAvailableBarrelRollActionTemplates(HostAction);
 
             foreach (ManeuverTemplate barrelRollTemplate in allowedTemplates)
             {
@@ -711,11 +711,11 @@ namespace SubPhases
             progressCurrent += progressStep;
 
             TheShip.SetPosition(Vector3.MoveTowards(TheShip.GetPosition(), TemporaryShipBase.transform.position, progressStep));
+            TheShip.SetRotationHelper2Angles(new Vector3(0, progressCurrent / progressTarget * (plannedRotation - initialRotation), 0));
 
             if (!IsTractorBeamBarrelRoll && !TheShip.IsLandedModel)
             {
                 TheShip.RotateModelDuringBarrelRoll(progressCurrent / progressTarget, (Direction == Direction.Left) ? -1 : 1);
-                TheShip.SetRotationHelper2Angles(new Vector3(0, progressCurrent / progressTarget * (plannedRotation - initialRotation), 0));
                 TheShip.MoveUpwards(progressCurrent / progressTarget);
             }
 

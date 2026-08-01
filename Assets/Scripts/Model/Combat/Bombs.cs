@@ -42,7 +42,7 @@ namespace Bombs
         public static bool DetonationIsAllowed { get; set; }
         public static ManeuverTemplate LastManeuverTemplateUsed { get; set; }
 
-        private static List<Vector3> generatedBombPoints = new List<Vector3>();
+        private static readonly List<Vector3> generatedBombPoints = new();
         private static Dictionary<GenericDeviceGameObject, GenericBomb> bombsList;
 
         public delegate void EventHandlerBool(ref bool flag);
@@ -84,8 +84,7 @@ namespace Bombs
             {
                 if (!bombsList.ContainsKey(bombObject)) bombsList.Add(bombObject, bombUpgrade);
 
-                MeshCollider collider = bombObject.transform.Find("Model").GetComponent<MeshCollider>();
-                if (collider != null) Board.Objects.Add(collider);
+                if (bombObject.transform.Find("Model").TryGetComponent<MeshCollider>(out MeshCollider collider)) Board.Objects.Add(collider);
             }
 
             BombsManager.CurrentBombObject = bombObjects.FirstOrDefault();
@@ -96,8 +95,7 @@ namespace Bombs
         {
             bombsList.Remove(bombObject);
 
-            MeshCollider collider = bombObject.transform.Find("Model").GetComponent<MeshCollider>();
-            if (collider != null) Board.Objects.Remove(collider);
+            if (bombObject.transform.Find("Model").TryGetComponent<MeshCollider>(out MeshCollider collider)) Board.Objects.Remove(collider);
         }
 
         public static GenericBomb GetBombByObject(GenericDeviceGameObject bombObject)
@@ -112,7 +110,7 @@ namespace Bombs
 
         public static List<GenericShip> GetShipsInRange(GenericDeviceGameObject bombObject, int range)
         {
-            List<GenericShip> result = new List<GenericShip>();
+            List<GenericShip> result = new();
 
             foreach (GenericShip ship in Roster.AllShips.Select(n => n.Value))
             {
@@ -124,7 +122,7 @@ namespace Bombs
 
         public static List<GenericBomb> GetBombsInRange(GenericShip ship)
         {
-            List<GenericBomb> result = new List<GenericBomb>();
+            List<GenericBomb> result = new();
 
             foreach (KeyValuePair<GenericDeviceGameObject, GenericBomb> bombHolder in bombsList)
             {
@@ -139,11 +137,11 @@ namespace Bombs
 
         public static bool IsDeviceInArc(GenericShip ship, GenericDeviceGameObject bombObject, GenericArc Arc, IShipWeapon Weapon)
         {
-            if (Arc.CannotBeUsedForAttackThisRound)  return false;
+            if (Arc.CannotBeUsedForAttackThisRound) return false;
 
             int maxRange = Weapon.WeaponInfo.MaxRange;
 
-            ColliderDistanceInfo distInfo = new ColliderDistanceInfo(ship, bombObject);
+            ColliderDistanceInfo distInfo = new(ship, bombObject);
 
             Vector3 bombPoint = bombObject.Collider.ClosestPoint(ship.Collider.transform.position);
             Vector3 shipPoint = ship.Collider.ClosestPoint(bombObject.Collider.transform.position);
@@ -152,7 +150,7 @@ namespace Bombs
 
             if (Arc.Limits != null && Arc.Limits.Count > 0)
             {
-                float signedAngle = (float)Math.Round(Vector3.SignedAngle(bombPoint-shipPoint, ship.GetFrontFacing(), Vector3.down), 2);
+                float signedAngle = (float)Math.Round(Vector3.SignedAngle(bombPoint - shipPoint, ship.GetFrontFacing(), Vector3.down), 2);
                 if (Arc.Facing != ArcFacing.Rear && Arc.Facing != ArcFacing.FullRear)
                 {
                     if (signedAngle < Arc.Limits.First().Value || signedAngle > Arc.Limits.Last().Value) return false;
@@ -187,12 +185,13 @@ namespace Bombs
 
         public static List<Vector3> GetBombPoints(GenericBomb bomb)
         {
-            List<Vector3> globalPoints = new List<Vector3>();
+            List<Vector3> globalPoints = new();
             foreach (Vector3 relativePoint in GetBombPointsRelative())
             {
                 Vector3 globalBombPoint = bomb.CurrentBombObjects.First().transform.TransformPoint(relativePoint);
                 globalPoints.Add(globalBombPoint);
             }
+
             return globalPoints;
         }
 
@@ -217,7 +216,7 @@ namespace Bombs
         }
 
         public static void CallGetPermissionToDetonateTrigger(Action callback)
-        {            
+        {
             DetonationIsAllowed = true;
             ToggleReadyToDetonateHighLight(true);
 
@@ -261,7 +260,7 @@ namespace Bombs
                     Name = "Ask which bomb to drop",
                     TriggerType = TriggerTypes.OnMovementActivationStart,
                     TriggerOwner = ship.Owner.PlayerNo,
-                    EventHandler = (object sender, EventArgs e) => CreateAskBombDropSubPhase((sender as GenericShip)),
+                    EventHandler = (sender, e) => CreateAskBombDropSubPhase((sender as GenericShip)),
                     Sender = ship
                 });
             }
@@ -279,9 +278,9 @@ namespace Bombs
                 Triggers.RegisterTrigger(new Trigger()
                 {
                     Name = "Ask which bomb to drop",
-                    TriggerType = TriggerTypes.OnMovementActivationStart,
+                    TriggerType = triggerType,
                     TriggerOwner = ship.Owner.PlayerNo,
-                    EventHandler = (object sender, EventArgs e) => CreateAskBombDropSubPhase((sender as GenericShip), subType, type, onlyDrop),
+                    EventHandler = (sender, e) => CreateAskBombDropSubPhase((sender as GenericShip), subType, type, onlyDrop),
                     Sender = ship
                 });
             }
@@ -345,7 +344,8 @@ namespace Bombs
         {
             if (CurrentDevice != null)
             {
-                Selection.ThisShip.CallBeforeDeviceWillBeDropped(delegate (){
+                Selection.ThisShip.CallBeforeDeviceWillBeDropped(delegate ()
+                {
                     if (onlyDrop || Selection.ThisShip.GetAvailableDeviceLaunchTemplates(CurrentDevice).Count == 0)
                     {
                         DropDevice();
@@ -374,6 +374,7 @@ namespace Bombs
             {
                 subphase.AddDecision("Drop", (o, e) => { DecisionSubPhase.ConfirmDecisionNoCallback(); DropDevice(); });
             }
+
             subphase.AddDecision("Launch", LaunchBomb);
 
             subphase.DescriptionShort = "Select a way how to use the device";
@@ -420,10 +421,10 @@ namespace Bombs
         public static List<GenericUpgrade> GetBombsToDrop(GenericShip ship, UpgradeSubType subType = UpgradeSubType.None, Type type = null)
         {
             return ship.UpgradeBar.GetUpgradesOnlyFaceup()
-                .Where(n => typeof(GenericBomb).IsAssignableFrom(n.GetType()) || n.UpgradeInfo.SubType == UpgradeSubType.Remote)
-                .Where(n => !n.State.UsesCharges|| n.State.Charges >= n.UpgradeInfo.ChargesCost)
+                .Where(n => typeof(GenericBomb).IsAssignableFrom(n.GetType()) || n.UpgradeInfo.SubType == subType)
+                .Where(n => !n.State.UsesCharges || n.State.Charges >= n.UpgradeInfo.ChargesCost)
                 .Where(n => subType == UpgradeSubType.None || n.UpgradeInfo.SubType == subType)
-                .Where(n => type == null || n.GetType() == type).ToList();
+                .Where(n => type == null || n.UpgradeInfo.RemoteType == type).ToList();
         }
 
         public static bool HasBombsToDrop(GenericShip ship, UpgradeSubType subType = UpgradeSubType.None, Type type = null)

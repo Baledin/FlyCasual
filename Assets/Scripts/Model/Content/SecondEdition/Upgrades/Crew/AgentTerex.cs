@@ -29,7 +29,7 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.FirstOrder,
-                new Vector2(229, 1)
+                new Vector2(294, 0)
             );
         }
     }
@@ -54,7 +54,7 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.FirstOrder,
-                new Vector2(215, 0)
+                new Vector2(281, 0)
             );
         }
     }
@@ -232,7 +232,8 @@ namespace Abilities.SecondEdition
 
             foreach (GenericShip enemyShip in Selection.ThisShip.Owner.EnemyShips.Values)
             {
-                DistanceInfo distInfo = new DistanceInfo(Selection.ThisShip, enemyShip);
+                DistanceInfo distInfo = new(Selection.ThisShip, enemyShip);
+
                 if (distInfo.Range <= 3) result = 100;
             }
 
@@ -249,7 +250,6 @@ namespace Abilities.SecondEdition
 
 namespace SubPhases
 {
-
     public class AgentTerexCyborgActionSubPhase : SelectShipSubPhase
     {
         public GenericToken TokenToAssign { get; set; }
@@ -288,7 +288,8 @@ namespace SubPhases
 
         private bool FilterTargets(GenericShip ship)
         {
-            DistanceInfo distInfo = new DistanceInfo(Selection.ThisShip, ship);
+            DistanceInfo distInfo = new(Selection.ThisShip, ship);
+
             return distInfo.Range <= 3;
         }
 

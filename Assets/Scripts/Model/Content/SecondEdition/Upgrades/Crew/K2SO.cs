@@ -21,16 +21,16 @@ namespace UpgradesList.SecondEdition
                 cost: 6,
                 isLimited: true,
                 restriction: new FactionRestriction(Faction.Rebel),
-                addActions: new List<ActionInfo> { new ActionInfo(typeof(CalculateAction)), new ActionInfo(typeof(JamAction)) },
+                addActions: new List<ActionInfo> { new(typeof(CalculateAction)), new(typeof(JamAction)) },
                 abilityType: typeof(Abilities.SecondEdition.K2SOAbility),
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
             Avatar = new AvatarInfo(
                 Faction.Rebel,
-                new Vector2(233, 1)
+                new Vector2(300, 2)
             );
-        }        
+        }
     }
 
     public class K2SOXWA : K2SO
@@ -84,17 +84,18 @@ namespace Abilities.SecondEdition
         private int GetAiPriority(GenericShip ship)
         {
             //Prioritize high cost pilots that have planned a blue maneuver or are ionized
-            var priority = ship.PilotInfo.Cost;
+            int priority = ship.PilotInfo.Cost;
 
             if ((ship.AssignedManeuver != null && ship.AssignedManeuver.ColorComplexity == Movement.MovementComplexity.Easy) || ship.State.IsIonized)
                 priority += 200;
-            
+
             return priority;
         }
 
         private void AssignToken()
         {
             Messages.ShowInfo("K-2SO: " + TargetShip.PilotInfo.PilotName + " gains 1 calculate and 1 stress token");
+
             TargetShip.Tokens.AssignToken(typeof(CalculateToken), () =>
             {
                 TargetShip.Tokens.AssignToken(typeof(StressToken), SelectShipSubPhase.FinishSelection);

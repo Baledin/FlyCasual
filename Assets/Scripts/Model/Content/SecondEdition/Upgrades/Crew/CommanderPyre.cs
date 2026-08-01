@@ -29,10 +29,9 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.FirstOrder,
-                new Vector2(259, 1),
-                new Vector2(75, 75)
+                new Vector2(317, 2)
             );
-        }        
+        }
     }
 
     public class CommanderPyreXWA : CommanderPyre
@@ -91,7 +90,6 @@ namespace Abilities.SecondEdition
                 EventHandler = SelectTarget
             });
         }
-
 
         private void SelectTarget(object Sender, System.EventArgs e)
         {

@@ -24,10 +24,9 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(269, 3),
-                new Vector2(63, 63)
+                new Vector2(313, 3)
             );
-        }        
+        }
     }
 }
 
@@ -46,7 +45,7 @@ namespace Abilities.SecondEdition
                 DiceModificationType.Change,
                 1,
                 new List<DieSide> { DieSide.Blank },
-                DieSide.Focus, 
+                DieSide.Focus,
                 isGlobal: true
             );
         }
@@ -69,6 +68,5 @@ namespace Abilities.SecondEdition
         {
             RemoveDiceModification();
         }
-
     }
 }

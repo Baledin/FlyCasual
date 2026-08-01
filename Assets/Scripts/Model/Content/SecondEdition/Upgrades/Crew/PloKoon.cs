@@ -27,9 +27,10 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(235, 1)
+                new Vector2(297, 3),
+                new Vector2(147, 147)
             );
-        }        
+        }
     }
 }
 
@@ -132,7 +133,7 @@ namespace Abilities.SecondEdition
         {
             if (!Tools.IsFriendly(HostShip, ship)) return false;
 
-            DistanceInfo distInfo = new DistanceInfo(HostShip, ship);
+            DistanceInfo distInfo = new(HostShip, ship);
             if (distInfo.Range == 0
                 || HostShip.SectorsInfo.RangeToShipBySector(ship, Arcs.ArcType.Left) == 1
                 || HostShip.SectorsInfo.RangeToShipBySector(ship, Arcs.ArcType.Right) == 1

@@ -23,11 +23,9 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(269, 1),
-                new Vector2(50, 50)
+                new Vector2(329, 0),
+                new Vector2(75, 75)
             );
-
-            
         }
     }
 }
@@ -91,13 +89,13 @@ namespace Abilities.SecondEdition
 
         private bool IsRangeFrom0To3()
         {
-            DistanceInfo distInfo = new DistanceInfo(HostShip, Combat.Defender);
+            DistanceInfo distInfo = new(HostShip, Combat.Defender);
             return distInfo.Range < 4;
         }
 
         private bool IsAttackerInArc()
         {
-            ShotInfo shotInfo = new ShotInfo(HostShip, Combat.Attacker, HostShip.PrimaryWeapons);
+            ShotInfo shotInfo = new(HostShip, Combat.Attacker, HostShip.PrimaryWeapons);
             return shotInfo.InArc;
         }
     }
