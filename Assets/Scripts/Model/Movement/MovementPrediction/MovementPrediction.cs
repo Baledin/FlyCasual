@@ -19,6 +19,8 @@ namespace Movement
         public float SuccessfullMovementProgress { get; private set; }
         public bool IsOffTheBoard;
         public bool IsBumped { get { return ShipsBumped.Count != 0; } }
+        public bool IsBumpedSameTeam { get { return ShipsBumped.Any(v => Tools.IsSameTeam(Ship, v)); } }
+        public bool IsBumpedAnotherTeam { get { return ShipsBumped.Any(v => Tools.IsAnotherTeam(Ship, v)); } }
         public List<GenericShip> ShipsBumped = new();
         public List<GenericShip> ShipsBumpedOnTheEnd = new();
         public List<GenericRemote> RemotesOverlapped = new();

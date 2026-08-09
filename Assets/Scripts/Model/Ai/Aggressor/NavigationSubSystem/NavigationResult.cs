@@ -1,7 +1,5 @@
 ﻿using Movement;
 using Ship;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace AI.Aggressor
@@ -23,7 +21,8 @@ namespace AI.Aggressor
         public bool isOffTheBoardNextTurn;
         public bool isHitAsteroidNextTurn;
 
-        public bool isBumped;
+        public bool isBumpedEnemy;
+        public bool isBumpedFriendly; // or allied
 
         public GenericMovement movement;
 
@@ -52,7 +51,9 @@ namespace AI.Aggressor
             Priority -= obstaclesHit * 2000 * asteroidAvoidPriority;
             if (isHitAsteroidNextTurn) Priority -= 1000 * asteroidAvoidPriority;
 
-            if (isBumped) Priority -= 500;
+            if (isBumpedEnemy) Priority -= 500;
+
+            if (isBumpedFriendly) Priority -= 1000;
 
             if (Selection.ThisShip.Damage.HasCrit(typeof(DamageDeckCardSE.LooseStabilizer)) && movement.Bearing != ManeuverBearing.Straight)
             {
@@ -107,7 +108,8 @@ namespace AI.Aggressor
 
             if (isOffTheBoard) result += "OffBoard ";
             if (isLandedOnObstacle) result += "LandedOnObstacle ";
-            if (isBumped) result += "Bumped ";
+            if (isBumpedEnemy) result += "BumpedEnemy ";
+            if (isBumpedFriendly) result += "BumpedFriendly ";
             
 
             if (enemiesInShotRange > 0) result += "enemiesToShoot:" + enemiesInShotRange + " ";

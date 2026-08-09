@@ -136,24 +136,23 @@ namespace AI.Aggressor
                 movement.Initialize();
                 movement.IsSimple = true;
 
-                MovementPrediction prediction = new MovementPrediction(ship, movement);
+                MovementPrediction prediction = new(ship, movement);
                 prediction.CalculateOnlyFinalPositionIgnoringCollisions();
 
                 VirtualBoard.SetVirtualPositionInfo(ship, prediction.FinalPositionInfo, prediction.CurrentMovement.ToString());
                 VirtualBoard.SwitchToVirtualPosition(ship);
 
-                float minDistanceToEnemyShip, minDistanceToNearestEnemyInShotRange, minAngle;
-                int enemiesInShotRange;
-                ProcessHeavyGeometryCalculations(ship, out minDistanceToEnemyShip, out minDistanceToNearestEnemyInShotRange, out minAngle, out enemiesInShotRange);
+                ProcessHeavyGeometryCalculations(ship, out float minDistanceToEnemyShip, out float minDistanceToNearestEnemyInShotRange, out float minAngle, out int enemiesInShotRange);
 
-                NavigationResult result = new NavigationResult()
+                NavigationResult result = new()
                 {
                     movement = prediction.CurrentMovement,
                     distanceToNearestEnemy = minDistanceToEnemyShip,
                     distanceToNearestEnemyInShotRange = minDistanceToNearestEnemyInShotRange,
                     angleToNearestEnemy = minAngle,
                     enemiesInShotRange = enemiesInShotRange,
-                    isBumped = prediction.IsBumped,
+                    isBumpedEnemy = prediction.IsBumpedAnotherTeam,
+                    isBumpedFriendly = prediction.IsBumpedSameTeam,
                     isLandedOnObstacle = prediction.IsLandedOnAsteroid,
                     isOffTheBoard = prediction.IsOffTheBoard,
                     FinalPositionInfo = prediction.FinalPositionInfo
@@ -238,7 +237,7 @@ namespace AI.Aggressor
                 VirtualBoard.SwitchToRealPosition(ship);
 
                 bestPriority = VirtualBoard.Ships[ship].NavigationResults.Max(n => n.Value.Priority);
-                maneuverToCheck = VirtualBoard.Ships[ship].NavigationResults.Where(n => n.Value.Priority == bestPriority).First();
+                maneuverToCheck = VirtualBoard.Ships[ship].NavigationResults.First(n => n.Value.Priority == bestPriority);
 
                 GenericMovement movement = ShipMovementScript.MovementFromString(maneuverToCheck.Key);
 
@@ -246,7 +245,7 @@ namespace AI.Aggressor
                 movement.Initialize();
                 movement.IsSimple = true;
 
-                MovementPrediction prediction = new MovementPrediction(ship, movement);
+                MovementPrediction prediction = new(ship, movement);
                 yield return prediction.CalculateMovementPredicition();
 
                 VirtualBoard.SetVirtualPositionInfo(ship, prediction.FinalPositionInfo, prediction.CurrentMovement.ToString());
@@ -255,7 +254,8 @@ namespace AI.Aggressor
                 CurrentNavigationResult = new NavigationResult()
                 {
                     movement = prediction.CurrentMovement,
-                    isBumped = prediction.IsBumped,
+                    isBumpedEnemy = prediction.IsBumpedAnotherTeam,
+                    isBumpedFriendly = prediction.IsBumpedSameTeam,
                     isLandedOnObstacle = prediction.IsLandedOnAsteroid,
                     obstaclesHit = prediction.AsteroidsHit.Count,
                     isOffTheBoard = prediction.IsOffTheBoard,
@@ -312,13 +312,13 @@ namespace AI.Aggressor
             enemiesInShotRange = 0;
             foreach (GenericShip enemyShip in ship.Owner.EnemyShips.Values)
             {
-                DistanceInfo distInfo = new DistanceInfo(ship, enemyShip);
+                DistanceInfo distInfo = new(ship, enemyShip);
                 if (distInfo.MinDistance.DistanceReal < minDistanceToEnemyShip)
                 {
                     minDistanceToEnemyShip = distInfo.MinDistance.DistanceReal;
                 }
 
-                ShotInfo shotInfo = new ShotInfo(ship, enemyShip, ship.PrimaryWeapons.First());
+                ShotInfo shotInfo = new(ship, enemyShip, ship.PrimaryWeapons.First());
                 if (shotInfo.IsShotAvailable)
                 {
                     enemiesInShotRange++;
@@ -368,7 +368,7 @@ namespace AI.Aggressor
             movement.Initialize();
             movement.IsSimple = true;
 
-            MovementPrediction prediction = new MovementPrediction(ship, movement);
+            MovementPrediction prediction = new(ship, movement);
             yield return prediction.CalculateMovementPredicition();
 
             if (isTemporaryManeuverAdded)
