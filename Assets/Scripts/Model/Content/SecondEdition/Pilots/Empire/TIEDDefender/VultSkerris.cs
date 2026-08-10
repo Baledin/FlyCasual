@@ -49,7 +49,7 @@ namespace Ship
         {
             public VultSkerrisDefenderXWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 15;
+                (PilotInfo as PilotCardInfo25).Cost = 16;
                 (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
