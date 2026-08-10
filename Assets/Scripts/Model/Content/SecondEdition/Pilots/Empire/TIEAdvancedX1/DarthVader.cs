@@ -54,7 +54,7 @@ namespace Ship
             public DarthVaderXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 16;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 11;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                         UpgradeType.ForcePower,
