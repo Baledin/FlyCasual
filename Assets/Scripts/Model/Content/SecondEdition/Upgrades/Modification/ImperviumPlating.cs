@@ -18,6 +18,7 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(Abilities.SecondEdition.ImperviumPlatingAbility),
                 charges: 2
             );
+            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal };
         }
     }
 
