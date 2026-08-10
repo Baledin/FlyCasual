@@ -1,7 +1,8 @@
-﻿using Ship;
-using Upgrade;
+﻿using Content;
+using Ship;
 using System.Collections.Generic;
 using Tokens;
+using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
@@ -16,7 +17,17 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(Abilities.SecondEdition.FireControlSystemAbility),
                 seImageNumber: 25
             );
-        }        
+            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal };
+        }
+    }
+
+    public class FireControlSystemXWA : FireControlSystem
+    {
+        public FireControlSystemXWA() : base()
+        {
+            UpgradeInfo.Cost = 3;
+            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+        }
     }
 }
 
