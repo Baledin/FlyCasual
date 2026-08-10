@@ -40,13 +40,14 @@ namespace Ship
             public MajorVynderXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 11;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 16;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 19;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Talent,
                     UpgradeType.Sensor,
                     UpgradeType.Missile,
+                    UpgradeType.Modification,
                     UpgradeType.Modification,
                     UpgradeType.Configuration
                 };

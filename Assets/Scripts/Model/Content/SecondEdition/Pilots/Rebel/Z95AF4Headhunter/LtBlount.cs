@@ -37,8 +37,8 @@ namespace Ship.SecondEdition.Z95AF4Headhunter
     {
         public LtBlountXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 9;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 17;
+            (PilotInfo as PilotCardInfo25).Cost = 8;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

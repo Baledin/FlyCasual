@@ -6,7 +6,6 @@ using BoardTools;
 using Content;
 using Movement;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Tokens;
 using UnityEngine;
@@ -16,7 +15,6 @@ namespace Ship
 {
     public partial class GenericShip
     {
-
         public delegate void EventHandler();
         public delegate void EventHandlerInt(ref int data);
         public delegate void EventHandlerBool(ref bool data);
@@ -50,7 +48,8 @@ namespace Ship
         public delegate void EventHandlerTokenBool(GenericToken token, ref bool data);
         public delegate void EventHandlerShipTokenBool(GenericShip ship, GenericToken token, ref bool data);
         public delegate void EventHandlerBombDropTemplates(List<ManeuverTemplate> availableTemplates, GenericUpgrade upgrade);
-        public delegate void EventHandlerBarrelRollTemplates(List<ManeuverTemplate> availableTemplates, GenericAction action);
+        public delegate void EventHandlerBarrelRollTemplates(List<ManeuverTemplate> availableTemplates);
+        public delegate void EventHandlerBarrelRollActionTemplates(List<ManeuverTemplate> availableTemplates, GenericAction action);
         public delegate void EventHandlerDecloakTemplates(List<ManeuverTemplate> availableTemplates);
         public delegate void EventHandlerBoostTemplates(List<BoostMove> availableTemplates, GenericAction action);
         public delegate void EventHandlerRefString(ref string name);
@@ -73,12 +72,11 @@ namespace Ship
         public delegate void EventHandlerCoordinateData(ref CoordinateActionData coordinateActionData);
         public delegate void EventHandlerDamageCard(GenericDamageCard damageCard);
         public delegate void EventHandlerUpgradeRefInt(GenericUpgrade upgrade, ref int count);
+        public delegate void EventHandlerUpgradeRefBool(GenericUpgrade upgrade, ref bool isAllowed);
         public delegate void EventHandlerModifyDice(Die die, GenericAbility.DiceModificationType modType, DieSide newResult, ref bool isAllowed);
         public delegate void EventHandlerTrySelectDie(Die die, ref bool isAllowed);
         public event EventHandlerShip AfterStatsAreChanged;
         public event EventHandlerInt AfterGetMaxHull;
         public event EventHandlerTagsBool OnUpgradeEquipTagCheck;
-
     }
-
 }

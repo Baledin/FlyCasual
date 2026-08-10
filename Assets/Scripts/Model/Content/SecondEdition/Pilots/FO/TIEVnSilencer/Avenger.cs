@@ -42,7 +42,7 @@ namespace Ship.SecondEdition.TIEVnSilencer
         public AvengerXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 14;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 15;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 17;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Modification,

@@ -44,7 +44,7 @@ namespace Ship.SecondEdition.AttackShuttle
         public EzraBridgerXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 9;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 6;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.ForcePower,

@@ -20,8 +20,8 @@ namespace UpgradesList.SecondEdition
                 restriction: new FactionRestriction(Faction.Rebel)
             );
 
-            
-        }        
+
+        }
     }
 }
 
@@ -45,14 +45,14 @@ namespace Abilities.SecondEdition
         {
             if (!Tools.IsAnotherFriendly(HostShip, ship)) return;
             if (!ship.PilotInfo.IsLimited && !ship.UpgradeBar.HasUpgradeInstalled(typeof(Hopeful))) return;
-            
+
             DistanceInfo distanceInfo = new DistanceInfo(HostShip, ship);
             if (distanceInfo.Range > 3) return;
 
             RegisterAbilityTrigger(
                 TriggerTypes.OnShipIsDestroyed,
                 AskWhatToDo,
-                customTriggerName: $"{HostUpgrade.UpgradeInfo.Name} (ID: {HostShip.ShipId})"
+                customTriggerName: $"{HostUpgrade.UpgradeInfo.Name} ({HostShip.PilotInfo.PilotName})"
             );
         }
 

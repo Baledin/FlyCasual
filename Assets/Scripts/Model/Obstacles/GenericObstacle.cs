@@ -2,7 +2,6 @@
 using Ship;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Tokens;
 using UnityEngine;
 
@@ -14,7 +13,8 @@ namespace Obstacles
         public string ShortName { get; protected set; }
         public bool IsPlaced { get; set; }
         public GameObject ObstacleGO { get; set; }
-        public List<GenericToken> Tokens { get; private set; } = new List<GenericToken>();
+
+        public TokensManager Tokens { get; protected set; }
 
         private MeshCollider collider;
         public MeshCollider Collider => collider;
@@ -24,6 +24,7 @@ namespace Obstacles
         {
             Name = name;
             ShortName = shortName;
+            Tokens = new(this);
         }
 
         public abstract string GetTypeName { get; }
@@ -37,7 +38,7 @@ namespace Obstacles
                 ship.OnTryPerformAttack += DenyAttack;
             }
 
-            if (Editions.Edition.Current.RuleSet is Editions.RuleSets.RuleSet25)
+            if (Editions.Edition.Current.RuleSet is Editions.RuleSets.RuleSet25 && !Selection.ThisShip.IsIgnoreObstacles)
             {
                 Messages.ShowErrorToHuman(ship.PilotInfo.PilotName + " landed on an obstacle during movement, their action subphase is skipped");
                 Selection.ThisShip.IsSkipsActionSubPhase = true;
@@ -70,28 +71,24 @@ namespace Obstacles
 
         public void AssignToken(RedTargetLockToken token, Action callback)
         {
-            Tokens.Add(token);
-            //TODO: Show token on obstacle
+            //Tokens.Add(token);
+            Tokens.AssignToken(token, callback);
             callback();
         }
 
         public List<char> GetTargetLockLetterPairsOn(ITargetLockable targetShip)
         {
-            return Tokens
-                .Where(t => (t as RedTargetLockToken).OtherTargetLockTokenOwner == targetShip)
-                .Select(t => (t as RedTargetLockToken).Letter)
-                .ToList();
+            return Tokens.GetTargetLockLetterPairsOn(targetShip);
         }
 
         public GenericTargetLockToken GetAnotherToken(Type oppositeType, char letter)
         {
-            return Tokens.FirstOrDefault(t => (t as RedTargetLockToken).Letter == letter) as GenericTargetLockToken;
+            return Tokens.GetToken(oppositeType, letter) as GenericTargetLockToken;
         }
 
         public void RemoveToken(GenericToken token)
         {
-            Tokens.Remove(token);
-            //TODO: Hide token from obstacle
+            Tokens.GetAllTokens().Remove(token);
         }
 
         public abstract void AfterObstacleRoll(GenericShip ship, DieSide side, Action callback);
@@ -104,6 +101,11 @@ namespace Obstacles
                 Selection.ThisShip.CallCheckObstacleDenyAttack(this, ref result);
                 if (!result) stringList.Add(Selection.ThisShip.PilotInfo.PilotName + " landed on an obstacle and cannot attack");
             }
+        }
+
+        public TokensManager GetTokens()
+        {
+            return this.Tokens;
         }
     }
 }

@@ -33,7 +33,7 @@ namespace UpgradesList.SecondEdition
     {
         public TrajectorySimulatorXWA() : base()
         {
-            UpgradeInfo.Cost = 10;
+            UpgradeInfo.Cost = 8;
             UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
             UpgradeInfo.Limited = 2;
         }

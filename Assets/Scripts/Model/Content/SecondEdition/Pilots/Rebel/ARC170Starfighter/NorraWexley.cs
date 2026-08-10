@@ -43,7 +43,7 @@ namespace Ship.SecondEdition.ARC170Starfighter
             {
                 UpgradeType.Talent,
                 UpgradeType.Astromech,
-                UpgradeType.Gunner,
+                UpgradeType.Crew,
                 UpgradeType.Gunner,
                 UpgradeType.Modification,
                 UpgradeType.Torpedo

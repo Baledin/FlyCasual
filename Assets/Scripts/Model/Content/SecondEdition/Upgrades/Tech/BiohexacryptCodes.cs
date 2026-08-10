@@ -1,5 +1,6 @@
-﻿using ActionsList;
-using BoardTools;
+﻿using Abilities.SecondEdition;
+using ActionsList;
+using Content;
 using Ship;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,18 @@ namespace UpgradesList.SecondEdition
                     new FactionRestriction(Faction.FirstOrder),
                     new ActionBarRestriction(typeof(TargetLockAction))
                 ),
-                abilityType: typeof(Abilities.SecondEdition.BiohexacryptCodesAbility)
+                abilityType: typeof(BiohexacryptCodesAbility),
+                legalityInfo: new List<Legality>() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
+        }
+    }
+
+    public class BiohexacryptCodesXWA : BiohexacryptCodes
+    {
+        public BiohexacryptCodesXWA() : base()
+        {
+            UpgradeInfo.Cost = 2;
+            UpgradeInfo.LegalityInfo = new List<Legality>() { Legality.XWA };
         }
     }
 }

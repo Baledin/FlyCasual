@@ -1,5 +1,8 @@
-﻿using Content;
+﻿using Abilities.SecondEdition;
+using ActionsList.SecondEdition;
+using Content;
 using Ship;
+using SubPhases;
 using System;
 using System.Collections.Generic;
 using Upgrade;
@@ -15,8 +18,8 @@ namespace UpgradesList.SecondEdition
                 "Malice",
                 UpgradeType.ForcePower,
                 cost: 4,
-                restriction: new TagRestriction(Content.Tags.DarkSide),
-                abilityType: typeof(Abilities.SecondEdition.MaliceAbility),
+                restriction: new TagRestriction(Tags.DarkSide),
+                abilityType: typeof(MaliceAbility),
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
         }
@@ -40,25 +43,21 @@ namespace Abilities.SecondEdition
 
         public override void ActivateAbility()
         {
-            AddDiceModification(
-                HostUpgrade.UpgradeInfo.Name,
-                IsDiceModificationAvailable,
-                GetDiceModificationAiPriority,
-                DiceModificationType.Change,
-                1,
-                new List<DieSide>() { DieSide.Focus, DieSide.Success },
-                DieSide.Crit,
-                payAbilityCost: payForce
-            );
+            HostShip.OnGenerateDiceModifications += AddMaliceAction;
 
             GenericShip.OnFaceupCritCardReadyToBeDealtGlobal += CheckRecoverForce;
         }
 
         public override void DeactivateAbility()
         {
-            RemoveDiceModification();
+            HostShip.OnGenerateDiceModifications -= AddMaliceAction;
 
             GenericShip.OnFaceupCritCardReadyToBeDealtGlobal -= CheckRecoverForce;
+        }
+
+        private void AddMaliceAction(GenericShip ship)
+        {
+            ship.AddAvailableDiceModificationOwn(new MaliceDiceModification(HostUpgrade, this));
         }
 
         private void CheckRecoverForce(GenericShip ship, GenericDamageCard crit, EventArgs e)
@@ -72,44 +71,96 @@ namespace Abilities.SecondEdition
                 HostShip.State.RestoreForce(2);
             }
         }
+    }
+}
 
-        private void RecoverForce(object sender, EventArgs e)
+namespace ActionsList.SecondEdition
+{
+    public class MaliceDiceModification : GenericAction
+    {
+        readonly GenericUpgrade HostUpgrade;
+        readonly MaliceAbility HostAbility;
+
+        public MaliceDiceModification(GenericUpgrade upgrade, MaliceAbility maliceAbility)
         {
-            abilityUsed = false;
-            HostShip.State.RestoreForce(2);
-            Triggers.FinishTrigger();
+            HostUpgrade = upgrade;
+            Name = HostUpgrade.UpgradeInfo.Name;
+            DiceModificationName = HostUpgrade.UpgradeInfo.Name;
+            ImageUrl = HostUpgrade.ImageUrl;
+            HostAbility = maliceAbility;
         }
 
-        private bool IsDiceModificationAvailable()
-        {
-            return (Combat.AttackStep == CombatStep.Attack) && (HostShip.State.Force >= 1) && (Combat.Attacker == HostShip);
-        }
-
-        private void payForce(Action<bool> callback)
-        {
-            if (HostShip.State.Force > 1)
-            {
-                HostShip.State.SpendForce
-                (
-                    1,
-                    delegate
-                    {
-                        abilityUsed = true;
-                        callback(true);
-                    }
-                );
-            }
-            else
-            {
-                callback(false);
-            }
-        }
-
-        private int GetDiceModificationAiPriority()
+        public override int GetActionPriority()
         {
             int result = 0;
             if (Combat.DiceRollAttack.RegularSuccesses + Combat.DiceRollAttack.Focuses > 0) result = 100;
             return result;
+        }
+
+        public override bool IsDiceModificationAvailable()
+        {
+            return (Combat.AttackStep == CombatStep.Attack) && (HostShip.State.Force >= 1) && (Combat.Attacker == HostShip);
+        }
+
+        public override void ActionEffect(Action callback)
+        {
+            Triggers.RegisterTrigger(
+                new Trigger()
+                {
+                    Name = DiceModificationName,
+                    TriggerOwner = HostShip.Owner.PlayerNo,
+                    TriggerType = TriggerTypes.OnAbilityDirect,
+                    EventHandler = StartSubphase
+                }
+            );
+
+            Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, callback);
+        }
+
+        private void StartSubphase(object sender, EventArgs e)
+        {
+            MaliceDecisionSubPhase spendDiceSubPhase = Phases.StartTemporarySubPhaseNew<MaliceDecisionSubPhase>(Name, Triggers.FinishTrigger);
+            spendDiceSubPhase.HostUpgrade = HostUpgrade;
+            spendDiceSubPhase.HostAbility = HostAbility;
+            spendDiceSubPhase.ShowSkipButton = true;
+            spendDiceSubPhase.OnSkipButtonIsPressed = DecisionSubPhase.ConfirmDecision;
+            spendDiceSubPhase.DecisionOwner = HostShip.Owner;
+            spendDiceSubPhase.Start();
+        }
+    }
+}
+
+namespace SubPhases
+{
+    public class MaliceDecisionSubPhase : SpendDiceResultDecisionSubPhase
+    {
+        public GenericUpgrade HostUpgrade;
+        public MaliceAbility HostAbility;
+
+        protected override void PrepareDiceResultEffects()
+        {
+            DescriptionShort = "Malice";
+            DescriptionLong = "Select a die result to change to a Crit";
+            ImageSource = HostUpgrade;
+
+            if (HostUpgrade.HostShip.State.Force < 1) return;
+
+            AddSpendDiceResultEffect(DieSide.Focus, "Focus result", delegate { SpendResultToChange(DieSide.Focus); });
+            AddSpendDiceResultEffect(DieSide.Success, "Hit result", delegate { SpendResultToChange(DieSide.Success); });
+        }
+
+        private void SpendResultToChange(DieSide side)
+        {
+            HostUpgrade.HostShip.State.SpendForce
+            (
+                1,
+                delegate
+                {
+                    HostAbility.abilityUsed = true;
+                    Combat.DiceRollAttack.ChangeOne(side, DieSide.Crit);
+                    DecisionSubPhase.ConfirmDecision();
+                }
+            );
         }
     }
 }

@@ -208,7 +208,7 @@ namespace Abilities.SecondEdition
 
             if (!canBePlacedFront && !canBePlacedRear)
             {
-                Messages.ShowInfo("Buzz Droid Swarm cannot be relocated without overlapping");
+                Messages.ShowInfo($"Buzz Droid Swarm #{HostShip.ShipId} cannot be relocated without overlapping");
                 DealDamageToBothShips();
             }
             else if (canBePlacedFront && canBePlacedRear)
@@ -234,7 +234,7 @@ namespace Abilities.SecondEdition
             );
 
             subphase.DescriptionShort = "Buzz Droids Swarm";
-            subphase.DescriptionLong = "After an enemy ship moves through or overlaps you, relocate to its front or rear guides";
+            subphase.DescriptionLong = $"Buzz Droids Swarm #{HostShip.ShipId}: After an enemy ship moves through or overlaps you, relocate to its front or rear guides";
             subphase.ImageSource = HostShip;
 
             subphase.AddDecision("Front", delegate { RelocateToFrontGuidesAndFinish(DecisionSubPhase.ConfirmDecision); }, isCentered: true);
@@ -250,14 +250,14 @@ namespace Abilities.SecondEdition
 
         private void RelocateToRearGuidesAndFinish(Action callback)
         {
-            Messages.ShowInfo("Buzz Droid Swarm is relocated to rear guides");
+            Messages.ShowInfo($"Buzz Droid Swarm #{HostShip.ShipId} is relocated to rear guides");
             RelocateToRearGuides();
             callback();
         }
 
         private void RelocateToFrontGuidesAndFinish(Action callback)
         {
-            Messages.ShowInfo("Buzz Droid Swarm is relocated to front guides");
+            Messages.ShowInfo($"Buzz Droid Swarm #{HostShip.ShipId} is relocated to front guides");
             RelocateToFrontGuides();
             callback();
         }

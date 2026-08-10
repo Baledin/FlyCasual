@@ -1,7 +1,6 @@
-﻿using Ship;
-using Upgrade;
+using ActionsList;
 using UnityEngine;
-using BoardTools;
+using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
@@ -32,23 +31,21 @@ namespace Abilities.SecondEdition
 {
     public class ZebOrreliosCrewAbility : GenericAbility
     {
-
         public override void ActivateAbility()
         {
-            GenericShip.OnUpdateWeaponRangeGlobal += AllowRange0Primaries;
+            Rules.DiceModification.OnAllowRangeZeroAttackModifications += AllowRange0FocusModification;
         }
 
         public override void DeactivateAbility()
         {
-            GenericShip.OnUpdateWeaponRangeGlobal -= AllowRange0Primaries;
+            Rules.DiceModification.OnAllowRangeZeroAttackModifications -= AllowRange0FocusModification;
         }
 
-        private void AllowRange0Primaries(IShipWeapon weapon, ref int minRange, ref int maxRange, GenericShip target)
+        private void AllowRange0FocusModification(GenericAction action, ref bool allowed)
         {
-            if (weapon.WeaponType == WeaponTypes.PrimaryWeapon && (weapon.HostShip == HostShip || target == HostShip))
-            {
-                minRange = 0;
-            }
+            allowed = allowed ||
+                action is FocusAction &&
+                (Combat.Attacker == HostShip || Combat.Defender == HostShip);
         }
     }
 }

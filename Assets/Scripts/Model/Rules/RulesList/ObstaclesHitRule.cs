@@ -18,7 +18,16 @@ namespace RulesList
             if (!RuleIsInitialized)
             {
                 GenericShip.OnPositionFinishGlobal += CheckHits;
+                Phases.Events.OnPlanningPhaseStart -= ResetObstaclesProcessed;
                 RuleIsInitialized = true;
+            }
+        }
+
+        public void ResetObstaclesProcessed()
+        {
+            foreach (GenericShip ship in Roster.AllShips.Values)
+            {
+                ship.ObstaclesHitProcessed.Clear();
             }
         }
 
@@ -26,13 +35,11 @@ namespace RulesList
         {
             if (ship.IsHitObstacles)
             {
-                List<GenericObstacle> ProcessedObstacles = new();
-
                 foreach (GenericObstacle obstacle in ship.ObstaclesHit)
                 {
                     if (ship.IgnoreObstaclesList.Contains(obstacle)) continue;
 
-                    if (ProcessedObstacles.Contains(obstacle)) continue;
+                    if (ship.ObstaclesHitProcessed.Contains(obstacle)) continue;
 
                     // If ship started on an obstacle and is no longer on the obstacle after moving, do not process
                     if (ship.PreviousObstaclesLanded.Contains(obstacle) && !ship.ObstaclesLanded.Contains(obstacle)) continue;
@@ -45,7 +52,7 @@ namespace RulesList
                         EventHandler = delegate { obstacle.OnHit(ship); }
                     });
 
-                    ProcessedObstacles.Add(obstacle);
+                    ship.ObstaclesHitProcessed.Add(obstacle);
                 }
             }
         }

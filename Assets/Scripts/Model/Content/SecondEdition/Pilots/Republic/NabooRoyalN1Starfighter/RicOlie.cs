@@ -49,7 +49,8 @@ namespace Ship
                     UpgradeType.Astromech,
                     UpgradeType.Sensor,
                     UpgradeType.Modification,
-                    UpgradeType.Torpedo,
+                    UpgradeType.Tech,
+                    UpgradeType.Torpedo
                 };
 
             }

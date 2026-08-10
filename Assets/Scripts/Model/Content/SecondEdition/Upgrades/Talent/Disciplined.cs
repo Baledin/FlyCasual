@@ -19,9 +19,7 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(Abilities.SecondEdition.DisciplinedAbility),
                 restriction: new FactionRestriction(Faction.Imperial)
             );
-
-            
-        }        
+        }
     }
 }
 
@@ -45,14 +43,14 @@ namespace Abilities.SecondEdition
         {
             if (!Tools.IsAnotherFriendly(HostShip, ship)) return;
             if (!ship.PilotInfo.IsLimited && !ship.UpgradeBar.HasUpgradeInstalled(typeof(Disciplined))) return;
-            
+
             DistanceInfo distanceInfo = new DistanceInfo(HostShip, ship);
             if (distanceInfo.Range > 3) return;
 
             RegisterAbilityTrigger(
                 TriggerTypes.OnShipIsDestroyed,
                 AskWhatToDo,
-                customTriggerName: $"{HostUpgrade.UpgradeInfo.Name} (ID: {HostShip.ShipId})"
+                customTriggerName: $"{HostUpgrade.UpgradeInfo.Name} ({HostShip.PilotInfo.PilotName})"
             );
         }
 

@@ -14,7 +14,7 @@ Which version did the bug occur in (use version from Main Menu, please do not sa
 Yes/No
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear and concise description of what the bug is. Please include if this is limited to the AI taking an action or if it affects the player as well.
 
 **To Reproduce**
 Steps to reproduce the behavior:

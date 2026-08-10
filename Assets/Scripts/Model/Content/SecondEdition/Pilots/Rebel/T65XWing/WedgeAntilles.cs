@@ -1,8 +1,5 @@
-﻿using Conditions;
-using Content;
-using Ship;
+﻿using Content;
 using System.Collections.Generic;
-using Tokens;
 using Upgrade;
 
 namespace Ship.SecondEdition.T65XWing
@@ -74,58 +71,20 @@ namespace Abilities.SecondEdition
             HostShip.OnAttackStartAsAttacker -= AddWedgeAntillesAbility;
         }
 
-        public void AddWedgeAntillesAbility()
+        protected void AddWedgeAntillesAbility()
         {
-            BoardTools.DistanceInfo distanceInfo = new BoardTools.DistanceInfo(HostShip, Combat.Defender);
-            if (distanceInfo.Range > 0)
-            {
-                WedgeAntillesCondition condition = new WedgeAntillesCondition(Combat.Defender, HostShip);
-                Combat.Defender.Tokens.AssignCondition(condition);
-            }
-        }
-    }
-}
+            if (Combat.ShotInfo.Range < 1) return;
 
-namespace Conditions
-{
-    public class WedgeAntillesCondition : GenericToken
-    {
-        bool AgilityWasDecreased = false;
-
-        public WedgeAntillesCondition(GenericShip host, GenericShip source) : base(host)
-        {
-            Name = ImageName = "Debuff Token";
-            TooltipType = source.GetType();
-            Temporary = false;
+            Combat.Defender.AfterGotNumberOfDefenceDice += ReduceDefenseDice;
         }
 
-        public override void WhenAssigned()
+        protected void ReduceDefenseDice(ref int count)
         {
-            if (Host.State.Agility != 0)
-            {
-                AgilityWasDecreased = true;
+            Combat.Defender.AfterGotNumberOfDefenceDice -= ReduceDefenseDice;
 
-                Messages.ShowInfo("Wedge Antilles: The defender's agility has been decreased by 1");
-                Host.ChangeAgilityBy(-1);
-            }
+            Messages.ShowInfo($"{HostShip.PilotInfo.PilotName}: The defender's defense dice have been decreased by 1.");
 
-            Host.OnAttackFinishAsDefender += RemoveWedgeAntillesAbility;
-        }
-
-        public void RemoveWedgeAntillesAbility(GenericShip ship)
-        {
-            Host.Tokens.RemoveCondition(this);
-        }
-
-        public override void WhenRemoved()
-        {
-            if (AgilityWasDecreased)
-            {
-                Messages.ShowInfo("Wedge Antilles: The defender's agility has been restored");
-                Host.ChangeAgilityBy(+1);
-            }
-
-            Host.OnAttackFinishAsDefender -= RemoveWedgeAntillesAbility;
+            count--;
         }
     }
 }

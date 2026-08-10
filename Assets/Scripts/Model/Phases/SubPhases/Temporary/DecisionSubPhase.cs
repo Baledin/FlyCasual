@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using Actions;
+using GameCommands;
+using GameModes;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Linq;
-using GameModes;
-using GameCommands;
-using Actions;
 
 namespace SubPhases
 {
@@ -72,8 +71,9 @@ namespace SubPhases
 
         private GameObject DecisionPanel;
         private GameObject ButtonsHolder;
-        protected List<Decision> decisions = new List<Decision>();
-        public string DefaultDecisionName;
+        protected List<Decision> decisions = new();
+        private string defaultDecisionName;
+        public string DefaultDecisionName { get { return defaultDecisionName ?? decisions.FirstOrDefault().Name; } set { defaultDecisionName = value; } }
         public Players.GenericPlayer DecisionOwner;
         public bool ShowSkipButton;
         public DecisionViewTypes DecisionViewType = DecisionViewTypes.TextButtons;
@@ -83,7 +83,7 @@ namespace SubPhases
         public bool WasDecisionButtonPressed;
         public bool IsForced;
         public bool DecisionWasPreparedAndShown;
-        public Vector2 ImagesDamageCardSize = new Vector2(194, 300);
+        public Vector2 ImagesDamageCardSize = new(194, 300);
 
         public override void Start()
         {
@@ -121,6 +121,7 @@ namespace SubPhases
             {
                 newName = name + " #" + counter++;
             }
+
             decisions.Add(new Decision(newName, call, tooltip, count, color, isCentered));
 
             return newName;
@@ -134,6 +135,7 @@ namespace SubPhases
             {
                 newName = name + " #" + counter++;
             }
+
             decisions.Find(n => n.Name == newName).AddTooltip(imageUrl);
 
             return newName;
@@ -146,7 +148,7 @@ namespace SubPhases
 
         public static GameCommand GenerateDecisionCommand(string decisionName)
         {
-            JSONObject parameters = new JSONObject();
+            JSONObject parameters = new();
             decisionName = decisionName.Replace("\"", "\\\"");
             parameters.AddField("name", decisionName);
 
@@ -172,7 +174,7 @@ namespace SubPhases
                 if (decision == null)
                 {
                     string alldecisions = null;
-                    foreach (var singleDecision in (Phases.CurrentSubPhase as DecisionSubPhase).GetDecisions())
+                    foreach (Decision singleDecision in (Phases.CurrentSubPhase as DecisionSubPhase).GetDecisions())
                     {
                         alldecisions += singleDecision.Name + " ";
                     }
@@ -208,7 +210,7 @@ namespace SubPhases
                 int rowsUsed = 0;
                 int currentColumn = 1;
 
-                foreach (var decision in decisions)
+                foreach (Decision decision in decisions)
                 {
                     GameObject prefab = null;
 
@@ -280,8 +282,10 @@ namespace SubPhases
                             }
 
                             EventTrigger trigger = button.AddComponent<EventTrigger>();
-                            EventTrigger.Entry entry = new EventTrigger.Entry();
-                            entry.eventID = EventTriggerType.PointerClick;
+                            EventTrigger.Entry entry = new()
+                            {
+                                eventID = EventTriggerType.PointerClick
+                            };
                             entry.callback.AddListener(
                                 (data) => { DecisionButtonWasPressed(decision, button); }
                             );
@@ -376,10 +380,7 @@ namespace SubPhases
 
                 ButtonsHolder.transform.localPosition = new Vector2(-ButtonsHolder.GetComponent<RectTransform>().sizeDelta.x / 2, -185);
 
-                if (DecisionOwner == null)
-                {
-                    DecisionOwner = Roster.GetPlayer(Phases.CurrentPhasePlayer);
-                }
+                DecisionOwner ??= Roster.GetPlayer(Phases.CurrentPhasePlayer);
                 RequiredPlayer = DecisionOwner.PlayerNo;
                 Roster.HighlightPlayer(RequiredPlayer);
 
@@ -519,7 +520,5 @@ namespace SubPhases
                 }
             }
         }
-
     }
-
 }

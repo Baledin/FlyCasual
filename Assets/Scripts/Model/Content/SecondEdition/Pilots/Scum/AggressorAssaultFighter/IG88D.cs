@@ -52,7 +52,7 @@ namespace Ship
         {
             public IG88DXWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 15;
+                (PilotInfo as PilotCardInfo25).Cost = 14;
                 (PilotInfo as PilotCardInfo25).LoadoutValue = 16;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             }

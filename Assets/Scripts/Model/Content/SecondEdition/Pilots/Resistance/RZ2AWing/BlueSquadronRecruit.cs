@@ -32,7 +32,7 @@ namespace Ship.SecondEdition.RZ2AWing
         public BlueSquadronRecruitXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 8;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 3;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 4;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Talent,

@@ -13,12 +13,12 @@ namespace Ship
 {
     public partial class GenericShip : ITargetLockable
     {
-        private List<GenericAction> AvailableActionsList = new List<GenericAction>();
-        private List<GenericAction> AvailableFreeActionsList = new List<GenericAction>();
-        private List<GenericAction> AlreadyExecutedActions = new List<GenericAction>();
+        private List<GenericAction> AvailableActionsList = new();
+        private List<GenericAction> AvailableFreeActionsList = new();
+        private List<GenericAction> AlreadyExecutedActions = new();
 
-        private List<GenericAction> AvailableDiceModifications = new List<GenericAction>();
-        private List<GenericAction> AlreadyUsedDiceModifications = new List<GenericAction>();
+        private List<GenericAction> AvailableDiceModifications = new();
+        private List<GenericAction> AlreadyUsedDiceModifications = new();
 
         public List<GenericAction> PlannedLinkedActions;
 
@@ -80,6 +80,7 @@ namespace Ship
         public EventHandlerShipTokenBool BeforeRemovingTokenInEndPhase;
         public static EventHandlerShipTokenBool BeforeRemovingTokenInEndPhaseGlobal;
 
+        public event EventHandler OnBeforeDecloak;
         public event EventHandler OnDecloak;
         public event EventHandler OnSlam;
 
@@ -112,12 +113,12 @@ namespace Ship
         {
             AvailableActionsList = new List<GenericAction>();
 
-            foreach (var action in ActionBar.AllActions)
+            foreach (GenericAction action in ActionBar.AllActions)
             {
                 AddAvailableAction(action);
             }
 
-            if (OnGenerateActions != null) OnGenerateActions(this);
+            OnGenerateActions?.Invoke(this);
         }
 
         public List<GenericAction> GetAvailableActions()
@@ -142,7 +143,7 @@ namespace Ship
 
         public List<GenericAction> GetAvailableActionsAsRed()
         {
-            List<GenericAction> redActions = new List<GenericAction>();
+            List<GenericAction> redActions = new();
 
             GenerateAvailableActionsList();
 
@@ -156,7 +157,7 @@ namespace Ship
 
         public List<GenericAction> GetAvailableActionsWhiteOnlyAsRed()
         {
-            List<GenericAction> redActions = new List<GenericAction>();
+            List<GenericAction> redActions = new();
 
             GenerateAvailableActionsList();
 
@@ -175,23 +176,23 @@ namespace Ship
 
         public void CallMovementActivationStart(Action callBack)
         {
-            if (OnMovementActivationStart != null) OnMovementActivationStart(this);
+            OnMovementActivationStart?.Invoke(this);
 
-            if (OnMovementActivationStartGlobal != null) OnMovementActivationStartGlobal(this);
+            OnMovementActivationStartGlobal?.Invoke(this);
 
             Triggers.ResolveTriggers(TriggerTypes.OnMovementActivationStart, callBack);
         }
 
         public void CallMovementActivationFinish(Action callback)
         {
-            if (OnMovementActivationFinish != null) OnMovementActivationFinish(this);
+            OnMovementActivationFinish?.Invoke(this);
 
             Triggers.ResolveTriggers(TriggerTypes.OnMovementActivationFinish, callback);
         }
 
         public void CallOnActionDecisionSubphaseEnd(Action callback)
         {
-            if (OnActionDecisionSubphaseEnd != null) OnActionDecisionSubphaseEnd(this);
+            OnActionDecisionSubphaseEnd?.Invoke(this);
 
             Triggers.ResolveTriggers(TriggerTypes.OnActionDecisionSubPhaseEnd, callback);
         }
@@ -240,21 +241,21 @@ namespace Ship
         public void GenerateAvailableFreeActionsList(List<GenericAction> freeActions)
         {
             AvailableFreeActionsList = new List<GenericAction>();
-            foreach (var action in freeActions)
+            foreach (GenericAction action in freeActions)
             {
                 AddAvailableFreeAction(action);
             }
 
-            if (OnGenerateActions != null) OnGenerateActions(this);
+            OnGenerateActions?.Invoke(this);
         }
 
         public bool CanPerformAction(GenericAction action)
         {
             bool result = action.IsActionAvailable();
 
-            if (OnTryAddAction != null) OnTryAddAction(this, action, ref result);
+            OnTryAddAction?.Invoke(this, action, ref result);
 
-            if (OnTryAddActionGlobal != null) OnTryAddActionGlobal(this, action, ref result);
+            OnTryAddActionGlobal?.Invoke(this, action, ref result);
 
             return result;
         }
@@ -263,9 +264,9 @@ namespace Ship
         {
             bool result = action.IsActionAvailable() && action.CanBePerformedAsAFreeAction;
 
-            if (OnTryAddAction != null) OnTryAddAction(this, action, ref result);
+            OnTryAddAction?.Invoke(this, action, ref result);
 
-            if (OnTryAddActionGlobal != null) OnTryAddActionGlobal(this, action, ref result);
+            OnTryAddActionGlobal?.Invoke(this, action, ref result);
 
             return result;
         }
@@ -280,7 +281,7 @@ namespace Ship
         {
             foreach (GenericAction freeAction in freeActions)
             {
-                if (freeAction.HostShip == null) freeAction.HostShip = Selection.ThisShip;
+                freeAction.HostShip ??= Selection.ThisShip;
             }
 
             GenerateAvailableFreeActionsList(freeActions);
@@ -299,8 +300,7 @@ namespace Ship
                             typeof(FreeActionDecisonSubPhase),
                             (Action)delegate
                             {
-                                var phase = Phases.CurrentSubPhase as FreeActionDecisonSubPhase;
-                                if (phase != null && phase.ActionWasPerformed)
+                                if (Phases.CurrentSubPhase is FreeActionDecisonSubPhase phase && phase.ActionWasPerformed)
                                 {
                                     ActionsHolder.TakeActionFinish(
                                         delegate
@@ -378,9 +378,9 @@ namespace Ship
 
         public void RemoveAlreadyExecutedAction(GenericAction action)
         {
-            List<GenericAction> keys = new List<GenericAction>(AlreadyExecutedActions);
+            List<GenericAction> keys = new(AlreadyExecutedActions);
 
-            foreach (var executedAction in keys)
+            foreach (GenericAction executedAction in keys)
             {
                 if (executedAction.Name == action.Name)
                 {
@@ -396,7 +396,7 @@ namespace Ship
 
             if (action.IsRealAction)
             {
-                foreach (var executedAction in AlreadyExecutedActions)
+                foreach (GenericAction executedAction in AlreadyExecutedActions)
                 {
                     if (executedAction.Name == action.Name)
                     {
@@ -439,42 +439,42 @@ namespace Ship
             AvailableDiceModifications = new List<GenericAction>(); ;
 
             //OLD
-            foreach (var token in Tokens.GetAllTokens())
+            foreach (GenericToken token in Tokens.GetAllTokens())
             {
                 GenericAction action = token.GetAvailableEffects();
                 if (action != null) AddAvailableDiceModificationOwn(action);
             }
 
-            if (OnGenerateDiceModifications != null) OnGenerateDiceModifications(this);
+            OnGenerateDiceModifications?.Invoke(this);
 
-            if (OnGenerateDiceModificationsGlobal != null) OnGenerateDiceModificationsGlobal(this);
+            OnGenerateDiceModificationsGlobal?.Invoke(this);
         }
 
         private void GenerateDiceModificationsAfterRolled()
         {
             AvailableDiceModifications = new List<GenericAction>(); ;
 
-            if (OnGenerateDiceModificationsAfterRolled != null) OnGenerateDiceModificationsAfterRolled(this);
+            OnGenerateDiceModificationsAfterRolled?.Invoke(this);
 
-            if (OnGenerateDiceModificationsAfterRolledGlobal != null) OnGenerateDiceModificationsAfterRolledGlobal(this);
+            OnGenerateDiceModificationsAfterRolledGlobal?.Invoke(this);
         }
 
         private void GenerateDiceModificationsOpposite()
         {
             AvailableDiceModifications = new List<GenericAction>();
 
-            if (OnGenerateDiceModificationsOpposite != null) OnGenerateDiceModificationsOpposite(this);
+            OnGenerateDiceModificationsOpposite?.Invoke(this);
 
-            if (OnGenerateDiceModificationsOppositeGlobal != null) OnGenerateDiceModificationsOppositeGlobal(this);
+            OnGenerateDiceModificationsOppositeGlobal?.Invoke(this);
         }
 
         private void GenerateDiceModificationsCompareResults()
         {
             AvailableDiceModifications = new List<GenericAction>();
 
-            if (OnGenerateDiceModificationsCompareResults != null) OnGenerateDiceModificationsCompareResults(this);
+            OnGenerateDiceModificationsCompareResults?.Invoke(this);
 
-            if (OnGenerateDiceModificationsCompareResultsGlobal != null) OnGenerateDiceModificationsCompareResultsGlobal(this);
+            OnGenerateDiceModificationsCompareResultsGlobal?.Invoke(this);
         }
 
         // ADD DICE MODIFICATION TO A LIST
@@ -515,17 +515,17 @@ namespace Ship
                 switch (action.DiceModificationTiming)
                 {
                     case DiceModificationTimingType.Normal:
-                        if (OnTryAddAvailableDiceModification != null) OnTryAddAvailableDiceModification(this, action, ref result);
-                        if (OnTryAddAvailableDiceModificationGlobal != null) OnTryAddAvailableDiceModificationGlobal(this, action, ref result);
+                        OnTryAddAvailableDiceModification?.Invoke(this, action, ref result);
+                        OnTryAddAvailableDiceModificationGlobal?.Invoke(this, action, ref result);
                         break;
                     case DiceModificationTimingType.Opposite:
-                        if (OnTryAddDiceModificationOpposite != null) OnTryAddDiceModificationOpposite(this, action, ref result);
+                        OnTryAddDiceModificationOpposite?.Invoke(this, action, ref result);
                         break;
                     case DiceModificationTimingType.AfterRolled:
-                        if (OnTryAddDiceModificationAfterRolled != null) OnTryAddDiceModificationAfterRolled(this, action, ref result);
+                        OnTryAddDiceModificationAfterRolled?.Invoke(this, action, ref result);
                         break;
                     case DiceModificationTimingType.CompareResults:
-                        if (OnTryAddDiceModificationCompareResults != null) OnTryAddDiceModificationCompareResults(action, ref result);
+                        OnTryAddDiceModificationCompareResults?.Invoke(action, ref result);
                         break;
                     default:
                         break;
@@ -554,7 +554,7 @@ namespace Ship
         {
             bool result = false;
 
-            foreach (var alreadyUsedAction in AlreadyUsedDiceModifications)
+            foreach (GenericAction alreadyUsedAction in AlreadyUsedDiceModifications)
             {
                 if (alreadyUsedAction.DiceModificationName == action.DiceModificationName)
                 {
@@ -575,8 +575,8 @@ namespace Ship
 
         public void CallBeforeAssignToken(GenericToken token, Action callback)
         {
-            if (BeforeTokenIsAssigned != null) BeforeTokenIsAssigned(this, token);
-            if (BeforeTokenIsAssignedGlobal != null) BeforeTokenIsAssignedGlobal(this, token);
+            BeforeTokenIsAssigned?.Invoke(this, token);
+            BeforeTokenIsAssignedGlobal?.Invoke(this, token);
 
             Triggers.ResolveTriggers(TriggerTypes.OnBeforeTokenIsAssigned, callback);
         }
@@ -595,21 +595,21 @@ namespace Ship
 
         public void CallOnConditionIsAssigned(GenericToken token)
         {
-            if (OnConditionIsAssigned != null) OnConditionIsAssigned(this, token);
+            OnConditionIsAssigned?.Invoke(this, token);
         }
 
         public void CallOnConditionIsRemoved(GenericToken token)
         {
-            if (OnConditionIsRemoved != null) OnConditionIsRemoved(this, token);
+            OnConditionIsRemoved?.Invoke(this, token);
         }
 
         public bool CanRemoveToken(GenericToken token)
         {
             bool result = true;
 
-            if (OnBeforeTokenIsRemoved != null) OnBeforeTokenIsRemoved(this, token, ref result);
+            OnBeforeTokenIsRemoved?.Invoke(this, token, ref result);
 
-            if (OnBeforeTokenIsRemovedGlobal != null) OnBeforeTokenIsRemovedGlobal(this, token, ref result);
+            OnBeforeTokenIsRemovedGlobal?.Invoke(this, token, ref result);
 
             return result;
         }
@@ -630,7 +630,7 @@ namespace Ship
             Triggers.ResolveTriggers(TriggerTypes.OnTargetLockIsAcquired, callback);
         }
 
-        public void ChooseTargetToAcquireTargetLock(Action callback, string abilityName, IImageHolder imageSource)
+        public void ChooseTargetToAcquireTargetLock(Action callback, string abilityName, IImageHolder imageSource, Func<GenericShip, bool> shipFilter = null)
         {
             AcquireTargetLockSubPhase selectTargetLockSubPhase = (AcquireTargetLockSubPhase)Phases.StartTemporarySubPhaseNew(
                 "Select target for Target Lock",
@@ -641,6 +641,8 @@ namespace Ship
                     Phases.FinishSubPhase(typeof(AcquireTargetLockSubPhase));
                     callback();
                 });
+
+            if (shipFilter != null) selectTargetLockSubPhase.FilterShipTargets = shipFilter;
 
             selectTargetLockSubPhase.RequiredPlayer = Owner.PlayerNo;
             selectTargetLockSubPhase.DescriptionShort = abilityName;
@@ -668,7 +670,7 @@ namespace Ship
 
         public bool ShouldRemoveTokenInEndPhase(GenericToken token)
         {
-            var remove = token.Temporary;
+            bool remove = token.Temporary;
             BeforeRemovingTokenInEndPhaseGlobal?.Invoke(this, token, ref remove);
             BeforeRemovingTokenInEndPhase?.Invoke(this, token, ref remove);
             return remove;
@@ -678,7 +680,7 @@ namespace Ship
 
         public void CallCoordinateTargetIsSelected(GenericShip targetShip, Action callback)
         {
-            if (OnCoordinateTargetIsSelected != null) OnCoordinateTargetIsSelected(targetShip);
+            OnCoordinateTargetIsSelected?.Invoke(targetShip);
 
             Triggers.ResolveTriggers(TriggerTypes.OnCoordinateTargetIsSelected, callback);
         }
@@ -687,7 +689,7 @@ namespace Ship
 
         public void CallJamTargetIsSelected(GenericShip targetShip, Action callback)
         {
-            if (OnJamTargetIsSelected != null) OnJamTargetIsSelected(targetShip);
+            OnJamTargetIsSelected?.Invoke(targetShip);
 
             Triggers.ResolveTriggers(TriggerTypes.OnJamTargetIsSelected, callback);
         }
@@ -696,16 +698,24 @@ namespace Ship
 
         public void CallRerollIsConfirmed(Action callback)
         {
-            if (OnRerollIsConfirmed != null) OnRerollIsConfirmed(this);
+            OnRerollIsConfirmed?.Invoke(this);
 
             Triggers.ResolveTriggers(TriggerTypes.OnRerollIsConfirmed, callback);
         }
 
         // Decloak
 
+        public void CallOnBeforeDecloak(Action callback)
+        {
+            OnBeforeDecloak?.Invoke();
+
+            Triggers.ResolveTriggers(TriggerTypes.OnBeforeDecloak, callback);
+        }
+
+
         public void CallDecloak(Action callback)
         {
-            if (OnDecloak != null) OnDecloak();
+            OnDecloak?.Invoke();
 
             Triggers.ResolveTriggers(TriggerTypes.OnDecloak, callback);
         }
@@ -714,7 +724,7 @@ namespace Ship
 
         public void CallSlam(Action callback)
         {
-            if (OnSlam != null) OnSlam();
+            OnSlam?.Invoke();
 
             Triggers.ResolveTriggers(TriggerTypes.OnSlam, callback);
         }
@@ -735,14 +745,15 @@ namespace Ship
 
         public List<ArcFacing> GetAvailableArcFacings()
         {
-            List<ArcFacing> availableArcFacings = new List<ArcFacing>()
+            List<ArcFacing> availableArcFacings = new()
             {
-                        ArcFacing.Front,
-                ArcFacing.Left, ArcFacing.Right,
-                        ArcFacing.Rear
+                ArcFacing.Front,
+                ArcFacing.Left,
+                ArcFacing.Right,
+                ArcFacing.Rear
             };
 
-            if (OnGetAvailableArcFacings != null) OnGetAvailableArcFacings(availableArcFacings);
+            OnGetAvailableArcFacings?.Invoke(availableArcFacings);
 
             return availableArcFacings;
         }
@@ -754,7 +765,7 @@ namespace Ship
             bool isDefaultFailOverwritten = false;
 
             if (action is CloakAction) isDefaultFailOverwritten = true;
-            if (OnActionIsReadyToBeFailed != null) OnActionIsReadyToBeFailed(action, failReasons, ref isDefaultFailOverwritten);
+            OnActionIsReadyToBeFailed?.Invoke(action, failReasons, ref isDefaultFailOverwritten);
 
             Triggers.ResolveTriggers(
                 TriggerTypes.OnActionIsReadyToBeFailed,
@@ -796,7 +807,7 @@ namespace Ship
         {
             if (!isDefaultFailOverwritten)
             {
-                if (OnActionIsReallyFailed != null) OnActionIsReallyFailed(action);
+                OnActionIsReallyFailed?.Invoke(action);
 
                 Triggers.ResolveTriggers(
                     TriggerTypes.OnActionIsReallyFailed,
@@ -814,7 +825,7 @@ namespace Ship
 
         public void CallAfterModifyDefenseDiceStep(Action callback)
         {
-            if (OnAfterModifyDefenseDiceStep != null) OnAfterModifyDefenseDiceStep(this);
+            OnAfterModifyDefenseDiceStep?.Invoke(this);
 
             Triggers.ResolveTriggers(TriggerTypes.OnAfterModifyDefenseDiceStep, callback);
         }
@@ -828,7 +839,7 @@ namespace Ship
 
         public int GetRangeToShip(GenericShip ship)
         {
-            DistanceInfo distanceInfo = new DistanceInfo(ship, this);
+            DistanceInfo distanceInfo = new(ship, this);
             return distanceInfo.Range;
         }
 
@@ -861,7 +872,7 @@ namespace Ship
 
         public CoordinateActionData CallCheckCoordinateModeModification()
         {
-            CoordinateActionData coordinateActionData = new CoordinateActionData(this);
+            CoordinateActionData coordinateActionData = new(this);
             OnCheckCoordinateModeModification?.Invoke(ref coordinateActionData);
             return coordinateActionData;
         }
@@ -894,6 +905,10 @@ namespace Ship
             OnCheckCanPerformActionsWhileStressed?.Invoke(ref canPerformActionsWhileStressed);
             return canPerformActionsWhileStressed;
         }
-    }
 
+        public TokensManager GetTokens()
+        {
+            return this.Tokens;
+        }
+    }
 }

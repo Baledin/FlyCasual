@@ -43,8 +43,8 @@ namespace Ship.SecondEdition.RZ2AWing
     {
         public SeftinVanikXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 10;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 11;
+            (PilotInfo as PilotCardInfo25).Cost = 9;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Talent,

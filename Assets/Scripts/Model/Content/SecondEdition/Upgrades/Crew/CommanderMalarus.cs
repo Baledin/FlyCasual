@@ -27,7 +27,8 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.FirstOrder,
-                new Vector2(239, 1)
+                new Vector2(327, 0),
+                new Vector2(65, 65)
             );
         }
     }
@@ -52,7 +53,7 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.FirstOrder,
-                new Vector2(239, 1)
+                new Vector2(332, 0)
             );
         }
     }
@@ -150,7 +151,7 @@ namespace Abilities.SecondEdition
         {
             HostShip.Tokens.AssignToken(
                 typeof(StressToken),
-                delegate{ CheckDamage(delegate { callback(true); }); }
+                delegate { CheckDamage(delegate { callback(true); }); }
             );
         }
 
@@ -160,7 +161,8 @@ namespace Abilities.SecondEdition
             {
                 HostShip.Damage.TryResolveDamage(
                     damage: 1,
-                    new DamageSourceEventArgs() {
+                    new DamageSourceEventArgs()
+                    {
                         DamageType = DamageTypes.CardAbility,
                         Source = HostUpgrade
                     },

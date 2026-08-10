@@ -35,9 +35,7 @@ namespace Ship.SecondEdition.BTANR2WYWing
                 legality: new List<Legality> { Legality.XWA }
             );
 
-            PilotNameCanonical = "newrepublicpatrol-btanr2wywing";
-
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/newrepublicpatrol-wartime.png";
+            PilotNameCanonical = "newrepublicpatrol-wartime";
         }
     }
 }

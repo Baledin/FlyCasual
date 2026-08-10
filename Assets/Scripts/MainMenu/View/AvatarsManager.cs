@@ -12,7 +12,7 @@ public static class AvatarsManager
     public static Faction AvatarFaction { get; private set; }
     public static int WaitingToDownload { get; set; }
 
-    private static Dictionary<Faction, int> FactionCellSizes = new Dictionary<Faction, int>()
+    private static readonly Dictionary<Faction, int> FactionCellSizes = new()
     {
         { Faction.None, 85 },
         { Faction.Rebel, 150 },
@@ -39,23 +39,31 @@ public static class AvatarsManager
 
         galleryTransform.GetComponent<GridLayoutGroup>().cellSize = new Vector2(FactionCellSizes[AvatarFaction], FactionCellSizes[AvatarFaction]);
 
+        List<string> avatarsAdded = new();
+
         List<Type> typelist = Assembly.GetExecutingAssembly().GetTypes()
             .Where(t => String.Equals(t.Namespace, "UpgradesList.FirstEdition", StringComparison.Ordinal) || String.Equals(t.Namespace, "UpgradesList.SecondEdition", StringComparison.Ordinal))
             .ToList();
 
         WaitingToDownload = 0;
-        foreach (var type in typelist)
+
+        foreach (Type type in typelist)
         {
             if (type.MemberType == MemberTypes.NestedType) continue;
 
-            GenericUpgrade newUpgradeContainer = (GenericUpgrade)System.Activator.CreateInstance(type);
-            if (newUpgradeContainer.UpgradeInfo.Name != null)
+            GenericUpgrade newUpgradeContainer = (GenericUpgrade)Activator.CreateInstance(type);
+
+            if (newUpgradeContainer.UpgradeInfo.Name != null
+                && newUpgradeContainer.Avatar != null)
             {
-                //  && newUpgradeContainer.Avatar.AvatarFaction == CurrentAvatarsFaction
-                if (newUpgradeContainer.Avatar != null)
+                if (newUpgradeContainer.Avatar.AvatarFaction == AvatarFaction || AvatarFaction == Faction.None)
                 {
-                    if (newUpgradeContainer.Avatar.AvatarFaction == AvatarFaction || AvatarFaction == Faction.None)
+                    string avatarName = $"{AvatarFaction} - {newUpgradeContainer.UpgradeInfo.Name}";
+
+                    if (!avatarsAdded.Contains(avatarName))
                     {
+                        // Prevents duplicate avatars due to SecondEdition / XWA Edition sharing a base edition
+                        avatarsAdded.Add(avatarName);
                         AddAvailableAvatar(newUpgradeContainer);
                     }
                 }
@@ -110,34 +118,26 @@ public static class AvatarsManager
 
     private static Faction CharToFaction(string faction)
     {
-        switch (faction)
+        return faction switch
         {
-            case "!":
-                return Faction.Rebel;
-            case "@":
-                return Faction.Imperial;
-            case "#":
-                return Faction.Scum;
-            case "-":
-                return Faction.Resistance;
-            case "+":
-                return Faction.FirstOrder;
-            case "/":
-                return Faction.Republic;
-            case ".":
-                return Faction.Separatists;
-            default:
-                return Faction.None;
-        }
+            "!" => Faction.Rebel,
+            "@" => Faction.Imperial,
+            "#" => Faction.Scum,
+            "-" => Faction.Resistance,
+            "+" => Faction.FirstOrder,
+            "/" => Faction.Republic,
+            "." => Faction.Separatists,
+            _ => Faction.None,
+        };
     }
 
     private static void ShowLoadingStub()
     {
-        GameObject.Find("UI/Panels/BrowseAvatarsPanel/Loading").gameObject.SetActive(true);
+        GameObject.Find("UI/Panels/BrowseAvatarsPanel/Loading").SetActive(true);
     }
 
     private static void HideLoadingStub()
     {
-        GameObject.Find("UI/Panels/BrowseAvatarsPanel/Loading").gameObject.SetActive(false);
+        GameObject.Find("UI/Panels/BrowseAvatarsPanel/Loading").SetActive(false);
     }
 }

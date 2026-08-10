@@ -36,11 +36,12 @@ namespace Ship
             public NuSquadronPilotXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 9;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 9;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Sensor,
+                    UpgradeType.Modification,
                     UpgradeType.Modification,
                     UpgradeType.Missile,
                     UpgradeType.Configuration

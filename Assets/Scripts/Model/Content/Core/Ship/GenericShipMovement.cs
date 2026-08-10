@@ -72,9 +72,11 @@ namespace Ship
 
             set
             {
-                if (value == false) ObstaclesHit = new List<GenericObstacle>();
+                if (value == false) ObstaclesHit = new ();
             }
         }
+
+        public List<GenericObstacle> ObstaclesHitProcessed = new();
 
         public List<GenericObstacle> ObstaclesHit = new();
 

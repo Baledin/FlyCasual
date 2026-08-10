@@ -45,8 +45,8 @@ namespace Ship
         {
             public MajorVermeilXWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 13;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 19;
+                (PilotInfo as PilotCardInfo25).Cost = 12;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 15;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             }
         }

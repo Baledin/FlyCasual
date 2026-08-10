@@ -59,7 +59,7 @@ namespace Ship.SecondEdition.T65XWing
     {
         public LukeSkywalkerBoYXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 16;
+            (PilotInfo as PilotCardInfo25).Cost = 15;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
         }
     }

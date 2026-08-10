@@ -51,7 +51,7 @@ namespace Ship
                     UpgradeType.Modification,
                     UpgradeType.Torpedo
                 };
-                (PilotInfo as PilotCardInfo25).Limited = 3;
+                (PilotInfo as PilotCardInfo25).Limited = 2;
             }
         }
     }

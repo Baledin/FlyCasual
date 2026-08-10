@@ -45,7 +45,7 @@ namespace Ship.SecondEdition.DroidTriFighter
     {
         public Dis347SoCXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 10;
+            (PilotInfo as PilotCardInfo25).Cost = 9;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
         }
     }

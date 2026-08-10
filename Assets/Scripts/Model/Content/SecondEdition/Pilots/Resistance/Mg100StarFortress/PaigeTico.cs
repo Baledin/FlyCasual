@@ -45,7 +45,7 @@ namespace Ship.SecondEdition.Mg100StarFortress
         public PaigeTicoXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 16;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 21;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 24;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

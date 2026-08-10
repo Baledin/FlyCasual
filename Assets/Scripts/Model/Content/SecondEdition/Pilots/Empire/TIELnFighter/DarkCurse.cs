@@ -49,7 +49,7 @@ namespace Ship
         {
             public DarkCurseXWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 9;
+                (PilotInfo as PilotCardInfo25).Cost = 10;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             }
         }

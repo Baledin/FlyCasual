@@ -39,7 +39,7 @@ namespace Ship.SecondEdition.T70XWing
         public RedSquadronExpertXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 11;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 9;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 11;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

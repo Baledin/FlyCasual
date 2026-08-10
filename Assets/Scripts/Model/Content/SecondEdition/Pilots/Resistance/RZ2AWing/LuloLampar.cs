@@ -40,8 +40,8 @@ namespace Ship.SecondEdition.RZ2AWing
     {
         public LuloLamparXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 10;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
+            (PilotInfo as PilotCardInfo25).Cost = 9;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 5;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Talent,

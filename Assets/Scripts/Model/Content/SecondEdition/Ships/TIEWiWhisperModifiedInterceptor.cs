@@ -98,7 +98,7 @@ namespace Ship.SecondEdition.TIEWiWhisperModifiedInterceptor
                 "TIE-Fire", 3
             );
 
-            ShipIconLetter = ' '; //TODO
+            ShipIconLetter = '#';
         }
     }
 }

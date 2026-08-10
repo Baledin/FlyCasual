@@ -6,6 +6,8 @@ using Players;
 using System.Linq;
 using Editions;
 using ActionsList;
+using System.Collections.Generic;
+using Movement;
 
 namespace RulesList
 {
@@ -106,6 +108,9 @@ namespace SubPhases
     {
         public GenericPlayer Assigner;
         private Action selectedPlanningAction;
+        private Direction selectedBarrelRollDirection;
+        private ManeuverTemplate selectedTemplate;
+        private Direction selectedSecondaryDirection;
         private bool canBoost = true;
 
         public override void Start()
@@ -168,7 +173,7 @@ namespace SubPhases
             }
         }
 
-        private void PerfromBrTemplatePlanning(Direction direction)
+        private void PerformBrTemplatePlanningWith(ManeuverTemplate template, Direction direction, Direction directionSecondary = Direction.None)
         {
             BarrelRollAction stubAction = new BarrelRollAction{ HostShip = TheShip };
 
@@ -188,27 +193,18 @@ namespace SubPhases
             brPlanning.IsTractorBeamBarrelRoll = true;
             brPlanning.IsIgnoreObstacles = Edition.Current.RuleSet.AllowTractoringOnObstacle;
             brPlanning.SelectTemplate(
-                new ManeuverTemplate(
-                    Movement.ManeuverBearing.Straight,
-                    Movement.ManeuverDirection.Forward,
-                    Movement.ManeuverSpeed.Speed1,
-                    isSideTemplate: TheShip.ShipInfo.BaseSize != BaseSize.Small
-                ),
-                direction
+                template,
+                direction,
+                directionSecondary
             );
 
             Phases.UpdateHelpInfo();
             brPlanning.PerformTemplatePlanning();
         }
 
-        private void PerfromLeftBrTemplatePlanning()
+        private void PerformBrTemplatePlanning()
         {
-            PerfromBrTemplatePlanning(Direction.Left);
-        }
-
-        private void PerfromRightBrTemplatePlanning()
-        {
-            PerfromBrTemplatePlanning(Direction.Right);
+            PerformBrTemplatePlanningWith(selectedTemplate, selectedBarrelRollDirection, selectedSecondaryDirection);
         }
 
         private void PerfromStraightTemplatePlanning()
@@ -231,6 +227,8 @@ namespace SubPhases
         private void StartSelectTemplateSubphase()
         {
             selectedPlanningAction = null;
+            selectedTemplate = null;
+            selectedBarrelRollDirection = Direction.None;
 
             TractorBeamDirectionDecisionSubPhase selectTractorDirection = (TractorBeamDirectionDecisionSubPhase)Phases.StartTemporarySubPhaseNew(
                 Name,
@@ -250,15 +248,9 @@ namespace SubPhases
                 );
             }
 
-            selectTractorDirection.AddDecision("Left", delegate {
-                selectedPlanningAction = PerfromLeftBrTemplatePlanning;
-                DecisionSubPhase.ConfirmDecision();
-            });
+            List<ManeuverTemplate> availableBarrelRollTemplates = TheShip.GetAvailableBarrelRollTemplates();
 
-            selectTractorDirection.AddDecision("Right", delegate {
-                selectedPlanningAction = PerfromRightBrTemplatePlanning;
-                DecisionSubPhase.ConfirmDecision();
-            });
+            GenerateSelectTemplateDecisions(selectTractorDirection, availableBarrelRollTemplates);
 
             selectTractorDirection.DescriptionShort = "Tractor beam";
             selectTractorDirection.DescriptionLong = "Select direction for " + TheShip.PilotInfo.PilotName;
@@ -270,6 +262,128 @@ namespace SubPhases
             selectTractorDirection.Start();
         }
 
+        private void SelectBarrelRollTemplate(ManeuverTemplate template, Direction directionPrimary, Direction directionSecondary = Direction.None)
+        {
+            selectedPlanningAction = PerformBrTemplatePlanning;
+            selectedTemplate = template;
+            selectedBarrelRollDirection = directionPrimary;
+            selectedSecondaryDirection = directionSecondary;
+
+        }
+
+        private void GenerateSelectTemplateDecisions(DecisionSubPhase subphase, List<ManeuverTemplate> availableTemplates)
+        {
+            // Straight templates
+            foreach (ManeuverTemplate template in availableTemplates)
+            {
+                if (template.Bearing == ManeuverBearing.Straight)
+                {
+                    subphase.AddDecision(
+                        "Left " + template.NameNoDirection,
+                        (EventHandler)delegate
+                        {
+                            SelectBarrelRollTemplate(template, Direction.Left);
+                            DecisionSubPhase.ConfirmDecision();
+                        }
+                    );
+
+                    subphase.AddDecision(
+                        "Right " + template.NameNoDirection,
+                        (EventHandler)delegate
+                        {
+                            SelectBarrelRollTemplate(template, Direction.Right);
+                            DecisionSubPhase.ConfirmDecision();
+                        }
+                    );
+                }
+            }
+
+            // Bank templates
+            ManeuverTemplate bankLeft = availableTemplates.FirstOrDefault(n => n.Bearing == ManeuverBearing.Bank && n.Direction == ManeuverDirection.Left);
+            ManeuverTemplate bankRight = availableTemplates.FirstOrDefault(n => n.Bearing == ManeuverBearing.Bank && n.Direction == ManeuverDirection.Right);
+
+            if (bankLeft != null && bankRight != null)
+            {
+                subphase.AddDecision(
+                    "Left " + bankRight.NameNoDirection + " Forward",
+                    (EventHandler)delegate
+                    {
+                        SelectBarrelRollTemplate(bankRight, Direction.Left, Direction.Top);
+                        DecisionSubPhase.ConfirmDecision();
+                    }
+                );
+
+                subphase.AddDecision(
+                    "Right " + bankLeft.NameNoDirection + " Forward",
+                    (EventHandler)delegate
+                    {
+                        SelectBarrelRollTemplate(bankLeft, Direction.Right, Direction.Top);
+                        DecisionSubPhase.ConfirmDecision();
+                    }
+                );
+
+                subphase.AddDecision(
+                    "Left " + bankLeft.NameNoDirection + " Backwards",
+                    (EventHandler)delegate
+                    {
+                        SelectBarrelRollTemplate(bankLeft, Direction.Left, Direction.Bottom);
+                        DecisionSubPhase.ConfirmDecision();
+                    }
+                );
+
+                subphase.AddDecision(
+                    "Right " + bankRight.NameNoDirection + " Backwards",
+                    (EventHandler)delegate
+                    {
+                        SelectBarrelRollTemplate(bankRight, Direction.Right, Direction.Bottom);
+                        DecisionSubPhase.ConfirmDecision();
+                    }
+                );
+            }
+
+            // Turn templates
+            ManeuverTemplate turnLeft = availableTemplates.FirstOrDefault(n => n.Bearing == ManeuverBearing.Turn && n.Direction == ManeuverDirection.Left);
+            ManeuverTemplate turnRight = availableTemplates.FirstOrDefault(n => n.Bearing == ManeuverBearing.Turn && n.Direction == ManeuverDirection.Right);
+
+            if (turnLeft != null && turnRight != null)
+            {
+                subphase.AddDecision(
+                    "Left " + turnRight.NameNoDirection + " Forward",
+                    (EventHandler)delegate
+                    {
+                        SelectBarrelRollTemplate(turnRight, Direction.Left, Direction.Top);
+                        DecisionSubPhase.ConfirmDecision();
+                    }
+                );
+
+                subphase.AddDecision(
+                    "Right " + turnLeft.NameNoDirection + " Forward",
+                    (EventHandler)delegate
+                    {
+                        SelectBarrelRollTemplate(turnLeft, Direction.Right, Direction.Top);
+                        DecisionSubPhase.ConfirmDecision();
+                    }
+                );
+
+                subphase.AddDecision(
+                    "Left " + turnLeft.NameNoDirection + " Backwards",
+                    (EventHandler)delegate
+                    {
+                        SelectBarrelRollTemplate(turnLeft, Direction.Left, Direction.Bottom);
+                        DecisionSubPhase.ConfirmDecision();
+                    }
+                );
+
+                subphase.AddDecision(
+                    "Right " + turnRight.NameNoDirection + " Backwards",
+                    (EventHandler)delegate
+                    {
+                        SelectBarrelRollTemplate(turnRight, Direction.Right, Direction.Bottom);
+                        DecisionSubPhase.ConfirmDecision();
+                    }
+                );
+            }
+        }
         private void FinishTractorBeamMovement()
         {
             if (Assigner == TheShip.Owner)

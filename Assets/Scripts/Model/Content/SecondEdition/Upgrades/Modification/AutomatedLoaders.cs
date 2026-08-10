@@ -1,6 +1,8 @@
 ﻿using ActionsList;
+using Content;
 using Ship;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Upgrade;
 
@@ -8,19 +10,31 @@ namespace UpgradesList.SecondEdition
 {
     public class AutomatedLoaders : GenericUpgrade
     {
-        public AutomatedLoaders()
+        public AutomatedLoaders() : base()
         {
             UpgradeInfo = new UpgradeCardInfo(
                 "Automated Loaders",
                 UpgradeType.Modification,
-                cost: 0,
+                cost: 3,
                 abilityType: typeof(Abilities.SecondEdition.AutomatedLoadersAbility),
-                charges: 1
+                charges: 1,
+                legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
             IsHidden = true;
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/majorrhymer-swz98.png";
+            NameCanonical = "automatedloaders-legendsandrelics";
+        }
+    }
+
+    public class AutomatedLoadersXwa : AutomatedLoaders
+    {
+        public AutomatedLoadersXwa() : base()
+        {
+            UpgradeInfo.Cost = 3;
+            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            UpgradeInfo.Restrictions.AddRestriction(new ActionBarRestriction(typeof(ReloadAction)));
+            IsHidden = false;
         }
     }
 }
@@ -43,7 +57,7 @@ namespace Abilities.SecondEdition
         {
             if (Combat.ShotInfo.Weapon.WeaponType != WeaponTypes.PrimaryWeapon) return;
 
-            if (HostUpgrade.UpgradeInfo.Charges > 0 && HostShip.UpgradeBar.GetRechargableUpgrades().Any())
+            if (HostUpgrade.State.Charges > 0 && HostShip.UpgradeBar.GetRechargableUpgrades().Any())
             {
                 RegisterAbilityTrigger(TriggerTypes.OnAttackFinish, AskUseAbility);
             }

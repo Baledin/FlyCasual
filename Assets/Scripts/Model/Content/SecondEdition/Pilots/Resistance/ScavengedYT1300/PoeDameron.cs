@@ -60,7 +60,7 @@ namespace Ship.SecondEdition.ScavengedYT1300
                 UpgradeType.Talent,
                 UpgradeType.Crew,
                 UpgradeType.Crew,
-                UpgradeType.Gunner,
+                UpgradeType.Crew,
                 UpgradeType.Gunner,
                 UpgradeType.Illicit,
                 UpgradeType.Illicit,

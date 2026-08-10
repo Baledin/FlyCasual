@@ -25,8 +25,8 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(235, 1),
-                new Vector2(75, 75)
+                new Vector2(278, 0),
+                new Vector2(118, 118)
             );
         }
     }
@@ -88,7 +88,7 @@ namespace ActionsList.SecondEdition
         {
             Combat.DiceRollAttack.RemoveType(DieSide.Focus);
 
-            EachShipCanDoAction action = new EachShipCanDoAction
+            EachShipCanDoAction action = new 
             (
                 EachShipAction,
                 onFinish: delegate

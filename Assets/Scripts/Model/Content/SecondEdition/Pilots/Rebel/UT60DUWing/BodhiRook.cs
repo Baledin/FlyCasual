@@ -39,7 +39,7 @@ namespace Ship.SecondEdition.UT60DUWing
         public BodhiRookXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 11;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Crew,

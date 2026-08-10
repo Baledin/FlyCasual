@@ -40,9 +40,10 @@ namespace Ship.SecondEdition.V19TorrentStarfighter
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
+                UpgradeType.Talent,
                 UpgradeType.Modification,
                 UpgradeType.Modification,
-                UpgradeType.Missile,
+                UpgradeType.Missile
             };
         }
     }

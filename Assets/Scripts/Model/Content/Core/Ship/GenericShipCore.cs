@@ -1,13 +1,11 @@
-﻿using System.Collections;
+﻿using Abilities;
+using Arcs;
+using Content;
+using Players;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Arcs;
-using Abilities;
-using System;
-using Editions;
 using Upgrade;
-using Players;
-using Content;
 
 namespace Ship
 {
@@ -55,11 +53,11 @@ namespace Ship
 
         public void CallAfterGetMaxHull(ref int result)
         {
-            if (AfterGetMaxHull != null) AfterGetMaxHull(ref result);
+            AfterGetMaxHull?.Invoke(ref result);
         }
 
         public GameObject Model { get; protected set; }
-        public GameObject InfoPanel { get; protected set;  }
+        public GameObject InfoPanel { get; protected set; }
 
         public GenericShipBase ShipBase { get; protected set; }
 
@@ -85,26 +83,25 @@ namespace Ship
             set { pilotNameCanonical = value; }
         }
 
-        private string shipTypeCanonical;
         public string ShipTypeCanonical
         {
             get { return Tools.Canonicalize(ShipInfo.ShipName); }
         }
 
-        public List<GenericAbility> PilotAbilities = new List<GenericAbility>();
-        public List<GenericAbility> ShipAbilities = new List<GenericAbility>();
+        public List<GenericAbility> PilotAbilities = new();
+        public List<GenericAbility> ShipAbilities = new();
 
         public GenericShip()
         {
-            IconicPilots = new Dictionary<Faction, Type>();
-            RequiredMods = new List<Type>();
-            Maneuvers = new Dictionary<string, Movement.MovementComplexity>();
-            UpgradeBar = new ShipUpgradeBar(this);
-            Tokens = new TokensManager(this);
-            ActionBar = new ShipActionBar(this);
-            Ai = new CustomizedAi(this);
-            DefaultUpgrades = new List<Type>();
-            MustHaveUpgrades = new List<Type>();
+            IconicPilots = new();
+            RequiredMods = new();
+            Maneuvers = new();
+            UpgradeBar = new(this);
+            Tokens = new(this);
+            ActionBar = new(this);
+            Ai = new(this);
+            DefaultUpgrades = new();
+            MustHaveUpgrades = new();
 
             TargetLockMinRange = 0;
             TargetLockMaxRange = 3;
@@ -137,7 +134,7 @@ namespace Ship
 
         public virtual void InitializeUpgrades()
         {
-            foreach (var slot in UpgradeBar.GetUpgradeSlots())
+            foreach (UpgradeSlot slot in UpgradeBar.GetUpgradeSlots())
             {
                 slot.TryInstallUpgrade(slot.InstalledUpgrade, this);
             }
@@ -145,15 +142,16 @@ namespace Ship
 
         public void InitializeState()
         {
-            State = new ShipStateInfo(this);
+            State = new(this)
+            {
+                Initiative = PilotInfo.Initiative,
+                PilotSkillModifiers = new List<IModifyPilotSkill>(),
 
-            State.Initiative = PilotInfo.Initiative;
-            State.PilotSkillModifiers = new List<IModifyPilotSkill>();
-
-            State.Firepower = ShipInfo.Firepower;
-            State.Agility = ShipInfo.Agility;
-            State.HullMax = ShipInfo.Hull;
-            State.ShieldsMax = ShipInfo.Shields;
+                Firepower = ShipInfo.Firepower,
+                Agility = ShipInfo.Agility,
+                HullMax = ShipInfo.Hull,
+                ShieldsMax = ShipInfo.Shields
+            };
             State.ShieldsCurrent = State.ShieldsMax;
 
             State.MaxForce = PilotInfo.Force;
@@ -164,7 +162,7 @@ namespace Ship
             Maneuvers = new Dictionary<string, Movement.MovementComplexity>();
             if (DialInfo != null)
             {
-                foreach (var maneuver in DialInfo.PrintedDial)
+                foreach (KeyValuePair<Movement.ManeuverHolder, Movement.MovementComplexity> maneuver in DialInfo.PrintedDial)
                 {
                     Maneuvers.Add(maneuver.Key.ToString(), maneuver.Value);
                 }
@@ -293,7 +291,7 @@ namespace Ship
 
         private void ActivateShipAbilities()
         {
-            foreach (var shipAbility in ShipAbilities)
+            foreach (GenericAbility shipAbility in ShipAbilities)
             {
                 shipAbility.Initialize(this);
             }
@@ -303,7 +301,7 @@ namespace Ship
         {
             if (PilotInfo.AbilityType != null) PilotAbilities.Add((GenericAbility)Activator.CreateInstance(PilotInfo.AbilityType));
 
-            foreach (var pilotAbility in PilotAbilities)
+            foreach (GenericAbility pilotAbility in PilotAbilities)
             {
                 pilotAbility.Initialize(this);
             }
@@ -311,16 +309,16 @@ namespace Ship
 
         private void InitializeSlots()
         {
-            foreach (var slot in ShipInfo.UpgradeIcons.Upgrades)
+            foreach (UpgradeType slot in ShipInfo.UpgradeIcons.Upgrades)
             {
                 UpgradeBar.AddSlot(slot);
             }
 
-            foreach (var slot in PilotInfo.ExtraUpgrades)
+            foreach (UpgradeType slot in PilotInfo.ExtraUpgrades)
             {
                 UpgradeBar.AddSlot(slot);
             }
-            
+
             if (DebugManager.FreeMode)
             {
                 UpgradeBar.AddSlot(UpgradeType.Omni);
@@ -332,25 +330,25 @@ namespace Ship
         public void ChangeFirepowerBy(int value)
         {
             if (State != null) State.Firepower += value;
-            if (AfterStatsAreChanged != null) AfterStatsAreChanged(this);
+            AfterStatsAreChanged?.Invoke(this);
         }
 
         public void ChangeAgilityBy(int value)
         {
             if (State != null) State.Agility += value;
-            if (AfterStatsAreChanged != null) AfterStatsAreChanged(this);
+            AfterStatsAreChanged?.Invoke(this);
         }
 
         public void ChangeMaxHullBy(int value)
         {
             if (State != null) State.HullMax += value;
-            if (AfterStatsAreChanged != null) AfterStatsAreChanged(this);
+            AfterStatsAreChanged?.Invoke(this);
         }
 
         public void ChangeShieldBy(int value)
         {
             if (State != null) State.ShieldsCurrent += value;
-            if (AfterStatsAreChanged != null) AfterStatsAreChanged(this);
+            AfterStatsAreChanged?.Invoke(this);
         }
 
         public void SetTargetLockRange(int min, int max)
@@ -407,12 +405,11 @@ namespace Ship
 
         public bool CanEquipTagRestrictedUpgrade(Tags tag)
         {
-            var result = ((PilotInfo as PilotCardInfo25).Tags.Contains(tag));
+            bool result = ((PilotInfo as PilotCardInfo25).Tags.Contains(tag));
 
             OnUpgradeEquipTagCheck?.Invoke(tag, ref result);
 
             return result;
         }
     }
-
 }

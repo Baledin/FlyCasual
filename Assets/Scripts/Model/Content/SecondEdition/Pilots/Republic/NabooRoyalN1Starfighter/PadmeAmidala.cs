@@ -8,60 +8,58 @@ using System.Collections.Generic;
 using Tokens;
 using Upgrade;
 
-namespace Ship
+namespace Ship.SecondEdition.NabooRoyalN1Starfighter
 {
-    namespace SecondEdition.NabooRoyalN1Starfighter
+    public class PadmeAmidala : NabooRoyalN1Starfighter
     {
-        public class PadmeAmidala : NabooRoyalN1Starfighter
+        public PadmeAmidala() : base()
         {
-            public PadmeAmidala() : base()
-            {
-                PilotInfo = new PilotCardInfo25
-                (
-                    "Padmé Amidala",
-                    "Aggressive Negotiator",
-                    Faction.Republic,
-                    4,
-                    4,
-                    16,
-                    isLimited: true,
-                    abilityText: "While an enemy ship in your [Front Arc] defends or performs an attack, that ship can modify only 1 [Focus] result (other results can still be modified).",
-                    abilityType: typeof(PadmeAmidalaAbility),
-                    extraUpgradeIcons: new List<UpgradeType>
-                    {
-                        UpgradeType.Talent,
-                        UpgradeType.Astromech,
-                        UpgradeType.Sensor,
-                        UpgradeType.Torpedo,
-                    },
-                    legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
-                );
-
-                if (ModsManager.Mods[typeof(LimitedEditionNabooRoyalN1StarfighterMod)].IsOn)
-                {
-                    ImageUrl = "https://images-cdn.fantasyflightgames.com/filer_public/e8/c1/e8c1866f-a83a-469f-b2c0-a144c166fced/swzp02_padme-amidala.jpg";
-                    ModelInfo.SkinName = "Silver";
-                }
-            }
-        }
-
-        public class PadmeAmidalaXWA : PadmeAmidala
-        {
-            public PadmeAmidalaXWA() : base()
-            {
-                (PilotInfo as PilotCardInfo25).Cost = 10;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
-                (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
-                (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
+            PilotInfo = new PilotCardInfo25
+            (
+                "Padmé Amidala",
+                "Aggressive Negotiator",
+                Faction.Republic,
+                4,
+                4,
+                16,
+                isLimited: true,
+                abilityText: "While an enemy ship in your [Front Arc] defends or performs an attack, that ship can modify only 1 [Focus] result (other results can still be modified).",
+                abilityType: typeof(PadmeAmidalaAbility),
+                extraUpgradeIcons: new List<UpgradeType>
                 {
                     UpgradeType.Talent,
                     UpgradeType.Astromech,
                     UpgradeType.Sensor,
-                    UpgradeType.Modification,
                     UpgradeType.Torpedo,
-                };
+                },
+                legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
+            );
 
+            if (ModsManager.Mods[typeof(LimitedEditionNabooRoyalN1StarfighterMod)].IsOn)
+            {
+                ImageUrl = "https://images-cdn.fantasyflightgames.com/filer_public/e8/c1/e8c1866f-a83a-469f-b2c0-a144c166fced/swzp02_padme-amidala.jpg";
+                ModelInfo.SkinName = "Silver";
             }
+        }
+    }
+
+    public class PadmeAmidalaXWA : PadmeAmidala
+    {
+        public PadmeAmidalaXWA() : base()
+        {
+            (PilotInfo as PilotCardInfo25).Cost = 10;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 13;
+            (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
+            (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
+            {
+                UpgradeType.Talent,
+                UpgradeType.Astromech,
+                UpgradeType.Sensor,
+                UpgradeType.Modification,
+                UpgradeType.Tech,
+                UpgradeType.Torpedo,
+            };
+
         }
     }
 }
@@ -80,8 +78,8 @@ namespace Abilities.SecondEdition
         {
             GenericShip.OnAttackStartAsAttackerGlobal -= CheckPadmeAbilityAttacker;
             GenericShip.OnAttackStartAsDefenderGlobal -= CheckPadmeAbilityDefender;
-
         }
+
         public void CheckPadmeAbilityDefender()
         {
             CheckPadmeAbility(false);
@@ -91,21 +89,16 @@ namespace Abilities.SecondEdition
         {
             CheckPadmeAbility(true);
         }
+
         public void CheckPadmeAbility(bool isAttacker)
         {
-            if (!isAttacker &&
-                Combat.Defender.Owner != HostShip.Owner &&
-                HostShip.SectorsInfo.IsShipInSector(Combat.Defender, Arcs.ArcType.Front))
+            GenericShip target = isAttacker ? Combat.Attacker : Combat.Defender;
+
+            if (target.Owner != HostShip.Owner &&
+                HostShip.SectorsInfo.IsShipInSector(target, Arcs.ArcType.Front))
             {
-                PadmeAmidalaCondition condition = new PadmeAmidalaCondition(Combat.Defender, HostShip);
-                Combat.Defender.Tokens.AssignCondition(condition);
-            }
-            if (isAttacker &&
-                Combat.Attacker.Owner != HostShip.Owner &&
-                HostShip.SectorsInfo.IsShipInSector(Combat.Attacker, Arcs.ArcType.Front))
-            {
-                PadmeAmidalaCondition condition = new PadmeAmidalaCondition(Combat.Attacker, HostShip);
-                Combat.Attacker.Tokens.AssignCondition(condition);
+                PadmeAmidalaCondition condition = new(target, HostShip);
+                target.Tokens.AssignCondition(condition);
             }
         }
     }
@@ -115,58 +108,45 @@ namespace Conditions
 {
     public class PadmeAmidalaCondition : GenericToken
     {
-        bool FocusHasBeenModified = false;
+        bool SkippedFirst = false;
 
         public PadmeAmidalaCondition(GenericShip host, GenericShip source) : base(host)
         {
             Name = ImageName = "Debuff Token";
             TooltipType = source.GetType();
-            Temporary = false;
+            Temporary = true;
         }
 
         public override void WhenAssigned()
         {
-            Messages.ShowInfo("Padmé Amidala: " + Host.PilotInfo.PilotName + " can only modify 1 focus result for this attack.");
-            FocusHasBeenModified = false;
+            Messages.ShowInfo($"Padmé Amidala: {Host.PilotInfo.PilotName} can only modify 1 focus result for this {(Host == Combat.Attacker ? "attack" : "defense")}.");
 
-            Host.OnTryDiceResultModification += CheckIfCanChangeDie;
-            Host.OnTrySelectDie += CheckIfCanSelectDie;
+            Host.OnImmediatelyAfterRolling += LockDice;
 
-            Host.OnAttackFinishAsDefender += RemovePadmeAmidalaCondition;
-            Host.OnAttackFinishAsAttacker += RemovePadmeAmidalaCondition;
+            Host.OnAttackFinish += RemovePadmeAmidalaCondition;
         }
 
-        public void CheckIfCanChangeDie(
-          Die die, Abilities.GenericAbility.DiceModificationType modType, DieSide newResult, ref bool isAllowed
-        )
-        // Add focus modification limitation code here.
+        private void LockDice(DiceRoll diceroll)
         {
-            // set FocusHasBeenModified in some check in here
-            if (FocusHasBeenModified == true && die.Side == DieSide.Focus)
+            Host.OnImmediatelyAfterRolling -= LockDice;
+
+            foreach (Die die in diceroll.DiceList)
             {
-                isAllowed = false;
-                Messages.ShowInfo("Padmé Amidala: Die modification is prevented");
+                if (die.Side == DieSide.Focus)
+                {
+                    if (SkippedFirst)
+                    {
+                        die.CannotBeModified = true;
+                        die.ShowRerolledLock(true);
+                    }
+                    else
+                        SkippedFirst = true;
+                }
             }
-            else if (die.Side == DieSide.Focus)
-            {
-                FocusHasBeenModified = true;
-            }
+
+            diceroll.OrganizeDicePositions();
         }
 
-        public void CheckIfCanSelectDie(
-          Die die, ref bool isAllowed
-        )
-        {
-            if (FocusHasBeenModified == true && die.Side == DieSide.Focus)
-            {
-                isAllowed = false;
-                Messages.ShowErrorToHuman("Padmé Amidala: Unable to select focus results");
-            }
-            else if (die.Side == DieSide.Focus)
-            {
-                FocusHasBeenModified = true;
-            }
-        }
         public void RemovePadmeAmidalaCondition(GenericShip ship)
         {
             Host.Tokens.RemoveCondition(this);
@@ -174,14 +154,9 @@ namespace Conditions
 
         public override void WhenRemoved()
         {
-            Messages.ShowInfo("Padmé Amidala: " + Host.PilotInfo.PilotName + "'s ability to modify focus results restored");
+            Messages.ShowInfo($"Padmé Amidala: {Host.PilotInfo.PilotName}'s ability to modify focus results restored.");
 
-            // remove focus modification limitation code here.
-            Host.OnTryDiceResultModification -= CheckIfCanChangeDie;
-            Host.OnTrySelectDie -= CheckIfCanSelectDie;
-
-            Host.OnAttackFinishAsDefender -= RemovePadmeAmidalaCondition;
-            Host.OnAttackFinishAsAttacker -= RemovePadmeAmidalaCondition;
+            Host.OnAttackFinish -= RemovePadmeAmidalaCondition;
         }
     }
 }

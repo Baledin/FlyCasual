@@ -1,5 +1,7 @@
 ﻿using Abilities.SecondEdition;
 using Arcs;
+using Content;
+using System.Collections.Generic;
 using Upgrade;
 
 namespace UpgradesList.SecondEdition
@@ -20,11 +22,22 @@ namespace UpgradesList.SecondEdition
                     maxRange: 3,
                     arc: ArcType.Front
                 ),
-                abilityType: typeof(PrecisionTunedCannonsAbility)
+                abilityType: typeof(PrecisionTunedCannonsAbility),
+                legalityInfo: new List<Legality>() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            ImageUrl = "https://raw.githubusercontent.com/sampson-matt/FlyCasualLegacyCustomCards/refs/heads/main/BattleOverEndor/PrecisionTunedCannons.jpg";
+            NameCanonical = "precisiontunedcannons-legendsandrelics";
         } 
+    }
+
+    public class PrecisionTunedCannonsXWA : PrecisionTunedCannons
+    {
+        public PrecisionTunedCannonsXWA() : base()
+        {
+            UpgradeInfo.Cost = 3;
+            UpgradeInfo.LegalityInfo = new List<Legality>() { Legality.XWA };
+            IsHidden = false;
+        }
     }
 }
 

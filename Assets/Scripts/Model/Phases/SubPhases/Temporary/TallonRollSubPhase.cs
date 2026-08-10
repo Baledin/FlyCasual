@@ -199,6 +199,8 @@ public class TallonRollHelper
     {
         foreach (GameObject temporaryShipBase in TemporaryShipBases.Values.ToList())
         {
+            if (temporaryShipBase == null) continue;
+
             ObstaclesStayDetectorForced detector = temporaryShipBase.transform.Find("ShipBase").Find("ObstaclesStayDetector").gameObject.AddComponent<ObstaclesStayDetectorForced>();
 
             detector.ReCheckCollisionsStart();
@@ -222,7 +224,8 @@ public class TallonRollHelper
     public IEnumerator GetObstaclesLanded(int direction)
     {
         yield return CheckCollisions();
-        Ship.ObstaclesLanded = TemporaryShipBases[direction].GetComponentInChildren<ObstaclesStayDetectorForced>().OverlappedAsteroidsNow;
+        if (TemporaryShipBases.ContainsKey(direction))
+            Ship.ObstaclesLanded = TemporaryShipBases[direction].GetComponentInChildren<ObstaclesStayDetectorForced>().OverlappedAsteroidsNow;
     }
 
     public void DestroyTemporaryShipBases()

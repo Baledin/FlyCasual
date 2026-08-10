@@ -54,7 +54,7 @@ namespace Ship
             public KananJarrusXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 9;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 5;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 7;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                         UpgradeType.ForcePower,
@@ -87,7 +87,7 @@ namespace Abilities.SecondEdition
         {
             bool hasForceTokens = HostShip.State.Force > 0;
 
-            if (hasForceTokens && (IsDefenderMe() || IsDefenderInMyMobileArc()))
+            if (hasForceTokens && (IsDefenderMe() || IsDefenderInMyMobileArc()) && Tools.IsAnotherTeam(HostShip, Combat.Attacker))
             {
                 RegisterAbilityTrigger(TriggerTypes.OnAttackStart, AskDecreaseAttack);
             }

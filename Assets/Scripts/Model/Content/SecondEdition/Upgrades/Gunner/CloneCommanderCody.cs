@@ -9,7 +9,7 @@ namespace UpgradesList.SecondEdition
         public CloneCommanderCody() : base()
         {
             UpgradeInfo = new UpgradeCardInfo(
-				"Clone Commander Cody",
+                "Clone Commander Cody",
                 UpgradeType.Gunner,
                 cost: 4,
                 isLimited: true,
@@ -19,11 +19,9 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(234, 1)
+                new Vector2(302, 4)
             );
-
-            
-        }        
+        }
     }
 }
 

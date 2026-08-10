@@ -54,14 +54,14 @@ namespace Ship.SecondEdition.ScavengedYT1300
     {
         public LandoCalrissianXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 18;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 20;
+            (PilotInfo as PilotCardInfo25).Cost = 17;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 17;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Talent,
                 UpgradeType.Crew,
                 UpgradeType.Crew,
-                UpgradeType.Gunner,
+                UpgradeType.Crew,
                 UpgradeType.Gunner,
                 UpgradeType.Illicit,
                 UpgradeType.Illicit,

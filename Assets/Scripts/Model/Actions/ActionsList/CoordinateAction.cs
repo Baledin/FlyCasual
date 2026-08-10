@@ -16,15 +16,30 @@ namespace Actions
         public bool SameShipTypeLimit { get; set; }
         public bool TargetLowerInitiave { get; set; }
         public bool SameActionLimit { get; set; }
-        public Func<GenericShip, int> GetAiPriority;
         public bool TreatCoordinatedActionAsRed { get; set; }
         public GenericShip CoordinateProvider { get; protected set; }
         public GenericAction FirstChosenAction { get; set; }
+        public Func<GenericShip, bool> Filter { get; set; }
+        public Func<GenericShip, int> GetAiPriority;
+
+        public int MinRange = 1;
+        public int MaxRange = 2;
 
         public CoordinateActionData(GenericShip coordinateProvider)
         {
             CoordinateProvider = coordinateProvider;
             MaxTargets = 1;
+            Filter = FilterCoordinateTargets;
+        }
+
+        protected bool FilterCoordinateTargets(GenericShip ship)
+        {
+            return ship.Owner.PlayerNo == Selection.ThisShip.Owner.PlayerNo
+                && Board.CheckInRange(CoordinateProvider, ship, MinRange, MaxRange, RangeCheckReason.CoordinateAction)
+                && ship.CanBeCoordinated
+                && (!TargetLowerInitiave || ship.PilotInfo.Initiative < CoordinateProvider.PilotInfo.Initiative)
+                && (!SameShipTypeLimit || Selection.MultiSelectedShips.Count == 0 || ship.ShipInfo.ShipName == Selection.MultiSelectedShips.First().ShipInfo.ShipName)
+                && CoordinateProvider.CallCheckCanCoordinate(ship);
         }
     }
 }
@@ -51,6 +66,8 @@ namespace ActionsList
                     "Select target for Coordinate",
                     Phases.CurrentSubPhase.CallBack
                 );
+                subphase.MinRange = CoordinateActionData.MinRange;
+                subphase.MaxRange = CoordinateActionData.MaxRange;
                 subphase.HostAction = this;
                 subphase.Start();
             }
@@ -64,7 +81,7 @@ namespace ActionsList
 
                 subphase.RequiredPlayer = HostShip.Owner.PlayerNo;
 
-                subphase.Filter = FilterCoordinateTargets;
+                subphase.Filter = CoordinateActionData.Filter;
                 subphase.MaxToSelect = CoordinateActionData.MaxTargets;
                 subphase.WhenDone = CoordinateTargets;
                 subphase.CoordinateActionData = CoordinateActionData;
@@ -120,7 +137,7 @@ namespace ActionsList
 
         protected void RememberChosenAction(GenericAction action)
         {
-            if (CoordinateActionData.FirstChosenAction == null) CoordinateActionData.FirstChosenAction = action;
+            CoordinateActionData.FirstChosenAction ??= action;
             ClearRememberChosenAction(Selection.ThisShip);
         }
 
@@ -143,7 +160,8 @@ namespace ActionsList
 
             MovementTemplates.ReturnRangeRuler();
 
-            Triggers.ResolveTriggers(TriggerTypes.OnFreeActionPlanned, (System.Action)delegate {
+            Triggers.ResolveTriggers(TriggerTypes.OnFreeActionPlanned, (System.Action)delegate
+            {
                 Selection.ChangeActiveShip(CoordinateActionData.CoordinateProvider);
                 CoordinateActionData.CoordinateProvider.OnCoordinateTargetIsSelected -= PrepareToRememberChosenAction;
                 ActionsHolder.CurrentAction = currentAction;
@@ -154,8 +172,9 @@ namespace ActionsList
         protected virtual void PerformFreeAction(GenericShip targetShip)
         {
             targetShip.AskPerformFreeAction(
-                GetPossibleActions(), 
-                delegate {
+                GetPossibleActions(),
+                delegate
+                {
                     Selection.ChangeActiveShip(CoordinateActionData.CoordinateProvider);
                     Triggers.FinishTrigger();
                 },
@@ -166,7 +185,8 @@ namespace ActionsList
 
         protected virtual List<GenericAction> GetPossibleActions()
         {
-            List<GenericAction> result = new List<GenericAction>();
+            List<GenericAction> result = new();
+
             if (!CoordinateActionData.SameActionLimit || CoordinateActionData.FirstChosenAction == null)
             {
                 result = Selection.ThisShip.GetAvailableActions();
@@ -182,16 +202,6 @@ namespace ActionsList
             }
 
             return result;
-        }
-
-        protected bool FilterCoordinateTargets(GenericShip ship)
-        {
-            return ship.Owner.PlayerNo == Selection.ThisShip.Owner.PlayerNo
-                && Board.CheckInRange(CoordinateActionData.CoordinateProvider, ship, 1, 2, RangeCheckReason.CoordinateAction)
-                && ship.CanBeCoordinated
-                && (!CoordinateActionData.TargetLowerInitiave || ship.PilotInfo.Initiative < HostShip.PilotInfo.Initiative)
-                && (!CoordinateActionData.SameShipTypeLimit || Selection.MultiSelectedShips.Count == 0 || ship.ShipInfo.ShipName == Selection.MultiSelectedShips.First().ShipInfo.ShipName)
-                && CoordinateActionData.CoordinateProvider.CallCheckCanCoordinate(ship);
         }
 
         public override void RevertActionOnFail(bool hasSecondChance = false)
@@ -211,9 +221,11 @@ namespace ActionsList
 
 namespace SubPhases
 {
-
     public class CoordinateTargetSubPhase : SelectShipSubPhase
     {
+        public int MinRange = 1;
+        public int MaxRange = 2;
+
         public override void Prepare()
         {
             PrepareByParameters(
@@ -258,7 +270,7 @@ namespace SubPhases
         protected bool FilterCoordinateTargets(GenericShip ship)
         {
             return ship.Owner.PlayerNo == Selection.ThisShip.Owner.PlayerNo
-                && Board.CheckInRange(Selection.ThisShip, ship, 1, 2, RangeCheckReason.CoordinateAction)
+                && Board.CheckInRange(Selection.ThisShip, ship, MinRange, MaxRange, RangeCheckReason.CoordinateAction)
                 && ship.CanBeCoordinated
                 && Selection.ThisShip.CallCheckCanCoordinate(ship);
         }
@@ -272,7 +284,7 @@ namespace SubPhases
 
         protected virtual void PerformCoordinateEffect()
         {
-            var coordinatingShip = Selection.ThisShip;
+            GenericShip coordinatingShip = Selection.ThisShip;
             Selection.ThisShip = TargetShip;
             GenericAction currentAction = ActionsHolder.CurrentAction;
 
@@ -288,7 +300,8 @@ namespace SubPhases
 
             MovementTemplates.ReturnRangeRuler();
 
-            Triggers.ResolveTriggers(TriggerTypes.OnFreeActionPlanned, (System.Action)delegate {
+            Triggers.ResolveTriggers(TriggerTypes.OnFreeActionPlanned, (Action)delegate
+            {
                 Selection.ThisShip = coordinatingShip;
                 ActionsHolder.CurrentAction = currentAction;
                 Phases.FinishSubPhase(typeof(CoordinateTargetSubPhase));
@@ -312,12 +325,10 @@ namespace SubPhases
                 "You are coordinated"
             );
         }
-
     }
 
     public class CoordinateMultiTargetSubPhase : MultiSelectionSubphase
     {
         public CoordinateActionData CoordinateActionData;
     }
-
 }

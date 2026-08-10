@@ -43,14 +43,14 @@ namespace Ship.SecondEdition.ARC170Starfighter
             (PilotInfo as PilotCardInfo25).Cost = 12;
             (PilotInfo as PilotCardInfo25).LoadoutValue = 17;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
-                {
-                    UpgradeType.Talent,
-                    UpgradeType.Astromech,
-                    UpgradeType.Gunner,
-                    UpgradeType.Gunner,
-                    UpgradeType.Modification,
-                    UpgradeType.Torpedo
-                };
+            {
+                UpgradeType.Talent,
+                UpgradeType.Astromech,
+                UpgradeType.Crew,
+                UpgradeType.Gunner,
+                UpgradeType.Modification,
+                UpgradeType.Torpedo
+            };
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
         }
     }

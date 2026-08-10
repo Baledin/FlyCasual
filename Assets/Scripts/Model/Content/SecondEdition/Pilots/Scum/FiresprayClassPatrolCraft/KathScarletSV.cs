@@ -45,7 +45,7 @@ namespace Ship
             public KathScarletSVXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 15;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             }
         }

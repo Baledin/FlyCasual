@@ -92,11 +92,11 @@ public static class Combat
 
             IsAttackAlreadyCalled = true;
 
-            JSONObject parameters = new JSONObject();
+            JSONObject parameters = new();
             parameters.AddField("id", attackerId.ToString());
             parameters.AddField("target", defenderId.ToString());
             parameters.AddField("weaponIsAlreadySelected", weaponIsAlreadySelected.ToString());
-            parameters.AddField("weapon", (chosenWeapon != null) ? chosenWeapon.Name : null);
+            parameters.AddField("weapon", chosenWeapon?.Name);
 
             return GameController.GenerateGameCommand(
                 GameCommandTypes.DeclareAttack,
@@ -123,10 +123,11 @@ public static class Combat
         Selection.ChangeAnotherShip("ShipId:" + defenderId);
 
         Action callback = Phases.CurrentSubPhase.CallBack;
-        var subphase = Phases.StartTemporarySubPhaseNew(
+        GenericSubPhase subphase = Phases.StartTemporarySubPhaseNew(
             "Extra Attack",
             typeof(AttackExecutionSubphase),
-            delegate {
+            delegate
+            {
                 Phases.FinishSubPhase(typeof(AttackExecutionSubphase));
                 callback();
             }
@@ -187,7 +188,7 @@ public static class Combat
 
     private static List<IShipWeapon> GetAvailbleAttackTypes(GenericShip thisShip, GenericShip anotherShip)
     {
-        List<IShipWeapon> availableWeapons = new List<IShipWeapon>();
+        List<IShipWeapon> availableWeapons = new();
 
         foreach (IShipWeapon shipWeapon in thisShip.GetAllWeapons())
         {
@@ -257,7 +258,7 @@ public static class Combat
 
     private static void PayAttackCost()
     {
-        if (PayExtraAttackCost == null) PayExtraAttackCost = callback => callback();
+        PayExtraAttackCost ??= callback => callback();
         ChosenWeapon.PayAttackCost(() => PayExtraAttackCost(StartAttack));
     }
 
@@ -276,7 +277,7 @@ public static class Combat
         if (DebugManager.DebugPhases) Debug.Log("Attack is started: " + Selection.ThisShip + " vs " + Selection.AnotherShip);
 
         Attacker = Selection.ThisShip;
-        Defender = Selection.AnotherShip;        
+        Defender = Selection.AnotherShip;
     }
 
     public static void CallAttackStart()
@@ -385,7 +386,7 @@ public static class Combat
 
     private static void ResolveCombatDamage()
     {
-        DamageSourceEventArgs damageArgs = new DamageSourceEventArgs()
+        DamageSourceEventArgs damageArgs = new()
         {
             Source = Attacker,
             DamageType = DamageTypes.ShipAttack
@@ -408,8 +409,7 @@ public static class Combat
 
     private static void CheckTwinAttack()
     {
-        GenericSpecialWeapon chosenSecondaryWeapon = ChosenWeapon as GenericSpecialWeapon;
-        if (chosenSecondaryWeapon != null && chosenSecondaryWeapon.WeaponInfo.TwinAttack && !Defender.IsDestroyed)
+        if (ChosenWeapon is GenericSpecialWeapon chosenSecondaryWeapon && chosenSecondaryWeapon.WeaponInfo.TwinAttack && !Defender.IsDestroyed)
         {
             if (attacksCounter == 0)
             {
@@ -474,14 +474,7 @@ public static class Combat
     {
         CleanupCombatData();
 
-        if (!Selection.ThisShip.IsCannotAttackSecondTime)
-        {
-            CheckExtraAttacks(FinishCombat);
-        }
-        else
-        {
-            FinishCombat();
-        }
+        CheckExtraAttacks(FinishCombat);
     }
 
     private static void FinishCombat()
@@ -491,7 +484,18 @@ public static class Combat
 
     private static void CheckExtraAttacks(Action callback)
     {
-        Selection.ThisShip.CallCombatCheckExtraAttack(callback);
+        GenericShip previousAttacker = Selection.ThisShip;
+
+        foreach (GenericShip ship in Roster.AllShips.Values)
+        {
+            if (!ship.IsCannotAttackSecondTime)
+            {
+                Selection.ThisShip = ship;
+                ship.CallCombatCheckExtraAttack();
+            }
+        }
+
+        Triggers.ResolveTriggers(TriggerTypes.OnCombatCheckExtraAttack, delegate { Selection.ThisShip = previousAttacker; callback(); });
     }
 
     private static void CleanupCombatData()
@@ -534,7 +538,7 @@ public static class Combat
         ExtraAttackFilter = extraAttackFilter;
         PayExtraAttackCost = payAttackCost;
 
-        SelectTargetForAttackSubPhase newAttackSubphase = (SelectTargetForAttackSubPhase) Phases.StartTemporarySubPhaseNew(
+        SelectTargetForAttackSubPhase newAttackSubphase = (SelectTargetForAttackSubPhase)Phases.StartTemporarySubPhaseNew(
             "Second attack",
             typeof(SelectTargetForAttackSubPhase),
             delegate
@@ -565,12 +569,12 @@ namespace SubPhases
 
             DescriptionShort = "Choose weapon for attack";
 
-            foreach (var weapon in allWeapons)
+            foreach (IShipWeapon weapon in allWeapons)
             {
                 if (weapon.IsShotAvailable(Selection.AnotherShip))
                 {
                     AddDecision(weapon.Name, delegate { PerformAttackWithWeapon(weapon); });
-                    AddTooltip(weapon.Name, (weapon as GenericSpecialWeapon != null) ? (weapon as GenericSpecialWeapon).ImageUrl : null );
+                    AddTooltip(weapon.Name, (weapon as GenericSpecialWeapon != null) ? (weapon as GenericSpecialWeapon).ImageUrl : null);
                 }
             }
 
@@ -605,7 +609,6 @@ namespace SubPhases
             Phases.FinishSubPhase(typeof(WeaponSelectionDecisionSubPhase));
             CallBack();
         }
-
     }
 
     public class SkippableWeaponSelectionDecisionSubPhase : WeaponSelectionDecisionSubPhase
@@ -645,6 +648,4 @@ namespace SubPhases
             Phases.CurrentSubPhase = Phases.CurrentSubPhase.PreviousSubPhase;
         }
     }
-
 }
-

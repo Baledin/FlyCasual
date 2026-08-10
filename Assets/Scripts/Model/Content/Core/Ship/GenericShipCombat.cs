@@ -24,11 +24,11 @@ namespace Ship
 
     public partial class GenericShip
     {
-        public List<PrimaryWeaponClass> PrimaryWeapons = new List<PrimaryWeaponClass>();
+        public List<PrimaryWeaponClass> PrimaryWeapons = new();
 
         public Damage Damage { get; protected set; }
 
-        public DiceRoll AssignedDamageDiceroll = new DiceRoll(DiceKind.Attack, 0, DiceRollCheckType.Virtual);
+        public DiceRoll AssignedDamageDiceroll = new(DiceKind.Attack, 0, DiceRollCheckType.Virtual);
 
         public bool IsCannotAttackSecondTime { get; set; }
         public bool CanAttackBumpedTargetAlways { get; set; }
@@ -77,6 +77,7 @@ namespace Ship
         public event EventHandlerShipDamage OnTryDamagePrevention;
 
         public event EventHandler OnAttackHitAsAttacker;
+        public static event EventHandler OnAttackHitAsAttackerGlobal;
         public event EventHandler OnAttackHitAsDefender;
         public static event EventHandler OnAttackHitAsDefenderGlobal;
         public event EventHandler OnAttackMissedAsAttacker;
@@ -130,6 +131,7 @@ namespace Ship
         public static event EventHandlerShip OnAttackFinishGlobal;
 
         public event EventHandlerUpgradeRefInt OnGetReloadChargesCount;
+        public event EventHandlerUpgradeRefBool OnAllowBombDropFrontGuides;
         public event EventHandlerBombDropTemplates OnGetAvailableBombDropTemplatesTwoConditions;
         public event EventHandlerBombDropTemplates OnGetAvailableBombDropTemplatesOneCondition;
         public event EventHandlerBombDropTemplates OnGetAvailableBombDropTemplatesNoConditions;
@@ -139,7 +141,9 @@ namespace Ship
         public event EventHandlerDirection OnGetBombTemplateDirection;
 
         public event EventHandlerBarrelRollTemplates OnGetAvailableBarrelRollTemplates;
-        public event EventHandlerDecloakTemplates OnGetAvailableDecloakTemplates;
+        public event EventHandlerBarrelRollActionTemplates OnGetAvailableBarrelRollActionTemplates;
+        public event EventHandlerDecloakTemplates OnGetAvailableDecloakBarrelRollTemplates;
+        public event EventHandlerDecloakTemplates OnGetAvailableDecloakBoostTemplates;
         public event EventHandlerBoostTemplates OnGetAvailableBoostTemplates;
         public event EventHandlerRefString OnUpdateChosenBoostTemplate;
         public event EventHandlerRefManeuverTemplate OnUpdateChosenBarrelRollTemplate;
@@ -180,6 +184,7 @@ namespace Ship
         public event EventHandler OnBombWasDropped;
         public event EventHandler OnBombWasLaunched;
         public event EventHandler OnRemoteWasDropped;
+        public event EventHandlerUpgrade OnRemoteWasDroppedUpgrade;
         public static event EventHandler OnRemoteWasDroppedGlobal;
         public event EventHandler OnRemoteWasLaunched;
         public static event EventHandler OnRemoteWasLaunchedGlobal;
@@ -312,6 +317,8 @@ namespace Ship
 
         public void CallOnAttackHitAsAttacker()
         {
+            OnAttackHitAsAttackerGlobal?.Invoke();
+
             OnAttackHitAsAttacker?.Invoke();
         }
 
@@ -384,7 +391,7 @@ namespace Ship
             GenericShip.OnModifyWeaponAttackRequirementGlobal?.Invoke(this, weapon, ref tokenTypeAttackRequirement, isSilent);
             OnModifyWeaponAttackRequirement?.Invoke(this, weapon, ref tokenTypeAttackRequirement, isSilent);
 
-            return tokenTypeAttackRequirement;            
+            return tokenTypeAttackRequirement;
         }
 
         public void CallOnGenerateAvailableAttackPaymentList(List<GenericToken> tokens)
@@ -415,17 +422,13 @@ namespace Ship
             Triggers.ResolveTriggers(TriggerTypes.OnShieldIsLost, callback);
         }
 
-        public void CallCombatCheckExtraAttack(Action callback)
+        public void CallCombatCheckExtraAttack()
         {
             OnCombatCheckExtraAttack?.Invoke(this);
-
-            Triggers.ResolveTriggers(TriggerTypes.OnCombatCheckExtraAttack, callback);
         }
 
         public void CallCombatActivation(Action callback)
         {
-            //Messages.ShowInfo("Ship is activated! " + this.ShipId);
-
             OnCombatActivation?.Invoke(this);
             OnCombatActivationGlobal?.Invoke(this);
 
@@ -434,8 +437,6 @@ namespace Ship
 
         public void CallCombatDeactivation(Action callback)
         {
-            //Messages.ShowInfo("Ship is deactivated! " + this.ShipId);
-
             OnCombatDeactivation?.Invoke(this);
 
             Triggers.ResolveTriggers(TriggerTypes.OnCombatDeactivation, callback);
@@ -443,7 +444,7 @@ namespace Ship
 
         // DICE
 
-        public int GetNumberOfAttackDice(GenericShip targetShip)
+        public int GetNumberOfAttackDice()
         {
             int result = Combat.ChosenWeapon.WeaponInfo.AttackValue;
 
@@ -459,7 +460,7 @@ namespace Ship
             return result;
         }
 
-        public int GetNumberOfDefenceDice(GenericShip attackerShip)
+        public int GetNumberOfDefenceDice()
         {
             int result = State.Agility;
 
@@ -504,13 +505,15 @@ namespace Ship
         public bool TryRegenShields()
         {
             bool result = false;
+
             if (State.ShieldsCurrent < State.ShieldsMax)
             {
                 result = true;
                 State.ShieldsCurrent++;
                 AnimateShields();
                 AfterAssignedDamageIsChanged(this);
-            };
+            }
+
             return result;
         }
 
@@ -542,7 +545,7 @@ namespace Ship
         }
 
         private void SufferDamageByType(object sender, EventArgs e, bool isCritical)
-        {            
+        {
             if (State.ShieldsCurrent > 0)
             {
                 SufferShieldDamage(isCritical);
@@ -700,7 +703,8 @@ namespace Ship
                 IsDestroyed = true;
 
                 PlayDestroyedAnimSound(
-                    delegate {
+                    delegate
+                    {
                         CallShipDestruction(
                      delegate { PlanShipRemoval(callBack); },
                      isFled: false);
@@ -744,11 +748,14 @@ namespace Ship
             IsDestroyed = true;
 
             PlayDestroyedAnimSound(
-                delegate { CallShipDestruction(
-                    delegate { RemoveDestroyedShip(callback); },
-                    isFled: isFled
-                ); }
-            );            
+                delegate
+                {
+                    CallShipDestruction(
+                        delegate { RemoveDestroyedShip(callback); },
+                        isFled: isFled
+                    );
+                }
+            );
         }
 
         private void RegisterShipRemovalSimultaneous()
@@ -769,7 +776,7 @@ namespace Ship
             OnShipIsReadyToBeRemoved?.Invoke(this);
             OnShipIsReadyToBeRemovedGlobal?.Invoke(this);
 
-            Triggers.ResolveTriggers(TriggerTypes.OnShipIsReadyToBeRemoved, delegate{ RemoveDestroyedShip_System(callback); });
+            Triggers.ResolveTriggers(TriggerTypes.OnShipIsReadyToBeRemoved, delegate { RemoveDestroyedShip_System(callback); });
         }
 
         private void RemoveDestroyedShip_System(Action callback)
@@ -809,7 +816,7 @@ namespace Ship
 
         public List<ManeuverTemplate> GetAvailableBombDropTemplates(GenericUpgrade upgrade)
         {
-            List<ManeuverTemplate> availableTemplates = new List<ManeuverTemplate>();
+            List<ManeuverTemplate> availableTemplates = new();
             availableTemplates.AddRange(upgrade.GetDefaultDropTemplates());
 
             OnGetAvailableBombDropTemplatesNoConditions?.Invoke(availableTemplates, upgrade);
@@ -823,7 +830,7 @@ namespace Ship
 
         public List<ManeuverTemplate> GetAvailableDeviceLaunchTemplates(GenericUpgrade upgrade)
         {
-            List<ManeuverTemplate> availableTemplates = new List<ManeuverTemplate>();
+            List<ManeuverTemplate> availableTemplates = new();
             availableTemplates.AddRange(upgrade.GetDefaultLaunchTemplates());
 
             OnGetAvailableBombLaunchTemplates?.Invoke(availableTemplates, upgrade);
@@ -833,32 +840,60 @@ namespace Ship
             return availableTemplates;
         }
 
+        public bool AllowBombDropFrontGuides(GenericUpgrade upgrade)
+        {
+            bool allowFrontGuides = false;
+
+            OnAllowBombDropFrontGuides?.Invoke(upgrade, ref allowFrontGuides);
+
+            return allowFrontGuides;
+        }
+
         public void CallOnGetBombTemplateDirection(ref Direction direction)
         {
             OnGetBombTemplateDirection?.Invoke(ref direction);
         }
 
-        public List<ManeuverTemplate> GetAvailableBarrelRollTemplates(GenericAction action)
+        public List<ManeuverTemplate> GetAvailableBarrelRollActionTemplates(GenericAction action)
         {
-            List<ManeuverTemplate> availableTemplates = new List<ManeuverTemplate>(ShipBase.BarrelRollTemplatesAvailable);
+            List<ManeuverTemplate> availableTemplates = new(ShipBase.BarrelRollTemplatesAvailable);
 
-            OnGetAvailableBarrelRollTemplates?.Invoke(availableTemplates, action);
+            OnGetAvailableBarrelRollActionTemplates?.Invoke(availableTemplates, action);
+            OnGetAvailableBarrelRollTemplates?.Invoke(availableTemplates);
+
+            return availableTemplates;
+        }
+
+        public List<ManeuverTemplate> GetAvailableBarrelRollTemplates()
+        {
+            List<ManeuverTemplate> availableTemplates = new(ShipBase.BarrelRollTemplatesAvailable);
+
+            OnGetAvailableBarrelRollTemplates?.Invoke(availableTemplates);
 
             return availableTemplates;
         }
 
         public List<ManeuverTemplate> GetAvailableDecloakBarrelRollTemplates()
         {
-            List<ManeuverTemplate> availableTemplates = new List<ManeuverTemplate>(ShipBase.DecloakBarrelRollTemplatesAvailable);
+            List<ManeuverTemplate> availableTemplates = new(ShipBase.DecloakBarrelRollTemplatesAvailable);
 
-            OnGetAvailableDecloakTemplates?.Invoke(availableTemplates);
+            OnGetAvailableDecloakBarrelRollTemplates?.Invoke(availableTemplates);
+
+            return availableTemplates;
+        }
+
+        public List<ManeuverTemplate> GetAvailableDecloakBoostTemplates()
+        {
+            List<ManeuverTemplate> availableTemplates = new(ShipBase.DecloakBoostTemplatesAvailable);
+
+            OnGetAvailableDecloakBoostTemplates?.Invoke(availableTemplates);
 
             return availableTemplates;
         }
 
         public List<BoostMove> GetAvailableBoostTemplates(GenericAction action)
         {
-            List<BoostMove> availableMoves = new List<BoostMove>
+            List<BoostMove> availableMoves = new()
             {
                 new BoostMove(ActionsHolder.BoostTemplates.Straight1),
                 new BoostMove(ActionsHolder.BoostTemplates.LeftBank1),
@@ -918,7 +953,7 @@ namespace Ship
 
         public List<IShipWeapon> GetAllWeapons()
         {
-            List<IShipWeapon> allWeapons = new List<IShipWeapon>();
+            List<IShipWeapon> allWeapons = new();
 
             foreach (PrimaryWeaponClass primaryWeapon in PrimaryWeapons)
             {
@@ -971,7 +1006,7 @@ namespace Ship
 
         public void StartBonusAttack(Action callback, Func<GenericShip, IShipWeapon, bool, bool> bonusAttackFilter = null)
         {
-            if(IsCannotAttackSecondTime)
+            if (IsCannotAttackSecondTime)
             {
                 // We should never reach this but just in case.
                 Messages.ShowError(PilotInfo.PilotName + ": You have already performed a bonus attack!");
@@ -981,18 +1016,18 @@ namespace Ship
             IsCannotAttackSecondTime = true;
 
             Combat.StartSelectAttackTarget(
-				this,
-				delegate
+                this,
+                delegate
                 {
                     //if bonus attack was skipped, allow bonus attacks again
                     if (IsAttackSkipped) IsCannotAttackSecondTime = false;
                     callback();
                 },
-				bonusAttackFilter,
+                bonusAttackFilter,
                 PilotInfo.PilotName,
-				"You may perform a bonus attack",
-				this
-			);
+                "You may perform a bonus attack",
+                this
+            );
         }
 
         public void CallBeforeDeviceWillBeDropped(Action callback)
@@ -1024,6 +1059,7 @@ namespace Ship
             {
                 OnRemoteWasDropped?.Invoke();
                 OnRemoteWasDroppedGlobal?.Invoke();
+                OnRemoteWasDroppedUpgrade?.Invoke(Bombs.BombsManager.CurrentDevice);
 
                 Triggers.ResolveTriggers(TriggerTypes.OnRemoteWasDropped, callback);
             }
@@ -1048,7 +1084,7 @@ namespace Ship
 
                 Triggers.ResolveTriggers(TriggerTypes.OnBombWasLaunched, callback);
             }
-            else if(Bombs.BombsManager.CurrentDevice.UpgradeInfo.SubType == UpgradeSubType.Remote)
+            else if (Bombs.BombsManager.CurrentDevice.UpgradeInfo.SubType == UpgradeSubType.Remote)
             {
                 OnRemoteWasLaunched?.Invoke();
                 OnRemoteWasLaunchedGlobal?.Invoke();
@@ -1061,7 +1097,7 @@ namespace Ship
             }
         }
 
-        public void CallUpdateWeaponRange(IShipWeapon weapon, ref int minRange, ref int maxRange, GenericShip target=null)
+        public void CallUpdateWeaponRange(IShipWeapon weapon, ref int minRange, ref int maxRange, GenericShip target = null)
         {
             OnUpdateWeaponRange?.Invoke(weapon, ref minRange, ref maxRange, target);
 
@@ -1070,8 +1106,7 @@ namespace Ship
 
         public void ShowAttackAnimationAndSound()
         {
-            GenericSpecialWeapon chosenSecondaryWeapon = Combat.ChosenWeapon as GenericSpecialWeapon;
-            if (chosenSecondaryWeapon == null || chosenSecondaryWeapon.HasType(UpgradeType.Cannon) || chosenSecondaryWeapon.HasType(UpgradeType.Illicit))
+            if (Combat.ChosenWeapon is not GenericSpecialWeapon chosenSecondaryWeapon || chosenSecondaryWeapon.HasType(UpgradeType.Cannon) || chosenSecondaryWeapon.HasType(UpgradeType.Illicit))
             { // Primary Weapons, Cannons, and Illicits (HotShotBlaster)
                 Sounds.PlayShots(SoundInfo.ShotsName, SoundInfo.ShotsCount);
                 AnimatePrimaryWeapon();

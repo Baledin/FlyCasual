@@ -86,7 +86,7 @@ namespace Abilities.SecondEdition
                 FilterTargets,
                 GetAiPriority,
                 HostShip.Owner.PlayerNo,
-                HostShip.PilotName,
+                HostShip.PilotInfo.PilotName,
                 "Choose a friendly ship, it removes a stress token",
                 HostShip
             );

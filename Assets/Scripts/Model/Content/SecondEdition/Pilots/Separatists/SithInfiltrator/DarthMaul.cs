@@ -58,6 +58,7 @@ namespace Ship.SecondEdition.SithInfiltrator
                     UpgradeType.Crew,
                     UpgradeType.Sensor,
                     UpgradeType.Modification,
+                    UpgradeType.Tech,
                     UpgradeType.Device,
                     UpgradeType.Torpedo,
                     UpgradeType.Title,

@@ -20,7 +20,7 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(Abilities.SecondEdition.CutthroatAbility),
                 restriction: new FactionRestriction(Faction.Scum)
             );
-        }        
+        }
     }
 }
 
@@ -43,7 +43,7 @@ namespace Abilities.SecondEdition
             if (HostShip == ship) return;
             if (!Tools.IsAnotherFriendly(HostShip, ship)) return;
             if (!(ship.PilotInfo.IsLimited || ship.UpgradeBar.HasUpgradeInstalled(typeof(Cutthroat)))) return;
-            
+
             DistanceInfo distanceInfo = new DistanceInfo(HostShip, ship);
             if (distanceInfo.Range > 3) return;
 
@@ -52,7 +52,7 @@ namespace Abilities.SecondEdition
                 RegisterAbilityTrigger(
                     TriggerTypes.OnShipIsDestroyed,
                     AskWhatToDo,
-                    customTriggerName: $"{HostUpgrade.UpgradeInfo.Name} (ID: {HostShip.ShipId})"
+                    customTriggerName: $"{HostUpgrade.UpgradeInfo.Name} ({HostShip.PilotInfo.PilotName})"
                 );
             }
         }

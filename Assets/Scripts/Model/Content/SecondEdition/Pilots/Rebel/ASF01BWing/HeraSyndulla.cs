@@ -56,8 +56,8 @@ namespace Ship
         {
             public HeraSyndullaXWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 15;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 21;
+                (PilotInfo as PilotCardInfo25).Cost = 14;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 16;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>() {
                     UpgradeType.Talent,
                     UpgradeType.Talent,

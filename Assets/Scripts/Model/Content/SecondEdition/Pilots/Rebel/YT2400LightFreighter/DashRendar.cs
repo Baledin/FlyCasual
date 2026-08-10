@@ -46,12 +46,13 @@ namespace Ship.SecondEdition.YT2400LightFreighter
     {
         public DashRendarXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 19;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 20;
+            (PilotInfo as PilotCardInfo25).Cost = 18;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 24;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,
                 UpgradeType.Crew,
+                UpgradeType.Gunner,
                 UpgradeType.Illicit,
                 UpgradeType.Illicit,
                 UpgradeType.Modification,

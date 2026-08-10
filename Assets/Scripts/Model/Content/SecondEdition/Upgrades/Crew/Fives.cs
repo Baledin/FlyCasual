@@ -24,9 +24,10 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(227, 9)
+                new Vector2(271, 5),
+                new Vector2(145, 145)
             );
-        }        
+        }
     }
 }
 
@@ -123,7 +124,7 @@ namespace Abilities.SecondEdition
         private void GetTokenFromcard(Type type)
         {
             DecisionSubPhase.ConfirmDecisionNoCallback();
-            
+
             StoredTokens[type]--;
             HostUpgrade.NamePostfix = $"(F:{StoredTokens[typeof(FocusToken)]} E:{StoredTokens[typeof(EvadeToken)]})";
             Roster.UpdateUpgradesPanel(HostShip, HostShip.InfoPanel);

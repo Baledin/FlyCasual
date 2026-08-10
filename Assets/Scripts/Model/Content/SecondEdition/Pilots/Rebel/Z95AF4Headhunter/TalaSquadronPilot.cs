@@ -31,8 +31,8 @@ namespace Ship.SecondEdition.Z95AF4Headhunter
     {
         public TalaSquadronPilotXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 8;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 16;
+            (PilotInfo as PilotCardInfo25).Cost = 7;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 11;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

@@ -33,7 +33,7 @@ namespace Ship
             public ObsidianSquadronPilotXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 5;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 2;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 0;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Modification

@@ -41,8 +41,8 @@ namespace Ship
         {
             public ContrailXWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 9;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
+                (PilotInfo as PilotCardInfo25).Cost = 8;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 7;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             }
         }

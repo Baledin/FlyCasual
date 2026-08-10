@@ -40,7 +40,7 @@ namespace Ship.SecondEdition.UpsilonClassCommandShuttle
     {
         public MajorStridanXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 18;
+            (PilotInfo as PilotCardInfo25).Cost = 17;
             (PilotInfo as PilotCardInfo25).LoadoutValue = 25;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {

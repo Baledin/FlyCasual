@@ -44,14 +44,15 @@ namespace Ship.SecondEdition.SithInfiltrator
     {
         public O66XWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 13;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 13;
+            (PilotInfo as PilotCardInfo25).Cost = 12;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 7;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Crew,
                     UpgradeType.Crew,
                     UpgradeType.Sensor,
                     UpgradeType.Modification,
+                    UpgradeType.Tech,
                     UpgradeType.Device,
                     UpgradeType.Torpedo,
                     UpgradeType.Title,

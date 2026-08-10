@@ -1,17 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using BoardTools;
-using GameModes;
-using System.Linq;
-using Editions;
-using Obstacles;
+﻿using Actions;
 using ActionsList;
-using Actions;
+using Assets.Scripts.Model.Tools.Enums;
 using Bombs;
-using Ship;
 using Movement;
+using Obstacles;
+using Ship;
+using SubPhases;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using static ActionsHolder;
 
 namespace ActionsList
 {
@@ -37,9 +37,10 @@ namespace ActionsList
             else
             {
                 Phases.CurrentSubPhase.Pause();
-                var phase = Phases.StartTemporarySubPhaseNew<SubPhases.BoostPlanningSubPhase>(
+                BoostPlanningSubPhase phase = Phases.StartTemporarySubPhaseNew<BoostPlanningSubPhase>(
                     "Boost",
-                    delegate {
+                    delegate
+                    {
                         SelectedBoostTemplate = null;
                         Phases.CurrentSubPhase.CallBack();
                     }
@@ -60,39 +61,24 @@ namespace ActionsList
     public class BoostMove
     {
         public string Name { get; private set; }
-        public ActionsHolder.BoostTemplates Template;
+        public BoostTemplates Template;
         public bool IsRed;
         public bool IsPurple;
         public bool IsForced { get; private set; }
 
-        public BoostMove(ActionsHolder.BoostTemplates template, bool isRed = false, bool isPurple = false, bool isForced = false)
+        public BoostMove(BoostTemplates template, bool isRed = false, bool isPurple = false, bool isForced = false)
         {
             Template = template;
             IsRed = isRed;
             IsPurple = isPurple;
             IsForced = isForced;
 
-            switch (template)
-            {
-                case ActionsHolder.BoostTemplates.Straight1:
-                    Name = "Straight 1";
-                    break;
-                case ActionsHolder.BoostTemplates.RightBank1:
-                    Name = "Bank 1 Right";
-                    break;
-                case ActionsHolder.BoostTemplates.LeftBank1:
-                    Name = "Bank 1 Left";
-                    break;
-                case ActionsHolder.BoostTemplates.RightTurn1:
-                    Name = "Turn 1 Right";
-                    break;
-                case ActionsHolder.BoostTemplates.LeftTurn1:
-                    Name = "Turn 1 Left";
-                    break;
-                default:
-                    Name = "Straight 1";
-                    break;
-            }
+            Name = template.GetDescription();
+        }
+
+        public static BoostTemplates GetBoostTemplateFromName(string name)
+        {
+            return EnumExtensions.GetEnumValueFromDescription<BoostTemplates>(name);
         }
     }
 }
@@ -111,7 +97,7 @@ namespace SubPhases
 
         private int updatesCount = 0;
 
-        public List<BoostMove> AvailableBoostMoves = new List<BoostMove>();
+        public List<BoostMove> AvailableBoostMoves = new();
         public string SelectedBoostHelper;
 
         public bool IsTractorBeamBoost = false;
@@ -135,6 +121,7 @@ namespace SubPhases
             {
                 render.enabled = false;
             }
+
             ShipStand.transform.Find("ShipBase").Find("ObstaclesStayDetector").gameObject.AddComponent<ObstaclesStayDetectorForced>();
             obstaclesStayDetectorBase = ShipStand.GetComponentInChildren<ObstaclesStayDetectorForced>();
             obstaclesStayDetectorBase.TheShip = TheShip;
@@ -179,9 +166,10 @@ namespace SubPhases
                 Triggers.FinishTrigger
             );
 
-            foreach (var move in AvailableBoostMoves)
+            foreach (BoostMove move in AvailableBoostMoves)
             {
                 ActionColor color = ActionColor.White;
+
                 if (move.IsRed)
                 {
                     color = ActionColor.Red;
@@ -193,12 +181,13 @@ namespace SubPhases
 
                 selectBoostTemplateDecisionSubPhase.AddDecision(
                     move.Name,
-                    delegate {
+                    delegate
+                    {
                         SelectTemplate(move);
                         DecisionSubPhase.ConfirmDecision();
                     },
                     color: color,
-                    isCentered: move.Template == ActionsHolder.BoostTemplates.Straight1
+                    isCentered: move.Template == BoostTemplates.Straight1
                 );
             }
 
@@ -247,7 +236,7 @@ namespace SubPhases
             }
             else
             {
-                CancelBoost(new List<ActionFailReason>() { ActionFailReason.NoTemplateAvailable});
+                CancelBoost(new List<ActionFailReason>() { ActionFailReason.NoTemplateAvailable });
             }
         }
 
@@ -256,8 +245,8 @@ namespace SubPhases
             TheShip.GetBoosterHelper().Find(SelectedBoostHelper).gameObject.SetActive(true);
 
             Transform newBase = TheShip.GetBoosterHelper().Find(SelectedBoostHelper + "/Finisher/BasePosition");
-            ShipStand.transform.position = new Vector3(newBase.position.x, 0, newBase.position.z);
-            ShipStand.transform.rotation = newBase.rotation;
+
+            ShipStand.transform.SetPositionAndRotation(new Vector3(newBase.position.x, 0, newBase.position.z), newBase.rotation);
 
             obstaclesStayDetectorMovementTemplate = TheShip.GetBoosterHelper().Find(SelectedBoostHelper).GetComponentInChildren<ObstaclesStayDetectorForced>();
             obstaclesStayDetectorMovementTemplate.TheShip = TheShip;
@@ -265,11 +254,12 @@ namespace SubPhases
 
         public virtual void StartBoostExecution(ShipPositionInfo finalPositionInfo)
         {
-            BoostExecutionSubPhase execution = (BoostExecutionSubPhase) Phases.StartTemporarySubPhaseNew(
+            BoostExecutionSubPhase execution = (BoostExecutionSubPhase)Phases.StartTemporarySubPhaseNew(
                 "Boost execution",
                 typeof(BoostExecutionSubPhase),
                 CallBack
             );
+
             execution.TheShip = TheShip;
             execution.IsTractorBeamBoost = IsTractorBeamBoost;
             execution.SelectedBoostHelper = SelectedBoostHelper;
@@ -332,7 +322,7 @@ namespace SubPhases
             obstaclesStayDetectorBase.ReCheckCollisionsFinish();
             obstaclesStayDetectorMovementTemplate.ReCheckCollisionsFinish();
 
-            ShipPositionInfo shipPositionInfo = new ShipPositionInfo(ShipStand.transform.position, ShipStand.transform.eulerAngles);
+            ShipPositionInfo shipPositionInfo = new(ShipStand.transform.position, ShipStand.transform.eulerAngles);
 
             HidePlanningTemplates();
 
@@ -373,7 +363,7 @@ namespace SubPhases
 
         private void CheckMines()
         {
-            foreach (var mineCollider in obstaclesStayDetectorMovementTemplate.OverlappedMinesNow)
+            foreach (Collider mineCollider in obstaclesStayDetectorMovementTemplate.OverlappedMinesNow)
             {
                 GenericDeviceGameObject mineObject = mineCollider.transform.parent.GetComponent<GenericDeviceGameObject>();
                 if (!TheShip.MinesHit.Contains(mineObject)) TheShip.MinesHit.Add(mineObject);
@@ -382,7 +372,7 @@ namespace SubPhases
 
         private List<ActionFailReason> CheckBoostProblems(bool quiet = false)
         {
-            List<ActionFailReason> result = new List<ActionFailReason>();
+            List<ActionFailReason> result = new();
 
             if (obstaclesStayDetectorBase.OverlapsShipNow)
             {
@@ -420,7 +410,6 @@ namespace SubPhases
         {
             return false;
         }
-
     }
 
     public class BoostExecutionSubPhase : GenericSubPhase
@@ -444,42 +433,20 @@ namespace SubPhases
         {
             Rules.Collision.ClearBumps(TheShip);
 
-            switch (SelectedBoostHelper)
+            BoostMovement = SelectedBoostHelper switch
             {
-                case "Straight 1":
-                    BoostMovement = new StraightBoost(1, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.None);
-                    break;
-                case "Bank 1 Left":
-                    BoostMovement = new BankBoost(1, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.None);
-                    break;
-                case "Bank 1 Right":
-                    BoostMovement = new BankBoost(1, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.None);
-                    break;
-                case "Turn 1 Right":
-                    BoostMovement = new TurnBoost(1, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.None);
-                    break;
-                case "Turn 1 Left":
-                    BoostMovement = new TurnBoost(1, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.None);
-                    break;
-                case "Straight 2":
-                    BoostMovement = new StraightBoost(2, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.None);
-                    break;
-                case "Bank 2 Left":
-                    BoostMovement = new BankBoost(2, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.None);
-                    break;
-                case "Bank 2 Right":
-                    BoostMovement = new BankBoost(2, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.None);
-                    break;
-                case "Turn 2 Right":
-                    BoostMovement = new TurnBoost(2, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.None);
-                    break;
-                case "Turn 2 Left":
-                    BoostMovement = new TurnBoost(2, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.None);
-                    break;
-                default:
-                    BoostMovement = new StraightBoost(1, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.None);
-                    break;
-            }
+                "Straight 1" => new StraightBoost(1, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.None),
+                "Bank 1 Left" => new BankBoost(1, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.None),
+                "Bank 1 Right" => new BankBoost(1, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.None),
+                "Turn 1 Right" => new TurnBoost(1, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.None),
+                "Turn 1 Left" => new TurnBoost(1, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.None),
+                "Straight 2" => new StraightBoost(2, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.None),
+                "Bank 2 Left" => new BankBoost(2, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.None),
+                "Bank 2 Right" => new BankBoost(2, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.None),
+                "Turn 2 Right" => new TurnBoost(2, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.None),
+                "Turn 2 Left" => new TurnBoost(2, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.None),
+                _ => new StraightBoost(1, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.None),
+            };
 
             BoostMovement.FinalPositionInfo = FinalPositionInfo;
             BoostMovement.TheShip = TheShip;

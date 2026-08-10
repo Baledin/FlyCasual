@@ -180,7 +180,8 @@ namespace SquadBuilderNS
 
         public void ShowFactionsImages()
         {
-            List<string> panelNames = new List<string>() { "FactionPanelsFirstEdition", "FactionPanelsSecondEdition" };
+            List<string> panelNames = new () { "FactionPanelsFirstEdition", "FactionPanelsSecondEdition" };
+
             foreach (string panelName in panelNames)
             {
                 GameObject.Find("UI/Panels/SelectFactionPanel/Panel").transform.Find(panelName).gameObject.SetActive(false);
@@ -265,7 +266,7 @@ namespace SquadBuilderNS
         public void RemoveInstalledUpgrade(UpgradeSlot slot, GenericUpgrade upgrade)
         {
             slot.RemovePreInstallUpgrade();
-            // check if upgrade is multi-slotted
+            // TODO: check if upgrade is multi-slotted
             ShowPilotWithSlots();
         }
 

@@ -46,7 +46,7 @@ namespace Ship.SecondEdition.Eta2Actis
         public YodaXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 10;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 11;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {

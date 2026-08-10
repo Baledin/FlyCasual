@@ -78,7 +78,7 @@ namespace Ship.SecondEdition.BTANR2YWing
 
             ShipAbilities.Add(new Abilities.SecondEdition.IntuitiveInterfaceAbility());
 
-            ShipIconLetter = ' ';
+            ShipIconLetter = '{';
         }
     }
 }

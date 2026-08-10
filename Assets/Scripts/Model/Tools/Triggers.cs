@@ -61,6 +61,7 @@ public enum TriggerTypes
     OnTargetLockIsAcquired,
     OnRerollIsConfirmed,
     OnDieResultIsSpent,
+    OnBeforeDecloak,
     OnDecloak,
     OnSlam,
 
@@ -150,12 +151,12 @@ public class Trigger
 
 public class StackLevel
 {
-    private List<Trigger> triggers = new List<Trigger>();
+    private readonly List<Trigger> triggers = new();
     public int level;
     public bool IsActive;
     public Action CallBack;
     public TriggerTypes TriggerType { get; private set; }
-    
+
     public StackLevel(TriggerTypes triggerType)
     {
         TriggerType = triggerType;
@@ -201,7 +202,6 @@ public class StackLevel
     {
         return triggers.Where(n => n.IsCurrent).First();
     }
-
 }
 
 public static partial class Triggers
@@ -256,7 +256,7 @@ public static partial class Triggers
                 {
                     FireTrigger(currentTriggersList[0]);
                 }
-                else if(currentTriggersList.Count(n=>n.IsPriority) > 0)
+                else if (currentTriggersList.Count(n => n.IsPriority) > 0)
                 {
                     FireTrigger(currentTriggersList.FirstOrDefault(n => n.IsPriority));
                 }
@@ -271,7 +271,6 @@ public static partial class Triggers
                 DoCallBack();
             }
         }
-        
     }
 
     public static void FireTrigger(Trigger trigger)
@@ -333,7 +332,7 @@ public static partial class Triggers
         else
         {
             string triggerTypesInStack = "";
-            foreach (var level in TriggersStack)
+            foreach (StackLevel level in TriggersStack)
             {
                 triggerTypesInStack += level.TriggerType;
                 if (level != TriggersStack.Last()) triggerTypesInStack += ", ";
@@ -353,8 +352,9 @@ public static partial class Triggers
         StackLevel result = null;
         if (TriggersStack.Count > 0)
         {
-            result = TriggersStack[TriggersStack.Count - 1];
+            result = TriggersStack[^1];
         }
+
         return result;
     }
 
@@ -366,7 +366,7 @@ public static partial class Triggers
 
     private static void AddTriggerToCurrentStackLevel(Trigger trigger)
     {
-        TriggersStack[TriggersStack.Count - 1].AddTrigger(trigger);
+        TriggersStack[^1].AddTrigger(trigger);
     }
 
     private static void CreateNewLevelOfStack(TriggerTypes triggerType, Action callBack = null)
@@ -377,10 +377,11 @@ public static partial class Triggers
 
     private static bool IsAllSkippable(List<Trigger> currentTriggersList)
     {
-        foreach (var trigger in currentTriggersList)
+        foreach (Trigger trigger in currentTriggersList)
         {
             if (!trigger.Skippable) return false;
         }
+
         return true;
     }
 
@@ -397,11 +398,12 @@ public static partial class Triggers
             Players.PlayerNo currentPlayer = (currentTriggersList.Count > 0) ? Phases.PlayerWithInitiative : Roster.AnotherPlayer(Phases.PlayerWithInitiative);
             currentTriggersList = Triggers.GetCurrentLevel().GetTriggersByPlayer(currentPlayer);
 
-            foreach (var trigger in currentTriggersList)
+            foreach (Trigger trigger in currentTriggersList)
             {
                 if (trigger.TriggerOwner == currentPlayer)
                 {
-                    AddDecision(trigger.Name, delegate {
+                    AddDecision(trigger.Name, delegate
+                    {
                         Phases.FinishSubPhase(this.GetType());
                         FireTrigger(trigger);
                     });
@@ -413,8 +415,5 @@ public static partial class Triggers
 
             callBack();
         }
-
     }
-
 }
-

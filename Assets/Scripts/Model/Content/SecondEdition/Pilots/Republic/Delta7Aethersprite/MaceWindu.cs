@@ -46,8 +46,8 @@ namespace Ship.SecondEdition.Delta7Aethersprite
     {
         public MaceWinduXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 11;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+            (PilotInfo as PilotCardInfo25).Cost = 10;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {

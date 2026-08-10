@@ -43,7 +43,7 @@ namespace Ship.SecondEdition.BTLS8KWing
         public EsegeTuketuXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 12;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 11;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 14;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Crew,

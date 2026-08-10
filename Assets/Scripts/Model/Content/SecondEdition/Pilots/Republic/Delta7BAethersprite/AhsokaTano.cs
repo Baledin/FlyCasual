@@ -42,8 +42,8 @@ namespace Ship.SecondEdition.Delta7BAethersprite
     {
         public AhsokaTano7BXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 13;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+            (PilotInfo as PilotCardInfo25).Cost = 12;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
         }
     }

@@ -52,7 +52,7 @@ namespace Ship
             public DaceBonearmXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 11;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 9;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {

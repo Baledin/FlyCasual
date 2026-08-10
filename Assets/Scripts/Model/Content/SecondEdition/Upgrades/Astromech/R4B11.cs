@@ -13,7 +13,7 @@ namespace UpgradesList.SecondEdition
             (
                 "R4-B11",
                 UpgradeType.Astromech,
-                cost: 3, 
+                cost: 3,
                 abilityType: typeof(Abilities.SecondEdition.R4B11Ability),
                 restriction: new FactionRestriction(Faction.Scum)
             );
@@ -88,7 +88,7 @@ namespace Abilities.SecondEdition
 
         private bool IsAvailable()
         {
-            return IsDefenderHasBadTokens();
+            return Combat.Attacker == HostShip && IsDefenderHasBadTokens();
         }
 
         public override void DeactivateAbility()
@@ -100,5 +100,5 @@ namespace Abilities.SecondEdition
 
 namespace SubPhases
 {
-    public class R4B11AbilityDecisionSubPhase : RemoveBadTokenFromDefenderDecisionSubPhase {}
+    public class R4B11AbilityDecisionSubPhase : RemoveBadTokenFromDefenderDecisionSubPhase { }
 }

@@ -3,6 +3,7 @@ using BoardTools;
 using Ship;
 using SubPhases;
 using System;
+using System.Linq;
 using Tokens;
 using UnityEngine;
 using Upgrade;
@@ -28,7 +29,7 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.FirstOrder,
-                new Vector2(229, 1)
+                new Vector2(294, 0)
             );
         }
     }
@@ -53,7 +54,7 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.FirstOrder,
-                new Vector2(215, 0)
+                new Vector2(281, 0)
             );
         }
     }
@@ -216,7 +217,7 @@ namespace Abilities.SecondEdition
         private static void StartSelectionSubphase(GenericToken token)
         {
             AgentTerexCyborgActionSubPhase subPhase = Phases.StartTemporarySubPhaseNew<AgentTerexCyborgActionSubPhase>(
-                "Agen Terex Target Selection",
+                "Agent Terex Target Selection",
                 Phases.CurrentSubPhase.CallBack
             );
 
@@ -231,18 +232,24 @@ namespace Abilities.SecondEdition
 
             foreach (GenericShip enemyShip in Selection.ThisShip.Owner.EnemyShips.Values)
             {
-                DistanceInfo distInfo = new DistanceInfo(Selection.ThisShip, enemyShip);
+                DistanceInfo distInfo = new(Selection.ThisShip, enemyShip);
+
                 if (distInfo.Range <= 3) result = 100;
             }
 
             return result;
+        }
+        public override bool IsActionAvailable()
+        {
+            return (Selection.ThisShip.Tokens.HasToken<CalculateToken>()
+                || Selection.ThisShip.Tokens.HasToken<JamToken>())
+                && Roster.AllShips.Values.Any(s => !Tools.IsSameShip(HostShip, s) && HostShip.GetRangeToShip(s) <= 3);
         }
     }
 }
 
 namespace SubPhases
 {
-
     public class AgentTerexCyborgActionSubPhase : SelectShipSubPhase
     {
         public GenericToken TokenToAssign { get; set; }
@@ -281,7 +288,8 @@ namespace SubPhases
 
         private bool FilterTargets(GenericShip ship)
         {
-            DistanceInfo distInfo = new DistanceInfo(Selection.ThisShip, ship);
+            DistanceInfo distInfo = new(Selection.ThisShip, ship);
+
             return distInfo.Range <= 3;
         }
 

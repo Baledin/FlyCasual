@@ -406,8 +406,8 @@ namespace AI.Aggressor
                 MovementPrediction prediction = new MovementPrediction(ship, movement);
                 yield return prediction.CalculateMovementPredicition();
 
-                if (!CurrentNavigationResult.isOffTheBoard) HasAnyManeuverWithoutOffBoardFinish = true;
-                if (CurrentNavigationResult.obstaclesHit == 0) HasAnyManeuverWithoutAsteroidCollision = true;
+                if (!prediction.IsOffTheBoard) HasAnyManeuverWithoutOffBoardFinish = true;
+                if (!prediction.IsLandedOnAsteroid) HasAnyManeuverWithoutAsteroidCollision = true;
             }
 
             CurrentNavigationResult.isOffTheBoardNextTurn = !HasAnyManeuverWithoutOffBoardFinish;

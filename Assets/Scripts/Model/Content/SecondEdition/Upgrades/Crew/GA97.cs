@@ -258,7 +258,7 @@ namespace Conditions
                 DistanceInfo distInfo = new DistanceInfo(Host, enemyShip);
                 if (distInfo.Range < 4)
                 {
-                    Messages.ShowErrorToHuman("Boba Fett: The range to the closest enemy is " + distInfo.Range + ", it must be beyond range 3");
+                    Messages.ShowErrorToHuman("It's The Resistance: The range to the closest enemy is " + distInfo.Range + ", it must be beyond range 3");
                     return false;
                 }
             }

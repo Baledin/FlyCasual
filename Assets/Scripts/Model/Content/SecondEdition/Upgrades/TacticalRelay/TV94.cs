@@ -22,11 +22,11 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Separatists,
-                new Vector2(192, 1)
+                new Vector2(401, 50)
             );
 
-            
-        }        
+
+        }
     }
 }
 
@@ -76,7 +76,7 @@ namespace Abilities.SecondEdition
 
             if (Combat.ChosenWeapon.WeaponType != WeaponTypes.PrimaryWeapon) return false;
 
-            DistanceInfo distInfo = new DistanceInfo(HostShip, Combat.Attacker);
+            DistanceInfo distInfo = new(HostShip, Combat.Attacker);
             if (distInfo.Range > 4) return false;
 
             if (!Combat.Attacker.SectorsInfo.IsShipInSector(Combat.Defender, Arcs.ArcType.Bullseye)) return false;

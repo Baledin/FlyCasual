@@ -64,7 +64,7 @@ namespace Ship
             public SoontirFelBoEXWA() : base()
             {
                 var pilotInfo = PilotInfo as PilotCardInfo25;
-                pilotInfo.Cost = 14;
+                pilotInfo.Cost = 15;
                 pilotInfo.LegalityInfo = new List<Legality> { Legality.XWA };
             }
         }

@@ -16,7 +16,7 @@ public static partial class Roster
 {
     //Players
 
-    public static List<GenericPlayer> Players;
+    public static List<GenericPlayer> Players = new();
 
     public static GenericPlayer Player1 { get { return Players.Find(n => n.PlayerNo == PlayerNo.Player1); } }
     public static GenericPlayer Player2 { get { return Players.Find(n => n.PlayerNo == PlayerNo.Player2); } }
@@ -24,11 +24,11 @@ public static partial class Roster
     //Ships
 
     public static Dictionary<string, GenericShip> AllUnits;
-    public static Dictionary<string, GenericShip> AllShips { get { return AllUnits.Where(n => !(n.Value is GenericRemote)).ToDictionary(n => n.Key, m => m.Value); } }
+    public static Dictionary<string, GenericShip> AllShips { get { return AllUnits.Where(n => n.Value is not GenericRemote).ToDictionary(n => n.Key, m => m.Value); } }
     public static Dictionary<string, GenericShip> AllRemotes { get { return AllUnits.Where(n => n.Value is GenericRemote).ToDictionary(n => n.Key, m => m.Value); } }
 
     public static Dictionary<string, GenericShip> ShipsPlayer1 { get { return Player1.Ships; } }
-    public static Dictionary<string, GenericShip> ShipsPlayer2 {get { return Player2.Ships; } }
+    public static Dictionary<string, GenericShip> ShipsPlayer2 { get { return Player2.Ships; } }
 
     public static List<GenericShip> Reserve;
 
@@ -58,7 +58,7 @@ public static partial class Roster
 
         if (ReplaysManager.Mode == ReplaysMode.Write)
         {
-            foreach (var squad in Global.SquadBuilder.SquadLists.Squads.Values)
+            foreach (SquadList squad in Global.SquadBuilder.SquadLists.Squads.Values)
             {
                 squad.SavedConfiguration["description"].str = squad.SavedConfiguration["description"].str.Replace("\n", "");
 
@@ -69,7 +69,6 @@ public static partial class Roster
                         squad.PlayerNo.ToString(),
                         squad.PlayerType.ToString(),
                         Options.Title,
-                        Options.Avatar,
                         squad.SavedConfiguration.ToString()
                     )
                 );
@@ -77,7 +76,7 @@ public static partial class Roster
         }
         else if (ReplaysManager.Mode == ReplaysMode.Read)
         {
-            
+
         }
 
         while (GameInitializer.AcceptsCommandType == typeof(SquadsSyncCommand) && GameInitializer.CommandsReceived < 2)
@@ -86,9 +85,9 @@ public static partial class Roster
         }
     }
 
-    public static GameCommand GenerateSyncSquadCommand(string playerName, string playerType, string title, string avatar, string squadString)
+    public static GameCommand GenerateSyncSquadCommand(string playerName, string playerType, string title, string squadString)
     {
-        JSONObject parameters = new JSONObject();
+        JSONObject parameters = new();
         parameters.AddField("player", playerName);
         parameters.AddField("type", playerType);
         parameters.AddField("title", title);
@@ -106,7 +105,7 @@ public static partial class Roster
 
     private static void CreatePlayers()
     {
-        foreach (var squadList in Global.SquadBuilder.SquadLists.Squads.Values)
+        foreach (SquadList squadList in Global.SquadBuilder.SquadLists.Squads.Values)
         {
             Type playerType = squadList.PlayerType;
 
@@ -126,7 +125,7 @@ public static partial class Roster
 
     private static GenericPlayer CreatePlayer(System.Type type, PlayerNo playerNo)
     {
-        GenericPlayer player = (GenericPlayer) System.Activator.CreateInstance(type);
+        GenericPlayer player = (GenericPlayer)System.Activator.CreateInstance(type);
         player.SetPlayerNo(playerNo);
         return player;
     }
@@ -166,6 +165,7 @@ public static partial class Roster
             GenericShip newShip = ShipFactory.SpawnShip(shipConfig);
             AddShipToLists(newShip);
         }
+
         foreach (SquadListShip shipConfig in Global.SquadBuilder.SquadLists[PlayerNo.Player2].Ships)
         {
             GenericShip newShip = ShipFactory.SpawnShip(shipConfig);
@@ -192,7 +192,7 @@ public static partial class Roster
 
     public static void HideShip(string id)
     {
-        var ship = GetShipById(id);
+        GenericShip ship = GetShipById(id);
 
         if (ship != null)
         {
@@ -249,12 +249,12 @@ public static partial class Roster
 
     public static GenericShip GetShipById(string id)
     {
-		if (AllUnits.Any (x => x.Key == id))
+        if (AllUnits.Any(x => x.Key == id))
         {
-			return AllUnits[id];
-		}
+            return AllUnits[id];
+        }
 
-		return null;
+        return null;
     }
 
     public static GenericPlayer GetPlayer(PlayerNo playerNo)
@@ -281,7 +281,7 @@ public static partial class Roster
 
     public static Dictionary<string, GenericShip> ListSamePlayerAndPilotSkill(PlayerNo playerNo, int pilotSkill)
     {
-        var results =
+        IEnumerable<KeyValuePair<string, GenericShip>> results =
             from n in AllShips
             where n.Value.Owner.PlayerNo == playerNo
             where n.Value.State.Initiative == pilotSkill
@@ -292,7 +292,7 @@ public static partial class Roster
 
     public static Dictionary<int, int> ListAnotherPlayerButSamePilotSkill(int previousPilotSkill, int PilotSkillSubPhasePlayer)
     {
-        var results =
+        IEnumerable<KeyValuePair<string, GenericShip>> results =
             from n in AllShips
             where n.Value.State.Initiative == previousPilotSkill
             where n.Value.Owner.Id != PilotSkillSubPhasePlayer
@@ -305,7 +305,7 @@ public static partial class Roster
 
     public static bool AllManuversAreAssigned(PlayerNo playerNo)
     {
-        var results =
+        IEnumerable<KeyValuePair<string, GenericShip>> results =
             from n in AllShips
             where n.Value.Owner.PlayerNo == playerNo
             where n.Value.AssignedManeuver == null
@@ -317,7 +317,7 @@ public static partial class Roster
 
     public static bool AllManueversArePerformed()
     {
-        var results =
+        IEnumerable<KeyValuePair<string, GenericShip>> results =
             from n in AllShips
             where n.Value.IsManeuverPerformed == false
             select n;
@@ -329,13 +329,15 @@ public static partial class Roster
     public static bool NoSamePlayerAndPilotSkillNotAttacked()
     {
         Dictionary<string, GenericShip> samePlayerAndPilotSkill = ListSamePlayerAndPilotSkill(Phases.CurrentSubPhase.RequiredPlayer, Phases.CurrentSubPhase.RequiredInitiative);
-        foreach (var item in samePlayerAndPilotSkill)
+
+        foreach (KeyValuePair<string, GenericShip> item in samePlayerAndPilotSkill)
         {
             if (item.Value.IsAttackPerformed == false)
             {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -348,10 +350,12 @@ public static partial class Roster
         {
             result += 1;
         }
+
         if (Roster.GetPlayer(PlayerNo.Player2).Ships.Count == 0 && !Roster.Reserve.Any(n => n.Owner.PlayerNo == PlayerNo.Player2))
         {
             result += 2;
         }
+
         return result;
     }
 
@@ -359,7 +363,7 @@ public static partial class Roster
 
     public static void SetRaycastTargets(bool value)
     {
-        foreach (var shipHolder in AllUnits)
+        foreach (KeyValuePair<string, GenericShip> shipHolder in AllUnits)
         {
             shipHolder.Value.SetRaycastTarget(value);
         }
@@ -386,7 +390,7 @@ public static partial class Roster
     public static void AllShipsHighlightOff()
     {
         RosterAllPanelsHighlightOff();
-        foreach (var ship in AllUnits)
+        foreach (KeyValuePair<string, GenericShip> ship in AllUnits)
         {
             ship.Value.HighlightCanBeSelectedOff();
         }
@@ -440,8 +444,9 @@ public static partial class Roster
 
     public static void DisableUpgrades(GenericShip ship)
     {
-        foreach (GenericUpgrade upgrade in ship.UpgradeBar.GetUpgradesOnlyFaceup()) {
-            if(!ReserveUpgrades(upgrade))    
+        foreach (GenericUpgrade upgrade in ship.UpgradeBar.GetUpgradesOnlyFaceup())
+        {
+            if (!ReserveUpgrades(upgrade))
                 upgrade.DeactivateAbility();
         }
     }

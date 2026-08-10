@@ -38,7 +38,7 @@ namespace Ship.SecondEdition.TIEVnSilencer
         public FirstOrderTestPilotXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 12;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 5;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 7;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Talent,

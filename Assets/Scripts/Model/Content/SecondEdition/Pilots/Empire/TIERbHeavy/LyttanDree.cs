@@ -46,7 +46,7 @@ namespace Ship
             public LyttanDreeXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 10;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 9;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 13;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {

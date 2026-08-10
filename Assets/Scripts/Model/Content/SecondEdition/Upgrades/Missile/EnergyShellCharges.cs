@@ -40,6 +40,7 @@ namespace UpgradesList.SecondEdition
         public EnergyShellChargesXWA() : base()
         {
             UpgradeInfo.Cost = 3;
+            UpgradeInfo.Limited = 4;
             UpgradeInfo.LegalityInfo = new() { Legality.XWA };
         }
     }

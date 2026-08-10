@@ -1,10 +1,11 @@
-﻿using Ship;
-using Upgrade;
-using System.Collections.Generic;
-using System;
+﻿using Content;
+using Ship;
 using SubPhases;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
@@ -24,7 +25,8 @@ namespace UpgradesList.SecondEdition
                 isLimited: true,
                 restriction: new FactionRestriction(Faction.Scum),
                 abilityType: typeof(Abilities.SecondEdition.JabbaTheHuttAbility),
-                seImageNumber: 133
+                seImageNumber: 133,
+                legalityInfo: new List<Legality>() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
             Avatar = new AvatarInfo(
@@ -32,7 +34,16 @@ namespace UpgradesList.SecondEdition
                 new Vector2(388, 2),
                 new Vector2(200, 200)
             );
-        }        
+        }
+    }
+
+    public class JabbaTheHuttXWA : JabbaTheHutt
+    {
+        public JabbaTheHuttXWA() : base()
+        {
+            UpgradeInfo.Cost = 14;
+            UpgradeInfo.LegalityInfo = new List<Legality>() { Legality.XWA };
+        }
     }
 }
 
@@ -90,8 +101,9 @@ namespace Abilities.SecondEdition
         private void SelectAbilityTarget()
         {
             var phase = Phases.StartTemporarySubPhaseNew<JabbaTheHuttDecisionSubphase>(
-                "Jabba the Hutt: Select upgrade to recover 1 charge", 
-                () => {
+                "Jabba the Hutt: Select upgrade to recover 1 charge",
+                () =>
+                {
                     HostUpgrade.State.SpendCharge();
                     Phases.CurrentSubPhase.CallBack();
                 });

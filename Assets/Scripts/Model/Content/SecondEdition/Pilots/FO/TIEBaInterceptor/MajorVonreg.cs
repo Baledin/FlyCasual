@@ -46,8 +46,8 @@ namespace Ship.SecondEdition.TIEBaInterceptor
     {
         public MajorVonregXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 14;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 17;
+            (PilotInfo as PilotCardInfo25).Cost = 13;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 14;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,
@@ -90,15 +90,22 @@ namespace Abilities.SecondEdition
 
         private void StartSelectShip(object sender, EventArgs e)
         {
-            SelectTargetForAbility(
-                SelectShip,
-                FilterTargets,
-                GetAiPriority,
-                HostShip.Owner.PlayerNo,
-                HostShip.PilotInfo.PilotName,
-                "You may choose a ship in your bullseye arc to assign Strain or Deplete token to it",
-                HostShip
-            );
+            if (Roster.AllShips.Values.Any(s => FilterTargets(s)))
+            {
+                SelectTargetForAbility(
+                    SelectShip,
+                    FilterTargets,
+                    GetAiPriority,
+                    HostShip.Owner.PlayerNo,
+                    HostShip.PilotInfo.PilotName,
+                    "You may choose a ship in your bullseye arc to assign Strain or Deplete token to it",
+                    HostShip
+                );
+            }
+            else
+            {
+                Triggers.FinishTrigger();
+            }
         }
 
         private void SelectShip()
@@ -152,7 +159,7 @@ namespace Abilities.SecondEdition
 
         private bool FilterTargets(GenericShip ship)
         {
-            return ship.Owner.PlayerNo != HostShip.Owner.PlayerNo
+            return Tools.IsAnotherTeam(HostShip, ship)
                 && HostShip.SectorsInfo.IsShipInSector(ship, Arcs.ArcType.Bullseye);
         }
 

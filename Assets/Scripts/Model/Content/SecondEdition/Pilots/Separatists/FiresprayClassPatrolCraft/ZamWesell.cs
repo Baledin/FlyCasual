@@ -50,7 +50,7 @@ namespace Ship.SecondEdition.FiresprayClassPatrolCraft
     {
         public ZamWesellXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 19;
+            (PilotInfo as PilotCardInfo25).Cost = 18;
             (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {

@@ -28,7 +28,8 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(261, 1)
+                new Vector2(326, 2),
+                new Vector2(131, 131)
             );
         }
     }
@@ -115,7 +116,5 @@ namespace Abilities.SecondEdition
         {
             return 0;
         }
-
-
     }
 }

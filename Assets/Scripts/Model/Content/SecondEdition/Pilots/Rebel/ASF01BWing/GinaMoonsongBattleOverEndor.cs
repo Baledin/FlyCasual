@@ -69,7 +69,7 @@ namespace Ship.SecondEdition.ASF01BWing
     {
         public GinaMoonsongBattleOverEndorXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 16;
+            (PilotInfo as PilotCardInfo25).Cost = 15;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
         }
     }

@@ -46,7 +46,7 @@ namespace Ship.SecondEdition.TIEWiWhisperModifiedInterceptor
         public WhirlwindXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 11;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 13;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Talent,
@@ -105,8 +105,8 @@ namespace Abilities.SecondEdition
                 subphase.DescriptionLong = "You may remove any number of jam tokens";
                 subphase.ImageSource = HostShip;
 
-                subphase.AddDecision("Remove all", delegate { DoRemoveJamTokens(jamTokensCount, callback); });
-                subphase.AddDecision("Leave 1", delegate { DoRemoveJamTokens(jamTokensCount - 1, callback); });
+                subphase.AddDecision("Remove all", delegate { DoRemoveJamTokens(jamTokensCount); });
+                subphase.AddDecision("Leave 1", delegate { DoRemoveJamTokens(jamTokensCount - 1); });
 
                 subphase.DefaultDecisionName = subphase.GetDecisions().First().Name;
                 subphase.DecisionOwner = HostShip.Owner;
@@ -115,12 +115,12 @@ namespace Abilities.SecondEdition
             }
         }
 
-        private void DoRemoveJamTokens(int count, Action callback)
+        private void DoRemoveJamTokens(int count)
         {
             Messages.ShowInfo($"{HostShip.PilotInfo.PilotName}: {count} Jam token(s) are removed");
 
             List<GenericToken> tokensToRemove = HostShip.Tokens.GetAllTokens().Where(n => n is JamToken).Take(count).ToList();
-            HostShip.Tokens.RemoveTokens(tokensToRemove, callback);
+            HostShip.Tokens.RemoveTokens(tokensToRemove, DecisionSubPhase.ConfirmDecision);
         }
 
         private void GainFocusTokens()
@@ -146,7 +146,7 @@ namespace Abilities.SecondEdition
         {
             if (alwaysUseAbility)
             {
-                DoGetFocusTokens(count);
+                DoGetFocusTokens(count, Triggers.FinishTrigger);
             }
             else
             {
@@ -154,20 +154,20 @@ namespace Abilities.SecondEdition
                 (
                     HostShip.PilotInfo.PilotName,
                     AlwaysUseByDefault,
-                    delegate { DoGetFocusTokens(count); },
+                    delegate { DoGetFocusTokens(count, DecisionSubPhase.ConfirmDecision); },
                     showAlwaysUseOption: true,
                     descriptionLong: $"Do you want to get {count} Focus Token(s)?",
                     imageHolder: HostShip,
-                    requiredPlayer: HostShip.Owner.PlayerNo
+                    requiredPlayer: HostShip.Owner.PlayerNo,
+                    callback: Triggers.FinishTrigger
                 );
             }
         }
 
-        private void DoGetFocusTokens(int count)
+        private void DoGetFocusTokens(int count, Action callback)
         {
-            DecisionSubPhase.ConfirmDecisionNoCallback();
             Messages.ShowInfo($"{HostShip.PilotInfo.PilotName} gains {count} Focus Token{(count > 1 ? "s" : "")}");
-            HostShip.Tokens.AssignTokens(CreateFocusToken, count, Triggers.FinishTrigger);
+            HostShip.Tokens.AssignTokens(CreateFocusToken, count, callback);
         }
 
         private GenericToken CreateFocusToken()

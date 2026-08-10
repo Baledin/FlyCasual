@@ -1,10 +1,10 @@
 ﻿using Actions;
 using ActionsList;
 using Arcs;
-using BoardTools;
 using Ship;
 using SubPhases;
 using System;
+using System.Linq;
 using Tokens;
 using UnityEngine;
 using Upgrade;
@@ -32,8 +32,6 @@ namespace UpgradesList.SecondEdition
                 Faction.Separatists,
                 new Vector2(250, 1)
             );
-
-
         }
     }
 }
@@ -66,18 +64,10 @@ namespace Abilities.SecondEdition
         private bool IsInFriendlyBullseyeInRange(GenericShip enemyShip)
         {
             if (HostUpgrade.State.Charges == 0) return false;
+
             if (enemyShip.Owner.PlayerNo == HostShip.Owner.PlayerNo) return false;
 
-            foreach (GenericShip friendlyShip in HostShip.Owner.Ships.Values)
-            {
-                DistanceInfo distInfo = new DistanceInfo(HostShip, friendlyShip);
-                if (distInfo.Range <= 3 && friendlyShip.SectorsInfo.IsShipInSector(enemyShip, ArcType.Bullseye))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return HostShip.Owner.Ships.Values.Any(s => HostShip.GetRangeToShip(s) <= 3 && s.SectorsInfo.IsShipInSector(enemyShip, ArcType.Bullseye));
         }
 
         private void AskToChooseOwnShip(object sender, EventArgs e)
@@ -95,8 +85,6 @@ namespace Abilities.SecondEdition
 
         private void GiveLock()
         {
-            SelectShipSubPhase.FinishSelectionNoCallback();
-
             HostUpgrade.State.SpendCharge();
             ActionsHolder.AcquireTargetLock(TargetShip, LastMovedShip, AssignStress, AssignStress);
         }
@@ -109,13 +97,13 @@ namespace Abilities.SecondEdition
         private void Cleanup()
         {
             Selection.ChangeActiveShip(LastMovedShip);
-            Triggers.FinishTrigger();
+
+            SelectShipSubPhase.FinishSelection();
         }
 
         private bool FilterTargets(GenericShip ship)
         {
-            DistanceInfo distInfo = new DistanceInfo(HostShip, ship);
-            return distInfo.Range <= 3
+            return HostShip.GetRangeToShip(ship) <= 3
                 && ship.Owner.PlayerNo == HostShip.Owner.PlayerNo
                 && ship.SectorsInfo.IsShipInSector(LastMovedShip, ArcType.Bullseye);
         }
@@ -123,8 +111,11 @@ namespace Abilities.SecondEdition
         private int GetAiPriority(GenericShip ship)
         {
             int result = 1000 + ship.PilotInfo.Cost;
+
             if (ship.Tokens.HasToken<BlueTargetLockToken>('*')) result -= 200;
+
             if (ship.IsStressed) result -= 500;
+
             return result;
         }
     }

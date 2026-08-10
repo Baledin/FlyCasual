@@ -21,6 +21,7 @@ namespace Ship.SecondEdition.TIESeBomber
                 4,
                 13,
                 isLimited: true,
+                charges: 3,
                 abilityType: typeof(Abilities.SecondEdition.JulJerjerrodPilotAbility),
                 extraUpgradeIcons: new List<UpgradeType>()
                 {
@@ -69,6 +70,8 @@ namespace Abilities.SecondEdition
 {
     public class JulJerjerrodPilotAbility : GenericAbility
     {
+        // After you perform a Boost Action, you may spend 1 Charge to remove 1 non-lock red or orange token.
+
         public override void ActivateAbility()
         {
             HostShip.OnActionIsPerformed += CheckAbilityAfterBoost;
@@ -110,7 +113,7 @@ namespace Abilities.SecondEdition
             subphase.DecisionOwner = HostShip.Owner;
             subphase.ShowSkipButton = true;
 
-            HostShip.SpendCharges(1);
+            HostShip.SpendCharge();
 
             List<GenericToken> tokensToRemove = HostShip.Tokens.GetNonLockRedOrangeTokens();
 
@@ -120,8 +123,7 @@ namespace Abilities.SecondEdition
                     token.Name,
                     delegate
                     {
-                        tokensToRemove.Add(token);
-                        ActionsHolder.RemoveTokens(tokensToRemove, DecisionSubPhase.ConfirmDecision);
+                        HostShip.Tokens.RemoveToken(token, DecisionSubPhase.ConfirmDecision);
                     }
                 );
             }

@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Movement;
+﻿using Actions;
 using ActionsList;
-using Upgrade;
-using Actions;
-using Ship.CardInfo;
 using Arcs;
-using UnityEngine;
 using BoardTools;
+using Movement;
+using Ship.CardInfo;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Ship
 {
@@ -90,7 +88,7 @@ namespace Ship
 
                 ShipIconLetter = 'v';
 
-                ShipAbilities.Add(new Abilities.FirstEdition.StarViperMkIIAbility());
+                ShipAbilities.Add(new Abilities.FirstEdition.MicrothrustersAbility());
             }
         }
     }
@@ -98,7 +96,7 @@ namespace Ship
 
 namespace Abilities.FirstEdition
 {
-    public class StarViperMkIIAbility : GenericAbility
+    public class MicrothrustersAbility : GenericAbility
     {
         public override void ActivateAbility()
         {
@@ -110,7 +108,7 @@ namespace Abilities.FirstEdition
             HostShip.OnGetAvailableBarrelRollTemplates -= ChangeBarrelRollTemplates;
         }
 
-        private void ChangeBarrelRollTemplates(List<ManeuverTemplate> availableTemplates, GenericAction action)
+        private void ChangeBarrelRollTemplates(List<ManeuverTemplate> availableTemplates)
         {
             if (availableTemplates.Any(n => n.Name == "Straight 1"))
             {

@@ -50,8 +50,8 @@ namespace Ship.SecondEdition.Mg100StarFortress
     {
         public FinchDallowXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 17;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 28;
+            (PilotInfo as PilotCardInfo25).Cost = 15;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

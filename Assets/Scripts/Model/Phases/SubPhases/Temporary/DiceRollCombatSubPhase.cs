@@ -1,6 +1,4 @@
-﻿using ActionsList;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -82,7 +80,7 @@ namespace SubPhases
 
         public void HideDiceResultMenu()
         {
-            GameObject.Find("UI/CombatDiceResultsPanel").gameObject.SetActive(false);
+            GameObject.Find("UI/CombatDiceResultsPanel").SetActive(false);
             HideDiceModificationButtons();
             CurentDiceRoll.RemoveDiceModels();
         }
@@ -96,6 +94,7 @@ namespace SubPhases
                     MonoBehaviour.Destroy(button.gameObject);
                 }
             }
+
             PrepareToggleConfirmButton(false);
         }
 
@@ -137,9 +136,9 @@ namespace SubPhases
                 closeButton.onClick.RemoveAllListeners();
                 closeButton.onClick.AddListener(delegate { CallBack(); });
             }
+
             closeButton.gameObject.SetActive(isActive);
         }
-
     }
 
     public class AttackDiceRollCombatSubPhase : DiceRollCombatSubPhase
@@ -149,7 +148,7 @@ namespace SubPhases
             CanBePaused = true;
 
             diceType = DiceKind.Attack;
-            diceCount = Combat.Attacker.GetNumberOfAttackDice(Combat.Defender);
+            diceCount = Combat.Attacker.GetNumberOfAttackDice();
             Combat.Attacker.DiceRolledLastAttack = diceCount;
 
             checkResults = CheckResults;
@@ -197,7 +196,7 @@ namespace SubPhases
         public override void Prepare()
         {
             diceType = DiceKind.Defence;
-            diceCount = Combat.Defender.GetNumberOfDefenceDice(Combat.Attacker);
+            diceCount = Combat.Defender.GetNumberOfDefenceDice();
 
             checkResults = CheckResults;
 
@@ -226,7 +225,5 @@ namespace SubPhases
         {
             if (pausedBySubphase != typeof(DiceSyncSubphase)) Pause();
         }
-
     }
-
 }

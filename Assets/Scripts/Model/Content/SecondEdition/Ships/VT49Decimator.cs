@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Actions;
+﻿using Actions;
 using ActionsList;
 using Arcs;
 using Movement;
 using Ship.CardInfo;
+using System.Collections.Generic;
 using UnityEngine;
-using Upgrade;
 
 namespace Ship.SecondEdition.VT49Decimator
 {
@@ -79,7 +77,7 @@ namespace Ship.SecondEdition.VT49Decimator
                 "Slave1-Fire", 3
             );
 
-            ShipIconLetter = 'D';
+            ShipIconLetter = 'd';
         }
     }
 }

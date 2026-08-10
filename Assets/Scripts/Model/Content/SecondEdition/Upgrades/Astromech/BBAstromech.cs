@@ -35,52 +35,59 @@ namespace UpgradesList.SecondEdition
 
 namespace Abilities.SecondEdition
 {
-    //Before you execute a blue maneuver, you may spend 1 charge to perform a barrel roll action.
+    // During the system phase, you may spend 1 charge to perform a barrel roll action.
+
     public class BBAstromechAbility : GenericAbility
     {
-        protected List<GenericAction> AbilityActions = new List<GenericAction> { new BarrelRollAction() };
+        protected List<GenericAction> AbilityActions = new() { new BarrelRollAction() };
+        protected GenericShip selectedShip;
 
         public override void ActivateAbility()
         {
-            HostShip.BeforeMovementIsExecuted += PlanAction;
+            HostShip.OnSystemsPhaseStart += PlanAction;
         }
 
         public override void DeactivateAbility()
         {
-            HostShip.BeforeMovementIsExecuted -= PlanAction;
+            HostShip.OnSystemsPhaseStart -= PlanAction;
         }
 
-        private void PlanAction(GenericShip host)
+        private void PlanAction(GenericShip ship)
         {
-            if (host.AssignedManeuver.ColorComplexity == Movement.MovementComplexity.Easy && HostUpgrade.State.Charges > 0)
-            {
-                RegisterAbilityTrigger(TriggerTypes.BeforeMovementIsExecuted, AskPerformAction);
-            }
+            RegisterAbilityTrigger(TriggerTypes.OnSystemsPhaseStart, AskPerformAction);
         }
 
         private void AskPerformAction(object sender, EventArgs e)
         {
-            HostShip.BeforeActionIsPerformed += SpendCharge;
+            if (HostUpgrade.State.Charges < 1)
+            {
+                Triggers.FinishTrigger();
+                return;
+            }
+
+            HostShip.OnActionIsPerformed += SpendCharge;
+
+            Selection.ThisShip = HostShip; // System phase doesn't have an active ship set yet
 
             HostShip.AskPerformFreeAction(
                 AbilityActions,
                 CleanUp,
                 HostUpgrade.UpgradeInfo.Name,
-                "Before you execute a blue maneuver, you may spend 1 Charge to perform a Barrel Roll action",
+                "You may spend 1 Charge to perform a Barrel Roll action",
                 HostUpgrade
             );
         }
 
-        private void SpendCharge(GenericAction action, ref bool isFreeAction)
+        private void SpendCharge(GenericAction action)
         {
-            HostShip.BeforeActionIsPerformed -= SpendCharge;
+            HostShip.OnActionIsPerformed -= SpendCharge;
             Sounds.PlayShipSound("BB-8-Sound");
             HostUpgrade.State.SpendCharge();
         }
 
         private void CleanUp()
         {
-            HostShip.BeforeActionIsPerformed -= SpendCharge;
+            HostShip.OnActionIsPerformed -= SpendCharge;
             Triggers.FinishTrigger();
         }
     }

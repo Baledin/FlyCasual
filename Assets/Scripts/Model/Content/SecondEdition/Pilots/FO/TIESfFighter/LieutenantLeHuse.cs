@@ -47,8 +47,8 @@ namespace Ship.SecondEdition.TIESfFighter
     {
         public LieutenantLeHuseXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 13;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 25;
+            (PilotInfo as PilotCardInfo25).Cost = 12;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 20;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

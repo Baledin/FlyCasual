@@ -85,7 +85,7 @@ namespace AI.Aggressor
             float potentialEvades = defenceDiceThrown * defenceDiceModifier;
             if (TargetShip.Tokens.HasToken<EvadeToken>() && defenceDiceThrown > 0)
             {
-                potentialEvades = Math.Min(1, potentialEvades);
+                potentialEvades += 1;
             }
 
             // Results

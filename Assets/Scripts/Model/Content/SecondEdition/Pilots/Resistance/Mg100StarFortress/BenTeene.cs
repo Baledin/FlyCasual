@@ -47,10 +47,11 @@ namespace Ship.SecondEdition.Mg100StarFortress
         public BenTeeneXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 15;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 19;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 20;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Crew,
+                UpgradeType.Sensor,
                 UpgradeType.Gunner,
                 UpgradeType.Gunner,
                 UpgradeType.Modification,

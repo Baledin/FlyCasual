@@ -70,12 +70,14 @@ namespace Abilities.SecondEdition
         public override void ActivateAbility()
         {
             Phases.Events.OnEndPhaseStart_NoTriggers += CheckAbility;
+            HostShip.OnRemoteWasDroppedUpgrade += SpendCharge;
         }
 
         public override void DeactivateAbility()
         {
             Phases.Events.OnEndPhaseStart_NoTriggers -= CheckAbility;
             Phases.Events.OnEndPhaseStart_Triggers -= RegisterOwnAbilityTrigger;
+            HostShip.OnRemoteWasDroppedUpgrade -= SpendCharge;
         }
 
         private void CheckAbility()
@@ -90,39 +92,25 @@ namespace Abilities.SecondEdition
         {
             Phases.Events.OnEndPhaseStart_Triggers -= RegisterOwnAbilityTrigger;
 
-            RegisterAbilityTrigger(TriggerTypes.OnEndPhaseStart, AskToUseOwnAbility);
-        }
-
-        private void AskToUseOwnAbility(object sender, EventArgs e)
-        {
-            AskToUseAbility(
-                HostUpgrade.UpgradeInfo.Name,
-                NeverUseByDefault,
-                DeployRemote,
-                descriptionLong: "Do you want to drop or launch 1 DRK-1 Probe Droid using a speed 3 template?",
-                imageHolder: HostUpgrade,
-                requiredPlayer: HostShip.Owner.PlayerNo
-            );
+            RegisterAbilityTrigger(TriggerTypes.OnEndPhaseStart, DeployRemote);
         }
 
         private void DeployRemote(object sender, EventArgs e)
         {
-            SubPhases.DecisionSubPhase.ConfirmDecisionNoCallback();
-
             BombsManager.RegisterBombDropTriggerIfAvailable(
                 HostShip,
                 TriggerTypes.OnAbilityDirect,
-                type: HostUpgrade.GetType()
+                subType: UpgradeSubType.Remote,
+                type: HostUpgrade.UpgradeInfo.RemoteType
             );
 
-            Triggers.ResolveTriggers(
-                TriggerTypes.OnAbilityDirect,
-                delegate
-                {
-                    HostUpgrade.State.SpendCharge();
-                    Triggers.FinishTrigger();
-                }
-            );
+            Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, Triggers.FinishTrigger);
+        }
+
+        private void SpendCharge(GenericUpgrade upgrade)
+        {
+            if (upgrade == HostUpgrade)
+                upgrade.State.SpendCharge();
         }
     }
 }

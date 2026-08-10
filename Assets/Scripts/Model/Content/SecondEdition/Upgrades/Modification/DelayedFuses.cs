@@ -1,6 +1,8 @@
 ﻿using Bombs;
+using Content;
 using SubPhases;
 using System;
+using System.Collections.Generic;
 using Upgrade;
 
 namespace UpgradesList.SecondEdition
@@ -13,11 +15,19 @@ namespace UpgradesList.SecondEdition
                 UpgradeType.Modification,
                 cost: 1,
                 abilityType: typeof(Abilities.SecondEdition.DelayedFusesAbility),
-                seImageNumber: 74);
-
-            
+                seImageNumber: 74,
+                legalityInfo: new List<Legality>() { Legality.StandardLegal, Legality.ExtendedLegal }
+            );
         }
-        
+    }
+
+    public class DelayedFusesXWA : DelayedFuses
+    {
+        public DelayedFusesXWA() : base()
+        {
+            UpgradeInfo.Cost = 2;
+            UpgradeInfo.LegalityInfo = new List<Legality>() { Legality.XWA };
+        }
     }
 }
 
@@ -65,6 +75,5 @@ namespace Abilities.SecondEdition
             BombsManager.CurrentBombObject.Fuses++;
             DecisionSubPhase.ConfirmDecision();
         }
-
     }
 }

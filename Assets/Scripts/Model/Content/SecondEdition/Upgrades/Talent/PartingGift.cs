@@ -1,6 +1,7 @@
 ﻿using Abilities.SecondEdition;
 using BoardTools;
 using Bombs;
+using Content;
 using Movement;
 using Ship;
 using System;
@@ -11,7 +12,7 @@ namespace UpgradesList.SecondEdition
 {
     public class PartingGift : GenericUpgrade
     {
-        public PartingGift()
+        public PartingGift() : base()
         {
             UpgradeInfo = new UpgradeCardInfo(
                 "Parting Gift",
@@ -22,7 +23,17 @@ namespace UpgradesList.SecondEdition
 
             IsHidden = true;
 
-            ImageUrl = HostShip != null ? HostShip.ImageUrl : "https://infinitearenas.com/xw2/images/quickbuilds/adonfox-battleoverendor.png";
+            NameCanonical = "partinggift-legendsandrelics";
+        }
+    }
+
+    public class PartingGiftXwa : PartingGift
+    {
+        public PartingGiftXwa() : base()
+        {
+            UpgradeInfo.Cost = 2;
+            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            IsHidden = false;
         }
     }
 }

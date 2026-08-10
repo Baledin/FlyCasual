@@ -39,7 +39,7 @@ namespace Ship
             public PlanetarySentinelXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 8;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 4;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 5;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Gunner,

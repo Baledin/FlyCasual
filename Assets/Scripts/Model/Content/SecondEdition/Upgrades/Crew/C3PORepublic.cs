@@ -1,12 +1,8 @@
-﻿using Ship;
-using Upgrade;
+﻿using Actions;
 using ActionsList;
-using SubPhases;
-using Actions;
 using Tokens;
-using System;
-using System.Linq;
 using UnityEngine;
+using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
@@ -28,9 +24,10 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(218, 0)
+                new Vector2(285, 4),
+                new Vector2(146, 146)
             );
-        }        
+        }
     }
 }
 
@@ -60,7 +57,7 @@ namespace Abilities.SecondEdition
         private bool IsAvailable()
         {
             return Combat.AttackStep == CombatStep.Defence
-                && HostShip.Tokens.HasToken<CalculateToken>();                
+                && HostShip.Tokens.HasToken<CalculateToken>();
         }
 
         public override void DeactivateAbility()
@@ -83,6 +80,5 @@ namespace Abilities.SecondEdition
             Messages.ShowInfo("C-3PO: Additional calculate token is gained");
             HostShip.Tokens.AssignToken(typeof(CalculateToken), Triggers.FinishTrigger);
         }
-
     }
 }

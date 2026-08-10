@@ -1,6 +1,5 @@
 ﻿using Abilities.SecondEdition;
 using BoardTools;
-using Conditions;
 using Content;
 using Ship;
 using System.Collections.Generic;
@@ -57,7 +56,7 @@ namespace Ship.SecondEdition.T65XWing
     {
         public WedgeAntillesBoYXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 15;
+            (PilotInfo as PilotCardInfo25).Cost = 13;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
         }
     }
@@ -91,12 +90,19 @@ namespace Abilities.SecondEdition
 
                 if (shotInfo.InArc)
                 {
-                    WedgeAntillesCondition condition = new WedgeAntillesCondition(Combat.Defender, HostShip);
-                    Combat.Defender.Tokens.AssignCondition(condition);
+                    Combat.Defender.AfterGotNumberOfDefenceDice += ReduceDefenseDice;
 
                     return;
                 }
             }
+        }
+
+        protected void ReduceDefenseDice(ref int count)
+        {
+            Messages.ShowInfo($"{HostShip.PilotInfo.PilotName}: The defender's defense dice have been decreased by 1.");
+            Combat.Defender.AfterGotNumberOfDefenceDice -= ReduceDefenseDice;
+
+            count--;
         }
     }
 }

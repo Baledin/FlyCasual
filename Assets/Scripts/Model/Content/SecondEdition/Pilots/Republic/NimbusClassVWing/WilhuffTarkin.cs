@@ -43,8 +43,8 @@ namespace Ship
         {
             public WilhuffTarkinXWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 8;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 7;
+                (PilotInfo as PilotCardInfo25).Cost = 7;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 6;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {

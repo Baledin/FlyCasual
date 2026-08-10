@@ -49,7 +49,7 @@ namespace Ship
             public AnakinSkywalkerXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 9;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 7;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 9;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.ForcePower,
@@ -57,7 +57,8 @@ namespace Ship
                     UpgradeType.Astromech,
                     UpgradeType.Sensor,
                     UpgradeType.Modification,
-                    UpgradeType.Torpedo,
+                    UpgradeType.Tech,
+                    UpgradeType.Torpedo
                 };
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             }

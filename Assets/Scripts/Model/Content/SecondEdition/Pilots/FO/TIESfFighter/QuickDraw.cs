@@ -67,6 +67,8 @@ namespace Abilities.SecondEdition
     {
         private bool performedRegularAttack;
 
+        private bool isAlreadyRegistered; // prevents queuing multiple times for the same attack
+
         public override void ActivateAbility()
         {
             // Host Ship Registers Attack on Shield Lost 
@@ -91,7 +93,12 @@ namespace Abilities.SecondEdition
         {
             if (HostShip.State.Charges == 0 || HostShip.IsCannotAttackSecondTime) return false;
 
-            return true;
+            if (isAlreadyRegistered) return false;
+
+            // Do we have any targets to shoot at?
+            if (!ActionsHolder.HasTarget(HostShip)) return false;
+
+            return isAlreadyRegistered = true; // set flag and return true
         }
 
         private void InitializeCounterAttack()
@@ -115,6 +122,8 @@ namespace Abilities.SecondEdition
 
         private void RegisterCombat(object sender, System.EventArgs e)
         {
+            isAlreadyRegistered = false;
+
             if (IsAbilityCanBeUsed())
             {
                 // Save his "is already attacked" flag
@@ -129,13 +138,13 @@ namespace Abilities.SecondEdition
                     AfterExtraAttackSubPhase,
                     IsPrimaryWeaponAttack,
                     HostShip.PilotInfo.PilotName,
-                    "You may perform a primary weapon attack",
+                    "You may spend 1 Charge to perform a primary weapon attack",
                     HostShip
                 );
             }
             else
             {
-                Messages.ShowErrorToHuman(string.Format("{0} cannot attack an additional time", HostShip.PilotInfo.PilotName));
+                Messages.ShowErrorToHuman(string.Format($"{HostShip.PilotInfo.PilotName} cannot attack an additional time"));
                 Triggers.FinishTrigger();
             }
         }

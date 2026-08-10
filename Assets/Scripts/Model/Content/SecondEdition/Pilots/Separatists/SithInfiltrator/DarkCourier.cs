@@ -40,6 +40,7 @@ namespace Ship.SecondEdition.SithInfiltrator
                 UpgradeType.Crew,
                 UpgradeType.Sensor,
                 UpgradeType.Modification,
+                UpgradeType.Tech,
                 UpgradeType.Device,
             };
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };

@@ -1,8 +1,8 @@
-﻿using Upgrade;
-using System.Collections.Generic;
+﻿using Actions;
 using ActionsList;
-using Actions;
+using System.Collections.Generic;
 using UnityEngine;
+using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
@@ -26,11 +26,9 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Republic,
-                new Vector2(304, 31),
-                new Vector2(50, 50)
+                new Vector2(240, 10),
+                new Vector2(140, 140)
             );
-
-            
         }
     }
 }

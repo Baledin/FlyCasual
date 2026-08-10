@@ -33,12 +33,13 @@ namespace Ship
             public BlackSunEnforcerXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 10;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 7;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 9;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Sensor,
                     UpgradeType.Illicit,
                     UpgradeType.Modification,
+                    UpgradeType.Tech,
                     UpgradeType.Torpedo
                 };
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };

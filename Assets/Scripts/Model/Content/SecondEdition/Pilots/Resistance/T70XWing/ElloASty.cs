@@ -43,8 +43,8 @@ namespace Ship.SecondEdition.T70XWing
     {
         public ElloAstyXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 14;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 16;
+            (PilotInfo as PilotCardInfo25).Cost = 13;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

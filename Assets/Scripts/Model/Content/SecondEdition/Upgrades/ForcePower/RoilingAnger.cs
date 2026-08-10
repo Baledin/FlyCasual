@@ -1,6 +1,7 @@
-﻿using BoardTools;
+﻿using Content;
 using Ship;
 using System;
+using System.Collections.Generic;
 using Upgrade;
 
 namespace UpgradesList.SecondEdition
@@ -15,11 +16,23 @@ namespace UpgradesList.SecondEdition
             (
                 "Roiling Anger",
                 UpgradeType.ForcePower,
-                cost: 0,
-                abilityType: typeof(Abilities.SecondEdition.RoilingAngerAbility)                
+                cost: 2,
+                abilityType: typeof(Abilities.SecondEdition.RoilingAngerAbility),
+                legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            
+            NameCanonical = "roilinganger-legendsandrelics";
+        }
+    }
+
+    public class RoilingAngerXwa : RoilingAnger
+    {
+        public RoilingAngerXwa() : base()
+        {
+            UpgradeInfo.Cost = 2;
+            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            UpgradeInfo.Restrictions.AddRestriction(new TagRestriction(Tags.DarkSide));
+            IsHidden = false;
         }
     }
 }

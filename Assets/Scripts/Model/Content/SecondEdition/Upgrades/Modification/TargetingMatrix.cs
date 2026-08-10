@@ -1,6 +1,7 @@
-﻿using Ship;
+﻿using Content;
 using SubPhases;
 using System;
+using System.Collections.Generic;
 using Tokens;
 using Upgrade;
 
@@ -16,10 +17,23 @@ namespace UpgradesList.SecondEdition
                 "Targeting Matrix",
                 UpgradeType.Modification,
                 cost: 0,
-                abilityType: typeof(Abilities.SecondEdition.TargetingMatrixAbility)
+                abilityType: typeof(Abilities.SecondEdition.TargetingMatrixAbility),
+                legalityInfo: new List<Legality>() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/scythe6-battleoverendor.png";
-        }        
+
+            NameCanonical = "targetingmatrix-legendsandrelics";
+        }
+    }
+
+    public class TargetingMatrixXWA : TargetingMatrix
+    {
+        public TargetingMatrixXWA() : base()
+        {
+            IsHidden = false;
+
+            UpgradeInfo.Cost = 4;
+            UpgradeInfo.LegalityInfo = new List<Legality>() { Legality.XWA };
+        }
     }
 }
 
@@ -27,7 +41,6 @@ namespace Abilities.SecondEdition
 {
     public class TargetingMatrixAbility : GenericAbility
     {
-
         public override void ActivateAbility()
         {
             HostShip.OnAfterNeutralizeResultsAttacker += CheckAbility;
@@ -48,20 +61,34 @@ namespace Abilities.SecondEdition
 
         private void AskToStrain(object sender, EventArgs e)
         {
+            if (alwaysUseAbility)
+            {
+                UseAbility();
+            }
+            else
+            {
+                AskToUseAbility(
+                    HostUpgrade.UpgradeInfo.Name,
+                    AlwaysUseByDefault,
+                    UseAbility,
+                    descriptionLong: "Do you want to spend one focus result to assign a strain token to the defender?",
+                    imageHolder: HostUpgrade,
+                    showAlwaysUseOption: true,
+                    callback: Triggers.FinishTrigger
+                );
+            }
+        }
 
-            AskToUseAbility(
-                HostUpgrade.UpgradeInfo.Name,
-                AlwaysUseByDefault,
-                UseAbility,
-                descriptionLong: "Do you want to spend one focus result to assign a strain token to the defender?",
-                imageHolder: HostUpgrade
-            );
+        private void UseAbility()
+        {
+            Combat.DiceRollAttack.RemoveType(DieSide.Focus);
+            Combat.Defender.Tokens.AssignToken(new StrainToken(Combat.Defender), Triggers.FinishTrigger);
         }
 
         private void UseAbility(object sender, EventArgs e)
         {
+            Combat.DiceRollAttack.RemoveType(DieSide.Focus);
             Combat.Defender.Tokens.AssignToken(new StrainToken(Combat.Defender), DecisionSubPhase.ConfirmDecision);
         }
     }
 }
-

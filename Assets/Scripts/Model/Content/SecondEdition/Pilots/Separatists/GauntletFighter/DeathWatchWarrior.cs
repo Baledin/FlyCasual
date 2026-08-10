@@ -42,7 +42,7 @@ namespace Ship.SecondEdition.GauntletFighter
         public DeathWatchWarriorXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 15;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 20;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Crew,

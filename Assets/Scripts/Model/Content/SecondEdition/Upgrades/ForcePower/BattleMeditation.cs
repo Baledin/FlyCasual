@@ -13,11 +13,18 @@ namespace UpgradesList.SecondEdition
                 "Battle Meditation",
                 UpgradeType.ForcePower,
                 cost: 6,
-                isLimited: false,
                 restriction: new FactionRestriction(Faction.Republic),
                 addAction: new ActionInfo(typeof(CoordinateAction), ActionColor.Purple),
                 abilityType: typeof(Abilities.SecondEdition.BattleMeditationAbility)
             );
+        }
+    }
+
+    public class BattleMeditationXWA : BattleMeditation
+    {
+        public BattleMeditationXWA() : base()
+        {
+            UpgradeInfo.Limited = 3;
         }
     }
 }

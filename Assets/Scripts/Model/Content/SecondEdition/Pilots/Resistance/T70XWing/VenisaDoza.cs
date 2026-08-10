@@ -46,7 +46,7 @@ namespace Ship.SecondEdition.T70XWing
         public VenisaDozaXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 13;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 15;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 17;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

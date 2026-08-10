@@ -42,6 +42,7 @@ namespace Ship
                     UpgradeType.Astromech,
                     UpgradeType.Sensor,
                     UpgradeType.Modification,
+                    UpgradeType.Tech,
                     UpgradeType.Torpedo
                 };
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };

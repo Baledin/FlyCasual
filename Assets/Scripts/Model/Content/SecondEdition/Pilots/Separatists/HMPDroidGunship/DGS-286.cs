@@ -45,8 +45,8 @@ namespace Ship
         {
             public DGS286XWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 11;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 17;
+                (PilotInfo as PilotCardInfo25).Cost = 10;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 13;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Modification,

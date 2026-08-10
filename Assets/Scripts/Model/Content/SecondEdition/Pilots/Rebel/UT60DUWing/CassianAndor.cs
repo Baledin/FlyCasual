@@ -42,7 +42,7 @@ namespace Ship.SecondEdition.UT60DUWing
         public CassianAndorXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 12;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 14;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

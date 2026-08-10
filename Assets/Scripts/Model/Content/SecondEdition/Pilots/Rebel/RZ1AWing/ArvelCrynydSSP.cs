@@ -22,7 +22,7 @@ namespace Ship.SecondEdition.RZ1AWing
                 4,
                 0,
                 isLimited: true,
-                abilityType: typeof(Abilities.SecondEdition.ArvelCrynydSSPAbility),
+                abilityType: typeof(Abilities.SecondEdition.ArvelCrynydAbility),
                 extraUpgradeIcons: new List<UpgradeType>
                 {
                         UpgradeType.Talent,
@@ -49,115 +49,6 @@ namespace Ship.SecondEdition.RZ1AWing
         {
             (PilotInfo as PilotCardInfo25).Cost = 8;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
-        }
-    }
-}
-
-namespace Abilities.SecondEdition
-{
-    public class ArvelCrynydSSPAbility : GenericAbility
-    {
-        private GenericMovement SavedManeuver;
-        private GenericAction ActionToRevert;
-
-        private static readonly List<string> ChangedManeuversCodes = new List<string>() { "1.L.B", "1.F.S", "1.R.B" };
-        private Dictionary<string, MovementComplexity> SavedManeuverColors;
-
-        public override void ActivateAbility()
-        {
-            HostShip.PrimaryWeapons.ForEach(n => n.WeaponInfo.MinRange = 0);
-
-            HostShip.OnActionIsReadyToBeFailed += CheckAbility;
-        }
-
-        public override void DeactivateAbility()
-        {
-            HostShip.PrimaryWeapons.ForEach(n => n.WeaponInfo.MinRange = 1);
-
-            HostShip.OnActionIsReadyToBeFailed += CheckAbility;
-        }
-
-        private void CheckAbility(GenericAction action, List<ActionFailReason> failReasons, ref bool isDefaultFailOverwritten)
-        {
-            // TODO: Real fail reasons
-            if (action is BoostAction
-                && failReasons.Count == 1
-                && failReasons.First() == ActionFailReason.Bumped
-            )
-            {
-                ActionToRevert = action;
-                isDefaultFailOverwritten = true;
-
-                RegisterAbilityTrigger(TriggerTypes.OnActionIsReadyToBeFailed, DoPseudoBoost);
-            }
-        }
-
-        private void DoPseudoBoost(object sender, System.EventArgs e)
-        {
-            Messages.ShowInfo(HostShip.PilotInfo.PilotName + " is resolving Boost as a maneuver");
-
-            SavedManeuver = HostShip.AssignedManeuver;
-
-            SavedManeuverColors = new Dictionary<string, MovementComplexity>();
-            foreach (var changedManeuver in ChangedManeuversCodes)
-            {
-                KeyValuePair<ManeuverHolder, MovementComplexity> existingManeuver = (HostShip.DialInfo.PrintedDial.FirstOrDefault(n => n.Key.ToString() == changedManeuver));
-                SavedManeuverColors.Add(changedManeuver, (existingManeuver.Equals(default(KeyValuePair<ManeuverHolder, MovementComplexity>))) ? MovementComplexity.None : existingManeuver.Value);
-                HostShip.Maneuvers[changedManeuver] = MovementComplexity.Normal;
-            }
-
-            // Direction from action
-            HostShip.SetAssignedManeuver(
-                ShipMovementScript.MovementFromString(
-                    ManeuverFromBoostTemplate(
-                        (ActionToRevert as BoostAction).SelectedBoostTemplate
-                    )
-                )
-            );
-
-            HostShip.AssignedManeuver.IsRevealDial = false;
-            HostShip.AssignedManeuver.GrantedBy = HostShip.PilotInfo.PilotName;
-            ShipMovementScript.LaunchMovement(FinishAbility);
-        }
-
-        private void FinishAbility()
-        {
-            (ActionToRevert as BoostAction).SelectedBoostTemplate = null;
-
-            HostShip.SetAssignedManeuver(SavedManeuver);
-
-            foreach (var changedManeuver in ChangedManeuversCodes)
-            {
-                if (SavedManeuverColors[changedManeuver] == MovementComplexity.None)
-                {
-                    HostShip.Maneuvers.Remove(changedManeuver);
-                }
-                else
-                {
-                    HostShip.Maneuvers[changedManeuver] = SavedManeuverColors[changedManeuver];
-                }
-            }
-
-            Triggers.FinishTrigger();
-        }
-
-        private string ManeuverFromBoostTemplate(string boostTemplateName)
-        {
-            switch (boostTemplateName)
-            {
-                case "Straight 1":
-                    return "1.F.S";
-                case "Bank 1 Left":
-                    return "1.L.B";
-                case "Bank 1 Right":
-                    return "1.R.B";
-                case "Turn 1 Right":
-                    return "1.R.T";
-                case "Turn 1 Left":
-                    return "1.L.T";
-            }
-
-            return "1.F.S";
         }
     }
 }

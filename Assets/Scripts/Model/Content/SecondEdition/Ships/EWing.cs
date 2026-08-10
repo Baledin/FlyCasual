@@ -1,4 +1,5 @@
-﻿using Actions;
+﻿using Abilities.SecondEdition;
+using Actions;
 using ActionsList;
 using Arcs;
 using Movement;
@@ -91,7 +92,7 @@ namespace Ship
 
                 ShipIconLetter = 'e';
 
-                SetTargetLockRange(2, int.MaxValue);
+                ShipAbilities.Add(new ExperimentalScannersAbility());
             }
         }
     }

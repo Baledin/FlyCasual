@@ -45,7 +45,7 @@ namespace Ship.SecondEdition.T70XWing
         public NienNunbXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 14;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 16;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,

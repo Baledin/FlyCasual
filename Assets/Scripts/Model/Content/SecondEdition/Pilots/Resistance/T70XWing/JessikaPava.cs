@@ -45,7 +45,7 @@ namespace Ship.SecondEdition.T70XWing
         public JessikaPavaXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 12;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Astromech,

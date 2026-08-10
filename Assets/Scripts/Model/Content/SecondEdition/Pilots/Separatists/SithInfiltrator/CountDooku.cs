@@ -51,8 +51,8 @@ namespace Ship.SecondEdition.SithInfiltrator
     {
         public CountDookuXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 15;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+            (PilotInfo as PilotCardInfo25).Cost = 14;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.ForcePower,
@@ -61,6 +61,7 @@ namespace Ship.SecondEdition.SithInfiltrator
                     UpgradeType.Crew,
                     UpgradeType.Sensor,
                     UpgradeType.Modification,
+                    UpgradeType.Tech,
                     UpgradeType.Device,
                     UpgradeType.Title,
                 };

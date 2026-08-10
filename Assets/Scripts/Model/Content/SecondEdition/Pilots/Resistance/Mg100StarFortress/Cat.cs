@@ -48,6 +48,7 @@ namespace Ship.SecondEdition.Mg100StarFortress
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Crew,
+                UpgradeType.Sensor,
                 UpgradeType.Gunner,
                 UpgradeType.Gunner,
                 UpgradeType.Modification,

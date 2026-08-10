@@ -55,6 +55,7 @@ namespace Ship
                     UpgradeType.Sensor,
                     UpgradeType.Illicit,
                     UpgradeType.Modification,
+                    UpgradeType.Tech,
                     UpgradeType.Torpedo,
                     UpgradeType.Title
                 };

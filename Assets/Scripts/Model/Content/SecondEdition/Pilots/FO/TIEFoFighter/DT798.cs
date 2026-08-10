@@ -81,6 +81,7 @@ namespace Abilities.SecondEdition
         {
             if (HostShip.IsStrained) return false;
             if (Combat.ChosenWeapon.WeaponType != WeaponTypes.PrimaryWeapon) return false;
+            if (Combat.ShotInfo.Range == 0) return false;
 
             return true;
         }

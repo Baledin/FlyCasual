@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 12fdf0491e9a5aa469868f63a4f8fb41
+guid: f7b327e326b28634980b187d203da358
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,9 +8,8 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: x-wing-ships
   fontNames:
-  - x-wing-ships
+  - X-Wing-Ships
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

@@ -26,7 +26,7 @@ namespace UpgradesList.SecondEdition
 
             Avatar = new AvatarInfo(
                 Faction.Separatists,
-                new Vector2(211, 14)
+                new Vector2(275, 21)
             );
         }
     }

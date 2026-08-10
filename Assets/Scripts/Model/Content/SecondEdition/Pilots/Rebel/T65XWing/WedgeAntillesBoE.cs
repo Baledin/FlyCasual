@@ -55,7 +55,7 @@ namespace Ship.SecondEdition.T65XWing
     {
         public WedgeAntillesBoEXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 16;
+            (PilotInfo as PilotCardInfo25).Cost = 15;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
 
             ImageUrl = "https://infinitearenas.com/xw2xwa/images/quickbuilds/wedgeantilles-battleoverendor.png";

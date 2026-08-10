@@ -1,21 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using System.Linq;
-using Players;
-using GameModes;
+﻿using Bombs;
+using Movement;
 using Ship;
 using SubPhases;
-using Tokens;
-using Movement;
-using Bombs;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace RulesList
 {
     public class DockingRule
     {
-        Dictionary<Func<GenericShip>, Func<GenericShip>> dockedShipsPairs = new Dictionary<Func<GenericShip>, Func<GenericShip>>();
+        Dictionary<Func<GenericShip>, Func<GenericShip>> dockedShipsPairs = new();
 
         public DockingRule()
         {
@@ -41,17 +38,24 @@ namespace RulesList
             }
         }
 
-        public void Dock(GenericShip hostShip, GenericShip dockedShip)
+        public void Dock(GenericShip hostShip, GenericShip dockedShip, Action callback = null)
         {
             if (hostShip != null && dockedShip != null)
             {
-                PerformDocking(hostShip, dockedShip);
+                RemoveDockingBump(dockedShip, hostShip);
+                PerformDocking(hostShip, dockedShip, callback);
             }
+        }
+
+        private void RemoveDockingBump(GenericShip dockingShip, GenericShip carrierShip)
+        {
+            if (dockingShip.ShipsBumped.Contains(carrierShip)) dockingShip.ShipsBumped.Remove(carrierShip);
+            if (dockingShip.ShipsBumpedOnTheEnd.Contains(carrierShip)) dockingShip.ShipsBumpedOnTheEnd.Remove(carrierShip);
         }
 
         private void DockShips()
         {
-            foreach (var dockedShipsPair in dockedShipsPairs)
+            foreach (KeyValuePair<Func<GenericShip>, Func<GenericShip>> dockedShipsPair in dockedShipsPairs)
             {
                 PerformDockingOld(dockedShipsPair.Key(), dockedShipsPair.Value());
             }
@@ -76,30 +80,34 @@ namespace RulesList
             }
         }
 
-        private void PerformDocking(GenericShip hostShip, GenericShip dockedShip)
+        private void PerformDocking(GenericShip carrier, GenericShip dockedShip, Action callback)
         {
             Roster.DockShip("ShipId:" + dockedShip.ShipId);
-            hostShip.DockedShips.Add(dockedShip);
-            dockedShip.DockingHost = hostShip;
+            carrier.DockedShips.Add(dockedShip);
+
+            dockedShip.IsSkipsActionSubPhase = true;
+            dockedShip.DockingHost = carrier;
             dockedShip.Model.SetActive(false);
-            hostShip.ToggleDockedModel(dockedShip, true);
 
-            dockedShip.CallDocked(hostShip);
-            hostShip.CallAnotherShipDocked(dockedShip);
+            carrier.ToggleDockedModel(dockedShip, true);
 
-            hostShip.OnShipIsDestroyed += CheckForcedUndocking;
+            dockedShip.CallDocked(carrier);
+            carrier.CallAnotherShipDocked(dockedShip);
+
+            carrier.OnShipIsDestroyed += CheckForcedUndocking;
 
             // OLD
             if (Editions.Edition.Current is Editions.SecondEdition)
             {
-                hostShip.OnCheckSystemsAbilityActivation += CheckUndockAvailability;
-                hostShip.OnSystemsAbilityActivation += RegisterAskUndockSE;
+                carrier.OnCheckSystemsAbilityActivation += CheckUndockAvailability;
+                carrier.OnSystemsAbilityActivation += RegisterAskUndockSE;
             }
             else
             {
-                hostShip.OnMovementFinish += RegisterAskUndockFE;
+                carrier.OnMovementFinish += RegisterAskUndockFE;
             }
-            
+
+            callback();
         }
 
         private void CheckUndockAvailability(GenericShip ship, ref bool flag)
@@ -124,8 +132,7 @@ namespace RulesList
         {
             if (BoardTools.Board.IsOffTheBoard(ship)) return;
 
-            bool canUndock = ship.CheckCanReleaseDockedShipRegular();
-            if (canUndock)
+            if (ship.CheckCanReleaseDockedShipRegular())
             {
                 Triggers.RegisterTrigger(new Trigger()
                 {
@@ -148,7 +155,7 @@ namespace RulesList
             );
 
             newSubphase.YesAction = delegate { Undock(ship, ship.DockedShips[0]); };
-            newSubphase.Start();            
+            newSubphase.Start();
         }
 
         private void Undock(GenericShip hostShip, GenericShip dockedShip, bool isEmergencyDeploy = false)
@@ -203,21 +210,21 @@ namespace RulesList
 
             if (!isEmergencyDeploy)
             {
-                AskAssignManeuver(hostShip, dockedShip);
+                AskAssignManeuver(dockedShip);
             }
             else
             {
                 dockedShip.Damage.TryResolveDamage(
-                    0, 
+                    0,
                     new DamageSourceEventArgs()
                     {
                         Source = null,
                         DamageType = DamageTypes.Rules
-                    }, 
+                    },
                     delegate
                     {
-                        AskAssignManeuver(hostShip, dockedShip, true);
-                    }, 
+                        AskAssignManeuver(dockedShip, true);
+                    },
                     1
                 );
             }
@@ -237,7 +244,7 @@ namespace RulesList
                     break;
             }
 
-            DecisionSubPhase.ConfirmDecision();            
+            DecisionSubPhase.ConfirmDecision();
         }
 
         private void CheckForcedUndocking(GenericShip host, bool isFled)
@@ -277,9 +284,9 @@ namespace RulesList
             ship.Damage.DealDrawnCard(callBack);
         }
 
-        private void AskAssignManeuver(GenericShip host, GenericShip docked, bool isEmergencyDeploy = false)
+        private void AskAssignManeuver(GenericShip docked, bool isEmergencyDeploy = false)
         {
-            Selection.ChangeActiveShip("ShipId:" + docked.ShipId);
+            Selection.ChangeActiveShip(docked);
 
             if (Editions.Edition.Current is Editions.SecondEdition)
             {
@@ -358,7 +365,8 @@ namespace RulesList
 
             Triggers.ResolveTriggers(
                 TriggerTypes.OnFreeAction,
-                delegate {
+                delegate
+                {
                     Selection.ThisShip.CallUndockingFinish(Selection.ThisShip.DockingHost, AfterUndockingFinished);
                 }
             );
@@ -405,19 +413,16 @@ namespace RulesList
         }
 
         private class UndockingDirectionDecisionSubphase : DecisionSubPhase { }
-
     }
-
 }
 
 namespace SubPhases
 {
-
     public class UndockingDecisionSubPhase : DecisionSubPhase
     {
         public Action YesAction;
 
-        public override void PrepareDecision(System.Action callBack)
+        public override void PrepareDecision(Action callBack)
         {
             DescriptionShort = "Do you want to deploy the docked ship?";
 
@@ -431,13 +436,13 @@ namespace SubPhases
             callBack();
         }
 
-        private void Undock(object sender, System.EventArgs e)
+        private void Undock(object sender, EventArgs e)
         {
             ConfirmDecisionNoCallback();
             YesAction();
         }
 
-        private void SkipUndock(object sender, System.EventArgs e)
+        private void SkipUndock(object sender, EventArgs e)
         {
             ConfirmDecision();
         }
@@ -446,7 +451,5 @@ namespace SubPhases
         {
             ConfirmDecision();
         }
-
     }
-
 }

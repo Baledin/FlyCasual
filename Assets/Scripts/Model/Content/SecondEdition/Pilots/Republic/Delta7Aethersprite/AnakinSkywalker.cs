@@ -48,8 +48,8 @@ namespace Ship.SecondEdition.Delta7Aethersprite
     {
         public AnakinSkywalkerXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 14;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
+            (PilotInfo as PilotCardInfo25).Cost = 13;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                     UpgradeType.ForcePower,

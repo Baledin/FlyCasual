@@ -53,7 +53,7 @@ namespace Ship.SecondEdition.VCX100LightFreighter
     {
         public KananJarrusXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 19;
+            (PilotInfo as PilotCardInfo25).Cost = 18;
             (PilotInfo as PilotCardInfo25).LoadoutValue = 20;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {

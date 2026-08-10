@@ -2,11 +2,6 @@
 using Remote;
 using Ship;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace BoardTools
@@ -181,21 +176,21 @@ namespace BoardTools
         {
             Speed++;
 
-            string bearingString = Bearing.ToString();
-            string speedString = Speed.ToString().Replace("Speed", "");
-            TemplatePrefabName = bearingString + speedString + ((IsSideTemplate) ? "Alt" : "");
-
             if (IsValidTemplate())
             {
+                string bearingString = Bearing.ToString();
+                string speedString = Speed.ToString().Replace("Speed", "");
+                string directionString = (Direction == ManeuverDirection.Forward) ? "" : " " + Direction.ToString();
+
+                TemplatePrefabName = bearingString + speedString + (IsSideTemplate ? "Alt" : "");
+                NameNoDirection = bearingString + " " + speedString;
+                Name = NameNoDirection + directionString;
+
                 return true;
             }
             else
             {
                 Speed--;
-
-                bearingString = Bearing.ToString();
-                speedString = Speed.ToString().Replace("Speed", "");
-                TemplatePrefabName = bearingString + speedString + ((IsSideTemplate) ? "Alt" : "");
 
                 return false;
             }

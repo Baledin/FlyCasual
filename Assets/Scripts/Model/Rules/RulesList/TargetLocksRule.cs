@@ -1,8 +1,7 @@
-﻿using Tokens;
-using Ship;
+﻿using Ship;
 using System.Collections.Generic;
 using System.Linq;
-using BoardTools;
+using Tokens;
 
 namespace RulesList
 {
@@ -39,11 +38,12 @@ namespace RulesList
 
             int rangeBetween = target.GetRangeToShip(ship);
             if (rangeBetween > ship.TargetLockMaxRange || rangeBetween < ship.TargetLockMinRange) result = false;
+            if (ship == target) result = false;
 
             if (result != true) OnCheckTargetLockIsAllowed?.Invoke(ref result, ship, target);
             if (result == true) OnCheckTargetLockIsDisallowed?.Invoke(ref result, ship, target);
 
             return result;
         }
-    } 
+    }
 }

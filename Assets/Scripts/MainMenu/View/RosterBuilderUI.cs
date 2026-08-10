@@ -67,7 +67,14 @@ public class RosterBuilderUI : MonoBehaviour
     public void NextPlayerRandomAi()
     {
         Global.SquadBuilder.View.SetRandomAiSquad();
-        StartBattle();
+        if(Global.SquadBuilder.CurrentSquad.IsValid)
+        {
+            StartBattle();
+        }
+        else
+        {
+            Messages.ShowError("Squadrons for AI aren't found");
+        }
     }
 
     public void FactionSelectionBackIsPressed()

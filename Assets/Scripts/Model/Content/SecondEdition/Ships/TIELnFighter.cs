@@ -3,7 +3,6 @@ using ActionsList;
 using Arcs;
 using BoardTools;
 using Movement;
-using Ship;
 using Ship.CardInfo;
 using SubPhases;
 using System;
@@ -97,20 +96,20 @@ namespace Abilities.SecondEdition
     {
         public override void ActivateAbility()
         {
-            Phases.Events.OnRoundEnd += CheckEndPhaseAbility;
+            Phases.Events.OnEndPhaseStart_Triggers += RegisterAbility;
         }
 
         public override void DeactivateAbility()
         {
-            Phases.Events.OnRoundEnd -= CheckEndPhaseAbility;
+            Phases.Events.OnEndPhaseStart_Triggers -= RegisterAbility;
         }
 
-        private void CheckEndPhaseAbility()
+        private void RegisterAbility()
         {
             if (HostShip.Tokens.CountTokensByType<StressToken>() > 0
                 && HasFriendlyShipsInRange())
             {
-                RegisterAbilityTrigger(TriggerTypes.OnRoundEnd, AskRemoveToken);
+                RegisterAbilityTrigger(TriggerTypes.OnEndPhaseStart, AskRemoveToken);
             }
         }
 
@@ -121,7 +120,8 @@ namespace Abilities.SecondEdition
                 AlwaysUseByDefault,
                 UseFormedUpAbility,
                 descriptionLong: "Do you want to remove 1 Stress Token?",
-                imageHolder: HostShip
+                imageHolder: HostShip,
+                callback: Triggers.FinishTrigger
             );
         }
 
@@ -135,8 +135,7 @@ namespace Abilities.SecondEdition
 
         private bool HasFriendlyShipsInRange()
         {
-            List<GenericShip> friendlyTies = Board.GetShipsAtRange(HostShip, new Vector2(0, 1), Team.Type.Friendly).Where(n => n is Ship.SecondEdition.TIELnFighter.TIELnFighter).ToList();
-            return friendlyTies.Count > 1;
+            return Board.GetShipsAtRange(HostShip, new Vector2(0, 1), Team.Type.Friendly).Any(n => n is Ship.SecondEdition.TIELnFighter.TIELnFighter && n != HostShip);
         }
     }
 }

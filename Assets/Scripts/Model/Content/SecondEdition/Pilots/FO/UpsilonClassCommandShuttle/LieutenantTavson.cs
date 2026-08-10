@@ -41,7 +41,7 @@ namespace Ship.SecondEdition.UpsilonClassCommandShuttle
     {
         public LieutenantTavsonXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 17;
+            (PilotInfo as PilotCardInfo25).Cost = 16;
             (PilotInfo as PilotCardInfo25).LoadoutValue = 17;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {

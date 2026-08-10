@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using BoardTools;
-using System;
-using System.Linq;
-using Editions;
-using Obstacles;
+﻿using Actions;
 using ActionsList;
-using Actions;
-using Movement;
-using Ship;
+using BoardTools;
 using Bombs;
+using Editions;
+using Movement;
+using Obstacles;
+using Ship;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace SubPhases
 {
@@ -50,9 +50,10 @@ namespace SubPhases
             }
         }
 
-        protected List<ManeuverTemplate> AvailableRepositionTemplates = new List<ManeuverTemplate>();
+        protected List<ManeuverTemplate> AvailableRepositionTemplates = new();
 
-        List<BarrelRollShiftData> BarrelRollShiftVariants = new List<BarrelRollShiftData>();
+        List<BarrelRollShiftData> BarrelRollShiftVariants = new();
+
         public ObstaclesStayDetectorForced TemporaryBaseCollider
         {
             get
@@ -88,8 +89,6 @@ namespace SubPhases
 
         public bool inReposition;
 
-        private bool IsDecloak;
-
         public override void Start()
         {
             Name = "Barrel Roll planning";
@@ -101,9 +100,8 @@ namespace SubPhases
 
         // Core
 
-        protected void StartBarrelRollPlanning(bool isDecloak = false)
+        protected void StartBarrelRollPlanning()
         {
-            IsDecloak = isDecloak;
             AskToSelectTemplate(PerformTemplatePlanning);
         }
 
@@ -178,7 +176,7 @@ namespace SubPhases
 
         protected virtual void GenerateListOfAvailableTemplates()
         {
-            List<ManeuverTemplate> allowedTemplates = Selection.ThisShip.GetAvailableBarrelRollTemplates(HostAction);
+            List<ManeuverTemplate> allowedTemplates = Selection.ThisShip.GetAvailableBarrelRollActionTemplates(HostAction);
 
             foreach (ManeuverTemplate barrelRollTemplate in allowedTemplates)
             {
@@ -209,18 +207,13 @@ namespace SubPhases
 
             GenerateSelectTemplateDecisions(selectBarrelRollTemplate);
 
-            selectBarrelRollTemplate.DescriptionShort = GetBarrelRollDescriptions();
+            selectBarrelRollTemplate.DescriptionShort = "Barrel Roll: Select template";
 
             selectBarrelRollTemplate.DefaultDecisionName = selectBarrelRollTemplate.GetDecisions().First().Name;
 
             selectBarrelRollTemplate.RequiredPlayer = Controller.PlayerNo;
 
             selectBarrelRollTemplate.Start();
-        }
-
-        private string GetBarrelRollDescriptions()
-        {
-            return (!IsDecloak) ? "Barrel Roll: Select template" : "Decloak: Select template";
         }
 
         protected virtual void GenerateSelectTemplateDecisions(DecisionSubPhase subphase)
@@ -232,7 +225,8 @@ namespace SubPhases
                 {
                     subphase.AddDecision(
                         "Left " + template.NameNoDirection,
-                        (EventHandler)delegate {
+                        (EventHandler)delegate
+                        {
                             SelectTemplate(template, Direction.Left);
                             DecisionSubPhase.ConfirmDecision();
                         }
@@ -240,7 +234,8 @@ namespace SubPhases
 
                     subphase.AddDecision(
                         "Right " + template.NameNoDirection,
-                        (EventHandler)delegate {
+                        (EventHandler)delegate
+                        {
                             SelectTemplate(template, Direction.Right);
                             DecisionSubPhase.ConfirmDecision();
                         }
@@ -333,7 +328,6 @@ namespace SubPhases
                     }
                 );
             }
-
         }
 
         public void SelectTemplate(ManeuverTemplate template, Direction directionPrimary, Direction directionSecondary = Direction.None)
@@ -341,12 +335,11 @@ namespace SubPhases
             SelectedTemplate = template;
             SelectedDirectionPrimary = directionPrimary;
             SelectedDirectionSecondary = directionSecondary;
-            
+
             if (HostAction is BarrelRollAction)
             {
                 (HostAction as BarrelRollAction).SelectedTemplate = template;
             }
-
         }
 
         protected virtual IEnumerator CheckCollisionsOfTemporaryElements(Action callback)
@@ -382,7 +375,7 @@ namespace SubPhases
 
         private void ShowInformationAboutProblems()
         {
-            foreach (var problem in BarrelRollProblems)
+            foreach (ActionFailReason problem in BarrelRollProblems)
             {
                 switch (problem)
                 {
@@ -417,9 +410,9 @@ namespace SubPhases
             {
                 BarrelRollProblems.Add(ActionFailReason.Bumped);
             }
-            else if (!TheShip.IsIgnoreObstacles 
-                && !TheShip.IsIgnoreObstaclesDuringBarrelRoll() 
-                && !IsIgnoreObstacles 
+            else if (!TheShip.IsIgnoreObstacles
+                && !TheShip.IsIgnoreObstaclesDuringBarrelRoll()
+                && !IsIgnoreObstacles
                 && collider.OverlapsAsteroidNow
                 && !TheShip.IgnoreObstacleTypes.Contains(typeof(Asteroid)))
             {
@@ -435,15 +428,15 @@ namespace SubPhases
 
         private IEnumerator CheckPotentialFinalPositions()
         {
-            List<Direction> directions = new List<Direction>() {
+            List<Direction> directions = new() {
                 Direction.Top,
                 Direction.None,
                 Direction.Bottom
             };
 
-            foreach (var direction in directions)
+            foreach (Direction direction in directions)
             {
-                BarrelRollShiftData currentData = new BarrelRollShiftData(
+                BarrelRollShiftData currentData = new(
                     direction,
                     ShowTemporaryShipBase(direction, isVisible: false)
                 );
@@ -456,14 +449,16 @@ namespace SubPhases
         private bool IsPotentialFinalPositionsAnyAllowed()
         {
             bool isAllowed = false;
+
             foreach (BarrelRollShiftData barrelRollData in BarrelRollShiftVariants)
             {
                 BarrelRollProblems = new List<ActionFailReason>();
-                if (IsColliderDataAllowed(barrelRollData.Collider, isBaseFinalPosition:true))
+                if (IsColliderDataAllowed(barrelRollData.Collider, isBaseFinalPosition: true))
                 {
                     isAllowed = true;
                 }
             }
+
             return isAllowed;
         }
 
@@ -495,7 +490,7 @@ namespace SubPhases
         {
             SelectedShift = direction;
 
-            foreach (var barrelRollShiftVariant in BarrelRollShiftVariants)
+            foreach (BarrelRollShiftData barrelRollShiftVariant in BarrelRollShiftVariants)
             {
                 ToggleTemporaryShipBaseVisibility(
                     barrelRollShiftVariant.TemporaryShipBase,
@@ -505,7 +500,7 @@ namespace SubPhases
 
             BarrelRollProblems = new List<ActionFailReason>();
 
-            if (!IsColliderDataAllowed(TemporaryBaseCollider, isBaseFinalPosition:true))
+            if (!IsColliderDataAllowed(TemporaryBaseCollider, isBaseFinalPosition: true))
             {
                 Messages.ShowError("This final position is not valid, choose another position");
                 UI.HideNextButton();
@@ -555,7 +550,7 @@ namespace SubPhases
 
             temporaryShipBase.transform.localEulerAngles += new Vector3(0, directionModifier * -90, 0);
 
-            Vector3 shift = new Vector3(
+            Vector3 shift = new(
                 directionModifier * TheShip.ShipBase.HALF_OF_SHIPSTAND_SIZE,
                 0,
                 TheShip.ShipBase.HALF_OF_SHIPSTAND_SIZE + finalShift
@@ -586,30 +581,13 @@ namespace SubPhases
 
         public void WhenCancelBarrelRollWithProblems(List<ActionFailReason> barrelRollProblems)
         {
-            if (HostAction == null) HostAction = new BarrelRollAction() { HostShip = TheShip };
+            HostAction ??= new BarrelRollAction() { HostShip = TheShip };
             Rules.Actions.ActionIsFailed(TheShip, HostAction, barrelRollProblems);
-        }
-
-        //OLD
-        public void TryConfirmBarrelRollNetwork(string templateName, Vector3 shipPosition, Vector3 movementTemplatePosition)
-        {
-            /*StopDrag();
-
-            SelectTemplate((ActionsHolder.BarrelRollTemplateVariants) Enum.Parse(typeof(ActionsHolder.BarrelRollTemplateVariants), templateName));
-
-            ShowBarrelRollTemplate();
-            BarrelRollTemplate.transform.position = movementTemplatePosition;
-
-            ShowTemporaryShipBase();
-            TemporaryShipBase.transform.position = shipPosition;
-            TemporaryShipBase.transform.rotation = GetCurrentBarrelRollHelperTemplateFinisherBasePositionGO().transform.rotation;
-
-            TryConfirmBarrelRollPosition();*/
         }
 
         private void DestroyTemporaryElements(bool isAll = false)
         {
-            foreach (var data in BarrelRollShiftVariants)
+            foreach (BarrelRollShiftData data in BarrelRollShiftVariants)
             {
                 if (data.Direction == SelectedShift && !isAll)
                 {
@@ -620,13 +598,14 @@ namespace SubPhases
                     GameObject.Destroy(data.TemporaryShipBase);
                 }
             }
+
             BarrelRollShiftVariants = new List<BarrelRollShiftData>();
             SelectedTemplate.DestroyTemplate();
         }
 
         private void CheckMines()
         {
-            foreach (var mineCollider in SelectedTemplate.Collider.OverlappedMinesNow)
+            foreach (Collider mineCollider in SelectedTemplate.Collider.OverlappedMinesNow)
             {
                 GenericDeviceGameObject mineObject = mineCollider.transform.parent.GetComponent<GenericDeviceGameObject>();
                 if (!TheShip.MinesHit.Contains(mineObject)) TheShip.MinesHit.Add(mineObject);
@@ -679,7 +658,6 @@ namespace SubPhases
         {
             return false;
         }
-
     }
 
     public class BarrelRollExecutionSubPhase : GenericSubPhase
@@ -733,11 +711,11 @@ namespace SubPhases
             progressCurrent += progressStep;
 
             TheShip.SetPosition(Vector3.MoveTowards(TheShip.GetPosition(), TemporaryShipBase.transform.position, progressStep));
+            TheShip.SetRotationHelper2Angles(new Vector3(0, progressCurrent / progressTarget * (plannedRotation - initialRotation), 0));
 
             if (!IsTractorBeamBarrelRoll && !TheShip.IsLandedModel)
             {
                 TheShip.RotateModelDuringBarrelRoll(progressCurrent / progressTarget, (Direction == Direction.Left) ? -1 : 1);
-                TheShip.SetRotationHelper2Angles(new Vector3(0, progressCurrent / progressTarget * (plannedRotation - initialRotation), 0));
                 TheShip.MoveUpwards(progressCurrent / progressTarget);
             }
 
@@ -798,7 +776,5 @@ namespace SubPhases
             bool result = false;
             return result;
         }
-
     }
-
 }

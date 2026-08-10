@@ -48,8 +48,8 @@ namespace Ship.SecondEdition.GauntletFighter
     {
         public ChopperXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 16;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
+            (PilotInfo as PilotCardInfo25).Cost = 15;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 16;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
                 {
                     UpgradeType.Crew,

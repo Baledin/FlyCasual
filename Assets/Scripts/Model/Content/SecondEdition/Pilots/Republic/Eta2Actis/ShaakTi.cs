@@ -48,9 +48,9 @@ namespace Ship.SecondEdition.Eta2Actis
     {
         public ShaakTiXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 12;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 14;
-            (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
+            (PilotInfo as PilotCardInfo25).Cost = 11;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 11;
+            (PilotInfo as PilotCardInfo25).LegalityInfo = new () { Legality.XWA };
         }
     }
 }
@@ -59,9 +59,9 @@ namespace Abilities.SecondEdition
 {
     public class ShaakTiAbility : TriggeredAbility
     {
-        private List<GenericToken> TokensToKeep = new List<GenericToken>();
+        private readonly List<GenericToken> tokensToKeep = new ();
 
-        public override TriggerForAbility Trigger => new AtTheStartOfPhase(typeof(SubPhases.EndStartSubPhase));
+        public override TriggerForAbility Trigger => new AtTheStartOfPhase(typeof(EndStartSubPhase));
 
         public override AbilityPart Action => new EachShipCanDoAction
         (
@@ -83,6 +83,13 @@ namespace Abilities.SecondEdition
 
         private void SelectFocusOrEvadeToken(GenericShip ship, Action callback)
         {
+            if (HostShip.State.Force < 1)
+            {
+                Messages.ShowErrorToHuman("Not enough force to perform this action.");
+                callback();
+                return;
+            }
+
             HostShip.State.SpendForce(
                 1,
                 delegate
@@ -135,7 +142,7 @@ namespace Abilities.SecondEdition
             Messages.ShowInfo($"{HostShip.PilotInfo.PilotName}: {token.Host.PilotInfo.PilotName} doesn't remove {token.Name} during End Phase");
 
             token.Temporary = false;
-            TokensToKeep.Add(token);
+            tokensToKeep.Add(token);
 
             Phases.Events.OnPlanningPhaseStart += Cleanup;
         }
@@ -144,11 +151,10 @@ namespace Abilities.SecondEdition
         {
             Phases.Events.OnPlanningPhaseStart -= Cleanup;
 
-            List<GenericToken> TokensToKeepCopy = new List<GenericToken>(TokensToKeep);
-            foreach (GenericToken token in TokensToKeepCopy)
+            foreach (GenericToken token in new List<GenericToken>(tokensToKeep))
             {
                 token.Temporary = true;
-                TokensToKeep.Remove(token);
+                tokensToKeep.Remove(token);
             }
         }
     }

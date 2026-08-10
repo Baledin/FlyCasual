@@ -1,5 +1,4 @@
-﻿using Conditions;
-using Content;
+﻿using Content;
 using Ship;
 using System.Collections.Generic;
 using Upgrade;
@@ -44,8 +43,8 @@ namespace Ship.SecondEdition.RZ1AWing
     {
         public WedgeAntillesXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 11;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 16;
+            (PilotInfo as PilotCardInfo25).Cost = 10;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Talent,
@@ -75,14 +74,20 @@ namespace Abilities.SecondEdition
 
         public void TryAddWedgeAntillesAbility()
         {
-            if (Combat.ChosenWeapon.WeaponType == WeaponTypes.PrimaryWeapon)
+            if (Combat.ChosenWeapon.WeaponType == WeaponTypes.PrimaryWeapon &&
+                HostShip.SectorsInfo.IsShipInSector(Combat.Defender, Arcs.ArcType.Front) &&
+                Combat.ShotInfo.Range > 0)
             {
-                if (HostShip.SectorsInfo.IsShipInSector(Combat.Defender, Arcs.ArcType.Front))
-                {
-                    WedgeAntillesCondition condition = new WedgeAntillesCondition(Combat.Defender, HostShip);
-                    Combat.Defender.Tokens.AssignCondition(condition);
-                }
+                Combat.Defender.AfterGotNumberOfDefenceDice += ReduceDefenseDice;
             }
+        }
+
+        private void ReduceDefenseDice(ref int count)
+        {
+            Messages.ShowInfo($"{HostShip.PilotInfo.PilotName}: The defender's defense dice have been decreased by 1.");
+            Combat.Defender.AfterGotNumberOfDefenceDice -= ReduceDefenseDice;
+
+            count--;
         }
     }
 }

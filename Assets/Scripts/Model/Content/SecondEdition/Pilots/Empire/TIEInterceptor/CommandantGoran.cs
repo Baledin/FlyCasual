@@ -1,5 +1,4 @@
 ﻿using Abilities.SecondEdition;
-using BoardTools;
 using Content;
 using Ship;
 using SubPhases;
@@ -7,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tokens;
-using UnityEngine;
 using Upgrade;
 
 namespace Ship.SecondEdition.TIEInterceptor
@@ -76,17 +74,17 @@ namespace Abilities.SecondEdition
 
         public void AskUseAbility(object sender, EventArgs e)
         {
-            if (Board.GetShipsAtRange(HostShip, new Vector2(0, 2), Team.Type.Friendly).Count > 0)
+            if (HostShip.Owner.Ships.Values.Any(s => MeetsCriteria(s)))
             {
                 SelectTargetForAbility
-                (
-                    AssignEvadeToken,
-                    MeetsCriteria,
-                    GetAiPriority,
-                    HostShip.Owner.PlayerNo,
-                    HostShip.PilotInfo.PilotName,
-                    "You may assign an evade and remove a non-stress red token."
-                );
+                  (
+                      AssignEvadeToken,
+                      MeetsCriteria,
+                      GetAiPriority,
+                      HostShip.Owner.PlayerNo,
+                      HostShip.PilotInfo.PilotName,
+                      "You may assign an evade and remove a non-stress red token."
+                  );
             }
             else
             {
@@ -102,14 +100,14 @@ namespace Abilities.SecondEdition
 
         public void RemoveRedToken()
         {
-            List<GenericToken> redtokens = TargetShip.Tokens.GetTokensByColor(TokenColors.Red).Where(t => t.GetType() != typeof(StressToken)).ToList<GenericToken>();
+            List<GenericToken> redtokens = TargetShip.Tokens.GetTokensByColor(TokenColors.Red).Where(t => t is not StressToken).ToList();
 
             if (redtokens.Count > 0)
             {
-                DecisionSubPhase pilotAbilityDecision = (DecisionSubPhase)Phases.StartTemporarySubPhaseNew(
+                CommandantgoranDecisionSubPhase pilotAbilityDecision = (CommandantgoranDecisionSubPhase)Phases.StartTemporarySubPhaseNew(
                     HostShip.PilotName,
                     typeof(CommandantgoranDecisionSubPhase),
-                    AbilityCleanup
+                    SelectShipSubPhase.FinishSelection
                 );
 
                 pilotAbilityDecision.DescriptionShort = $"{HostShip.PilotName} Pilot Ability";
@@ -118,17 +116,20 @@ namespace Abilities.SecondEdition
 
                 pilotAbilityDecision.RequiredPlayer = HostShip.Owner.PlayerNo;
 
-                foreach (var Token in redtokens)
-                {
-                    string name = Token.Name;
-                    if (Token.GetType() == typeof(RedTargetLockToken))
+                foreach (GenericToken Token in redtokens.OrderBy(t => t switch 
                     {
-                        RedTargetLockToken targetLockToken = (RedTargetLockToken)Token;
-                        name = Token.Name + " " + targetLockToken.Letter;
-                    }
+                        // Target Locks are prioritized by range, times two to give gaps for other priorities without ties
+                        RedTargetLockToken => TargetShip.GetRangeToShip((t as RedTargetLockToken).OtherTargetLockTokenOwner as GenericShip) * 2,
+                        StrainToken => 3,
+                        _ => 7
+                    }))
+                {
+                    string name = Token is RedTargetLockToken ? $"{Token.Name} {(Token as RedTargetLockToken).Letter}" : Token.Name;
+
                     pilotAbilityDecision.AddDecision(name, delegate { TargetShip.Tokens.RemoveToken(Token, DecisionSubPhase.ConfirmDecision); });
                 }
 
+                pilotAbilityDecision.DefaultDecisionName = pilotAbilityDecision.GetDecisions().FirstOrDefault().Name;
                 pilotAbilityDecision.ShowSkipButton = true;
                 pilotAbilityDecision.Start();
             }
@@ -140,21 +141,7 @@ namespace Abilities.SecondEdition
 
         public bool MeetsCriteria(GenericShip ship)
         {
-            DistanceInfo distInfo = new DistanceInfo(HostShip, ship);
-
-            bool isValid = (distInfo.Range <= 2 && ship.State.Initiative < HostShip.State.Initiative);
-
-            if (!isValid)
-            {
-                Messages.ShowInfoToHuman("Choose a friendly target with a lower initiave between range 0 and 3");
-            }
-
-            return isValid;
-        }
-
-        public void AbilityCleanup()
-        {
-            DecisionSubPhase.ConfirmDecision();
+            return HostShip.GetRangeToShip(ship) <= 3 && ship.State.Initiative < HostShip.State.Initiative;
         }
 
         public int GetAiPriority(GenericShip ship)

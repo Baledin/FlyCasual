@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using BoardTools;
-using ActionsList;
-using Ship;
-using System.ComponentModel;
-using Tokens;
-using System.Linq;
-using SubPhases;
-using Upgrade;
+﻿using ActionsList;
 using Arcs;
+using BoardTools;
+using Ship;
+using SubPhases;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using Tokens;
+using UnityEngine;
+using Upgrade;
 
 namespace Actions
 {
@@ -92,7 +91,17 @@ public static partial class ActionsHolder
         [Description("Turn 1 Right")]
         RightTurn1,
         [Description("Turn 1 Left")]
-        LeftTurn1
+        LeftTurn1,
+        [Description("Straight 2")]
+        Straight2,
+        [Description("Bank 2 Right")]
+        RightBank2,
+        [Description("Bank 2 Left")]
+        LeftBank2,
+        [Description("Turn 2 Right")]
+        RightTurn2,
+        [Description("Turn 2 Left")]
+        LeftTurn2
     }
 
     public enum BarrelRollTemplateVariants
@@ -151,8 +160,8 @@ public static partial class ActionsHolder
 
     private static void GetTokensToRemoveThenAssign(List<BlueTargetLockToken> existingBlueTokens, GenericShip thisShip, ITargetLockable targetShip, Action successCallback)
     {
-        TokensToRemove = new List<GenericToken>();
-        List<GenericToken> tokensAskToRemove = new List<GenericToken>();
+        TokensToRemove = new();
+        List<GenericToken> tokensAskToRemove = new();
 
         foreach (BlueTargetLockToken existingBlueToken in existingBlueTokens)
         {
@@ -199,7 +208,7 @@ public static partial class ActionsHolder
                         tokenMaybeWillBeRemoved = true;
                     }
                 }
-            } 
+            }
             //Two TLs on the same target are allowed
             else if (thisShip.TwoTargetLocksOnSameTargetsAreAllowed.Count > 0 && thisShip.TwoTargetLocksOnDifferentTargetsAreAllowed.Count == 0)
             {
@@ -212,7 +221,7 @@ public static partial class ActionsHolder
                 {
                     //If already >1 of tokens, then remove all except one
                     int alreadyAssignedSameTokens = thisShip.Tokens.GetTokens<BlueTargetLockToken>('*').Count(t => t.OtherTargetLockTokenOwner == targetShip);
-                    if (alreadyAssignedSameTokens > 1 && TokensToRemove.Count < alreadyAssignedSameTokens -1)
+                    if (alreadyAssignedSameTokens > 1 && TokensToRemove.Count < alreadyAssignedSameTokens - 1)
                     {
                         tokenMustBeRemoved = true;
                     }
@@ -252,7 +261,7 @@ public static partial class ActionsHolder
 
         Triggers.ResolveTriggers(
             TriggerTypes.OnAbilityDirect,
-            delegate{ AssignNewTargetLockToken(TokensToRemove, thisShip, targetShip, successCallback); }
+            delegate { AssignNewTargetLockToken(TokensToRemove, thisShip, targetShip, successCallback); }
         );
     }
 
@@ -260,7 +269,7 @@ public static partial class ActionsHolder
     {
         EventArgsTokensList tokensToAskList = e as EventArgsTokensList;
 
-        var subphase = Phases.StartTemporarySubPhaseNew<TokenToRemoveSubPhase>(
+        TokenToRemoveSubPhase subphase = Phases.StartTemporarySubPhaseNew<TokenToRemoveSubPhase>(
             "Select token to remove",
             Triggers.FinishTrigger
         );
@@ -269,7 +278,7 @@ public static partial class ActionsHolder
         subphase.RequiredPlayer = (sender as GenericShip).Owner.PlayerNo;
         subphase.ShowSkipButton = false;
 
-        foreach (var token in tokensToAskList.List)
+        foreach (GenericToken token in tokensToAskList.List)
         {
             subphase.AddDecision(
                 (token as BlueTargetLockToken).Letter.ToString(),
@@ -303,11 +312,11 @@ public static partial class ActionsHolder
         }
     }
 
-   
+
     private static void FinishAcquireTargetLock(GenericShip thisShip, ITargetLockable targetShip, Action callback)
     {
-        BlueTargetLockToken tokenBlue = new BlueTargetLockToken(thisShip);
-        RedTargetLockToken tokenRed = new RedTargetLockToken(targetShip);
+        BlueTargetLockToken tokenBlue = new(thisShip);
+        RedTargetLockToken tokenRed = new(targetShip);
 
         char letter = GetFreeTargetLockLetter();
 
@@ -355,10 +364,11 @@ public static partial class ActionsHolder
     private static char GetFreeTargetLockLetter()
     {
         char result = ' ';
-        foreach (var letter in Letters)
+        foreach (KeyValuePair<char, bool> letter in Letters)
         {
             if (letter.Value) return letter.Key;
         }
+
         return result;
     }
 
@@ -379,34 +389,30 @@ public static partial class ActionsHolder
 
     public static float GetVector(GenericShip thisShip, GenericShip anotherShip)
     {
-        float result = 0;
-
-        float angle = 0;
         Vector3 vectorFacing = thisShip.GetFrontFacing();
         Vector3 vectorToTarget = anotherShip.GetCenter() - thisShip.GetCenter();
-        angle = Mathf.Abs(Vector3.Angle(vectorToTarget, vectorFacing));
+        float angle = Mathf.Abs(Vector3.Angle(vectorToTarget, vectorFacing));
 
-        int direction = 0;
-        direction = (thisShip.Model.transform.InverseTransformPoint(anotherShip.GetCenter()).x > 0) ? 1 : -1;
+        int direction = (thisShip.Model.transform.InverseTransformPoint(anotherShip.GetCenter()).x > 0) ? 1 : -1;
 
-        result = angle * direction;
+        float result = angle * direction;
 
         return result;
     }
 
     public static bool IsClosing(GenericShip thisShip, GenericShip anotherShip)
     {
-        bool result = false;
-
-        DistanceInfo distanceInfo = new DistanceInfo(thisShip, anotherShip);
+        DistanceInfo distanceInfo = new(thisShip, anotherShip);
         int range = distanceInfo.Range;
+
         if (range <= 1) return true;
+
         if (range >= 3) return false;
 
         float distanceToFront = Vector3.Distance(thisShip.GetPosition(), anotherShip.ShipBase.GetCentralFrontPoint());
         float distanceToBack = Vector3.Distance(thisShip.GetPosition(), anotherShip.ShipBase.GetCentralBackPoint());
-        result = (distanceToFront < distanceToBack) ? true : false;
-        return result;
+
+        return distanceToFront < distanceToBack;
     }
 
     public static ShotInfo GetFiringRangeAndShow(GenericShip thisShip, GenericShip anotherShip)
@@ -417,21 +423,21 @@ public static partial class ActionsHolder
         IShipWeapon checkedWeapon = thisShip.PrimaryWeapons.First();
         //IShipWeapon checkedWeapon = outOfArcWeapon ?? thisShip.PrimaryWeapon;
 
-        ShotInfo shotInfo = new ShotInfo(thisShip, anotherShip, checkedWeapon);
+        ShotInfo shotInfo = new(thisShip, anotherShip, checkedWeapon);
         MovementTemplates.ShowFiringArcRange(shotInfo);
         return shotInfo;
     }
 
     public static int GetRangeAndShow(GenericShip thisShip, GenericShip anotherShip)
     {
-        DistanceInfo distanceInfo = new DistanceInfo(thisShip, anotherShip);
+        DistanceInfo distanceInfo = new(thisShip, anotherShip);
         MovementTemplates.ShowRangeRuler(distanceInfo.MinDistance);
 
         string messageText = "Range to target: " + RangeInfoToText(distanceInfo) +
             "\nRange in Front sector: " + ArcRangeInfoToText(thisShip.SectorsInfo.GetSectorInfo(anotherShip, ArcType.Front)) +
             "\nRange in Bullseye sector: " + ArcRangeInfoToText(thisShip.SectorsInfo.GetSectorInfo(anotherShip, ArcType.Bullseye));
 
-        List<ArcType> mentionedFacings = new List<ArcType>() { ArcType.None, ArcType.Front };
+        List<ArcType> mentionedFacings = new() { ArcType.None, ArcType.Front };
 
         foreach (GenericArc arc in thisShip.ArcsInfo.Arcs)
         {
@@ -445,31 +451,23 @@ public static partial class ActionsHolder
         }
 
         Messages.ShowInfo(messageText);
-        
+
         return distanceInfo.Range;
     }
 
     private static ArcType ArcToSector(GenericArc arc)
     {
-        switch (arc.Facing)
+        return arc.Facing switch
         {
-            case ArcFacing.Front:
-                return ArcType.Front;
-            case ArcFacing.Left:
-                return ArcType.Left;
-            case ArcFacing.Right:
-                return ArcType.Right;
-            case ArcFacing.Rear:
-                return ArcType.Rear;
-            case ArcFacing.FullFront:
-                return ArcType.FullFront;
-            case ArcFacing.FullRear:
-                return ArcType.FullRear;
-            case ArcFacing.Bullseye:
-                return ArcType.Bullseye;
-            default:
-                return ArcType.None;
-        }
+            ArcFacing.Front => ArcType.Front,
+            ArcFacing.Left => ArcType.Left,
+            ArcFacing.Right => ArcType.Right,
+            ArcFacing.Rear => ArcType.Rear,
+            ArcFacing.FullFront => ArcType.FullFront,
+            ArcFacing.FullRear => ArcType.FullRear,
+            ArcFacing.Bullseye => ArcType.Bullseye,
+            _ => ArcType.None,
+        };
     }
 
     private static string RangeInfoToText(DistanceInfo info)
@@ -498,11 +496,11 @@ public static partial class ActionsHolder
 
     public static bool HasTarget(GenericShip thisShip)
     {
-        foreach (var anotherShip in Roster.GetPlayer(Roster.AnotherPlayer(thisShip.Owner.PlayerNo)).Ships)
+        foreach (KeyValuePair<string, GenericShip> anotherShip in Roster.GetPlayer(Roster.AnotherPlayer(thisShip.Owner.PlayerNo)).Ships)
         {
             foreach (IShipWeapon weapon in thisShip.GetAllWeapons())
             {
-                ShotInfo shotInfo = new ShotInfo(thisShip, anotherShip.Value, weapon);
+                ShotInfo shotInfo = new(thisShip, anotherShip.Value, weapon);
                 if (shotInfo.IsShotAvailable)
                 {
                     return true;
@@ -517,10 +515,10 @@ public static partial class ActionsHolder
     {
         int result = 0;
 
-        foreach (var anotherShip in Roster.GetPlayer(Roster.AnotherPlayer(thisShip.Owner.PlayerNo)).Ships.Values)
+        foreach (GenericShip anotherShip in Roster.GetPlayer(Roster.AnotherPlayer(thisShip.Owner.PlayerNo)).Ships.Values)
         {
             // Test to see if we're in the primary arc of any enemy ships.
-            ShotInfo shotInfo = new ShotInfo(anotherShip, thisShip, anotherShip.PrimaryWeapons);
+            ShotInfo shotInfo = new(anotherShip, thisShip, anotherShip.PrimaryWeapons);
             if ((shotInfo.Range < 4) && (shotInfo.IsShotAvailable))
             {
                 if (direction == 0)
@@ -538,8 +536,8 @@ public static partial class ActionsHolder
                         if (thisShip.SectorsInfo.IsShipInSector(anotherShip, Arcs.ArcType.FullRear)) result++;
                     }
                 }
-                
             }
+
             foreach (GenericUpgrade SecondaryWeapon in anotherShip.UpgradeBar.GetSpecialWeaponsAll())
             {
                 // Test to see if we're in the secondary arc of any enemy ships.
@@ -563,7 +561,6 @@ public static partial class ActionsHolder
                         }
                     }
                 }
-
             }
         }
 
@@ -580,7 +577,7 @@ public static partial class ActionsHolder
 
     public static void TakeActionStart(GenericAction action)
     {
-        var ship = Selection.ThisShip;
+        GenericShip ship = Selection.ThisShip;
         Tooltips.EndTooltip();
         UI.HideSkipButton();
         ship.AddAlreadyExecutedAction(action);
@@ -620,7 +617,7 @@ public static partial class ActionsHolder
 
     public static void ReassignToken(GenericToken tokenToReassign, GenericShip fromShip, GenericShip toShip, Action callBack)
     {
-        List<Type> lockTokens = new List<Type>() { typeof(BlueTargetLockToken), typeof(RedTargetLockToken) };
+        List<Type> lockTokens = new() { typeof(BlueTargetLockToken), typeof(RedTargetLockToken) };
 
         if (lockTokens.Contains(tokenToReassign.GetType()))
         {
@@ -639,16 +636,18 @@ public static partial class ActionsHolder
             GenericToken tokenToAssign = (GenericToken)Activator.CreateInstance(tokenToReassign.GetType(), toShip, fromShip.Owner);
             fromShip.Tokens.RemoveToken(
                 tokenToReassign.GetType(),
-                delegate {
+                delegate
+                {
                     toShip.Tokens.AssignToken(tokenToAssign, callBack);
                 });
         }
         else
         {
-            GenericToken tokenToAssign = (GenericToken)Activator.CreateInstance(tokenToReassign.GetType(), new [] { toShip });
+            GenericToken tokenToAssign = (GenericToken)Activator.CreateInstance(tokenToReassign.GetType(), new[] { toShip });
             fromShip.Tokens.RemoveToken(
                 tokenToReassign.GetType(),
-                delegate {
+                delegate
+                {
                     toShip.Tokens.AssignToken(tokenToAssign, callBack);
                 });
         }
@@ -710,7 +709,7 @@ public static partial class ActionsHolder
         GenericTargetLockToken otherToken = assignedTargetLockToken.OtherTargetLockTokenOwner.GetAnotherToken(oppositeType, letter);
 
         otherToken.OtherTargetLockTokenOwner = newOwner;
-        newOwner.Tokens.AssignToken(assignedTargetLockToken, callback, letter);
+        newOwner.Tokens.AssignToken(assignedTargetLockToken, callback);
     }
 
     public static void RemoveTokens(List<GenericToken> tokensList, Action callback)
@@ -733,5 +732,4 @@ public static partial class ActionsHolder
             );
         }
     }
-
 }

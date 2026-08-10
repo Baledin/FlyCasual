@@ -33,8 +33,8 @@ namespace Ship
         {
             public BravoFlightOfficerXWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 8;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 6;
+                (PilotInfo as PilotCardInfo25).Cost = 7;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 3;
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
@@ -42,7 +42,8 @@ namespace Ship
                     UpgradeType.Astromech,
                     UpgradeType.Sensor,
                     UpgradeType.Modification,
-                    UpgradeType.Torpedo,
+                    UpgradeType.Tech,
+                    UpgradeType.Torpedo
                 };
             }
         }

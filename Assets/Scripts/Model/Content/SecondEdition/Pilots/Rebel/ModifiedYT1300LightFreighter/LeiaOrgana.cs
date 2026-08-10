@@ -56,7 +56,7 @@ namespace Ship.SecondEdition.ModifiedYT1300LightFreighter
                     UpgradeType.ForcePower,
                     UpgradeType.Crew,
                     UpgradeType.Crew,
-                    UpgradeType.Gunner,
+                    UpgradeType.Crew,
                     UpgradeType.Gunner,
                     UpgradeType.Illicit,
                     UpgradeType.Modification,

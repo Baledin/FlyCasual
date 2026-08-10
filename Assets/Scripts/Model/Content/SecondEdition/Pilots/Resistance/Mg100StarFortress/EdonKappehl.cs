@@ -46,10 +46,11 @@ namespace Ship.SecondEdition.Mg100StarFortress
         public EdonKappehlXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 16;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 23;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 24;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Crew,
+                UpgradeType.Sensor,
                 UpgradeType.Sensor,
                 UpgradeType.Gunner,
                 UpgradeType.Gunner,

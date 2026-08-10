@@ -42,7 +42,7 @@ namespace Ship.SecondEdition.UpsilonClassCommandShuttle
     {
         public LieutenantDormitzXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 18;
+            (PilotInfo as PilotCardInfo25).Cost = 17;
             (PilotInfo as PilotCardInfo25).LoadoutValue = 22;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {

@@ -41,13 +41,14 @@ namespace Ship
             public GavinDarklighterXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 15;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 20;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
                 {
                     UpgradeType.Talent,
                     UpgradeType.Astromech,
                     UpgradeType.Sensor,
                     UpgradeType.Modification,
+                    UpgradeType.Tech,
                     UpgradeType.Torpedo
                 };
                 (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };

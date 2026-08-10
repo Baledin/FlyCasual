@@ -50,8 +50,8 @@ namespace Ship.SecondEdition.TIEWiWhisperModifiedInterceptor
     {
         public KyloRenWhisperXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 15;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 15;
+            (PilotInfo as PilotCardInfo25).Cost = 14;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.ForcePower,

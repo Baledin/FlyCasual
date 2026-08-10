@@ -61,39 +61,43 @@ namespace Abilities.SecondEdition
     {
         public override void ActivateAbility()
         {
-            HostShip.OnAttackStartAsAttacker += RegisterEpsilonLeaderAbility;
-            HostShip.OnAttackFinishAsAttacker += RemoveZetaLeaderAbility;
+            HostShip.OnAttackStartAsAttacker += RegisterScorchAbility;
+            HostShip.OnAttackFinishAsAttacker += RemoveScorchAbility;
         }
 
         public override void DeactivateAbility()
         {
-            HostShip.OnAttackStartAsAttacker -= RegisterEpsilonLeaderAbility;
-            HostShip.OnAttackFinishAsAttacker -= RemoveZetaLeaderAbility;
+            HostShip.OnAttackStartAsAttacker -= RegisterScorchAbility;
+            HostShip.OnAttackFinishAsAttacker -= RemoveScorchAbility;
         }
 
-        private void RegisterEpsilonLeaderAbility()
+        private void RegisterScorchAbility()
         {
-            RegisterAbilityTrigger(TriggerTypes.OnAttackStart, ShowDecision);
+            if (IsAvailable())
+            {
+                RegisterAbilityTrigger(TriggerTypes.OnAttackStart, ShowDecision);
+            }
+        }
+
+        private bool IsAvailable()
+        {
+            if (HostShip.IsStressed) return false;
+            if (Combat.ChosenWeapon.WeaponType != WeaponTypes.PrimaryWeapon) return false;
+            if (Combat.ShotInfo.Range == 0) return false;
+
+            return true;
         }
 
         private void ShowDecision(object sender, System.EventArgs e)
         {
-            // check if this ship is stressed
-            if (!HostShip.Tokens.HasToken(typeof(StressToken)))
-            {
-                // give user the option to use ability
-                AskToUseAbility(
-                    HostShip.PilotInfo.PilotName,
-                    AlwaysUseByDefault,
-                    UseAbility,
-                    descriptionLong: "Do you want to receive 1 Stress token to roll 1 additional attack die?",
-                    imageHolder: HostShip
-                );
-            }
-            else
-            {
-                Triggers.FinishTrigger();
-            }
+            // give user the option to use ability
+            AskToUseAbility(
+                HostShip.PilotInfo.PilotName,
+                AlwaysUseByDefault,
+                UseAbility,
+                descriptionLong: "Do you want to receive 1 Stress token to roll 1 additional attack die?",
+                imageHolder: HostShip
+            );
         }
 
         private void UseAbility(object sender, System.EventArgs e)
@@ -102,21 +106,21 @@ namespace Abilities.SecondEdition
             // add an attack dice
             IsAbilityUsed = true;
             //HostShip.ChangeFirepowerBy(+1);
-            HostShip.AfterGotNumberOfPrimaryWeaponAttackDice += ZetaLeaderAddAttackDice;
+            HostShip.AfterGotNumberOfPrimaryWeaponAttackDice += ScorchAddAttackDice;
             HostShip.Tokens.AssignToken(typeof(StressToken), SubPhases.DecisionSubPhase.ConfirmDecision);
         }
 
-        private void RemoveZetaLeaderAbility(GenericShip genericShip)
+        private void RemoveScorchAbility(GenericShip genericShip)
         {
             // At the end of combat phase, need to remove attack value increase
             if (IsAbilityUsed)
             {
                 //HostShip.ChangeFirepowerBy(-1);
-                HostShip.AfterGotNumberOfPrimaryWeaponAttackDice -= ZetaLeaderAddAttackDice;
+                HostShip.AfterGotNumberOfPrimaryWeaponAttackDice -= ScorchAddAttackDice;
                 IsAbilityUsed = false;
             }
         }
-        private void ZetaLeaderAddAttackDice(ref int value)
+        private void ScorchAddAttackDice(ref int value)
         {
             value++;
         }

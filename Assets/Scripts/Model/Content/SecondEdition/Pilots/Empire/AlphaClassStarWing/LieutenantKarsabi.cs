@@ -41,11 +41,12 @@ namespace Ship
             public LieutenantKarsabiXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 10;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 13;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 15;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Talent,
                     UpgradeType.Sensor,
+                    UpgradeType.Modification,
                     UpgradeType.Modification,
                     UpgradeType.Missile,
                     UpgradeType.Configuration
@@ -98,7 +99,7 @@ namespace Abilities.SecondEdition
 
         private void UseAbility(object sender, System.EventArgs e)
         {
-            Messages.ShowInfo(HostShip.PilotInfo.PilotName + " recieved Stress token instead of Disarm Token");
+            Messages.ShowInfo($"{HostShip.PilotInfo.PilotName} received Stress token instead of Disarm Token");
 
             HostShip.Tokens.RemoveToken(
                 typeof(WeaponsDisabledToken),

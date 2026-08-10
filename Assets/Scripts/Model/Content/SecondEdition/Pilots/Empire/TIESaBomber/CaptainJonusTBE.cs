@@ -55,7 +55,7 @@ namespace Ship
             public CaptainJonusTBEXWA() : base()
             {
                 var pilotInfo = PilotInfo as PilotCardInfo25;
-                pilotInfo.Cost = 11;
+                pilotInfo.Cost = 10;
                 pilotInfo.LegalityInfo = new List<Legality> { Legality.XWA };
             }
         }

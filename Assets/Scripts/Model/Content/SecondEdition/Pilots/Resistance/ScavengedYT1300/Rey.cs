@@ -48,14 +48,14 @@ namespace Ship.SecondEdition.ScavengedYT1300
         public ReyXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 19;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 21;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 23;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.ForcePower,
                 UpgradeType.ForcePower,
                 UpgradeType.Crew,
                 UpgradeType.Crew,
-                UpgradeType.Gunner,
+                UpgradeType.Crew,
                 UpgradeType.Gunner,
                 UpgradeType.Illicit,
                 UpgradeType.Illicit,

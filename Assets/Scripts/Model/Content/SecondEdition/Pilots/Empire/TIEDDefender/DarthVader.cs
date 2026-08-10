@@ -53,9 +53,10 @@ namespace Ship.SecondEdition.TIEDDefender
             {
                 UpgradeType.ForcePower,
                 UpgradeType.ForcePower,
+                UpgradeType.Modification,
+                UpgradeType.Tech,
                 UpgradeType.Cannon,
                 UpgradeType.Missile,
-                UpgradeType.Modification,
                 UpgradeType.Configuration
             };
         }

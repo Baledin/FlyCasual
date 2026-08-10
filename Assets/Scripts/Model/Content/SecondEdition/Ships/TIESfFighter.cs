@@ -8,101 +8,98 @@ using Ship;
 using Ship.CardInfo;
 using System;
 
-namespace Ship
+namespace Ship.SecondEdition.TIESfFighter
 {
-    namespace SecondEdition.TIESfFighter
+    public class TIESfFighter : GenericShip
     {
-        public class TIESfFighter : GenericShip
+        public TIESfFighter() : base()
         {
-            public TIESfFighter() : base()
-            {
-                ShipInfo = new ShipCardInfo25
+            ShipInfo = new ShipCardInfo25
+            (
+                "TIE/sf Fighter",
+                BaseSize.Small,
+                new FactionData
                 (
-                    "TIE/sf Fighter",
-                    BaseSize.Small,
-                    new FactionData
-                    (
-                        new Dictionary<Faction, Type>
-                        {
-                            { Faction.FirstOrder, typeof(Quickdraw) }
-                        }
-                    ),
-                    new ShipArcsInfo
-                    (
-                        new ShipArcInfo(ArcType.Front, 2),
-                        new ShipArcInfo(ArcType.SingleTurret, 2)
-                    ),
-                    2, 3, 3,
-                    new ShipActionsInfo
-                    (
-                        new ActionInfo(typeof(FocusAction)),
-                        new ActionInfo(typeof(TargetLockAction)),
-                        new ActionInfo(typeof(BarrelRollAction)),
-                        new ActionInfo(typeof(EvadeAction))
-                    ),
-                    new ShipUpgradesInfo(),
-                    linkedActions: new List<LinkedActionInfo>
+                    new Dictionary<Faction, Type>
                     {
-                        new LinkedActionInfo(typeof(FocusAction), typeof(RotateArcAction), ActionColor.White),
-                        new LinkedActionInfo(typeof(TargetLockAction), typeof(RotateArcAction), ActionColor.White),
-                        new LinkedActionInfo(typeof(EvadeAction), typeof(RotateArcAction), ActionColor.White),
-                        new LinkedActionInfo(typeof(BarrelRollAction), typeof(RotateArcAction), ActionColor.White)
+                        { Faction.FirstOrder, typeof(Quickdraw) }
                     }
-                );
-
-                ShipAbilities.Add(new Abilities.SecondEdition.HeavyWeaponTurret());
-
-                ModelInfo = new ShipModelInfo
+                ),
+                new ShipArcsInfo
                 (
-                    "TIE/SF Fighter",
-                    "First Order",
-                    previewScale: 2f
-                );
-
-                DialInfo = new ShipDialInfo
+                    new ShipArcInfo(ArcType.Front, 2),
+                    new ShipArcInfo(ArcType.SingleTurret, 2)
+                ),
+                2, 3, 3,
+                new ShipActionsInfo
                 (
-                    new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.Complex),
-                    new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.Easy),
-                    new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Easy),
-                    new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.Easy),
-                    new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.Complex),
+                    new ActionInfo(typeof(FocusAction)),
+                    new ActionInfo(typeof(TargetLockAction)),
+                    new ActionInfo(typeof(BarrelRollAction)),
+                    new ActionInfo(typeof(EvadeAction))
+                ),
+                new ShipUpgradesInfo(),
+                linkedActions: new List<LinkedActionInfo>
+                {
+                    new (typeof(FocusAction), typeof(RotateArcAction), ActionColor.White),
+                    new (typeof(TargetLockAction), typeof(RotateArcAction), ActionColor.White),
+                    new (typeof(EvadeAction), typeof(RotateArcAction), ActionColor.White),
+                    new (typeof(BarrelRollAction), typeof(RotateArcAction), ActionColor.White)
+                }
+            );
 
-                    new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.Normal),
-                    new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.Easy),
-                    new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Easy),
-                    new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.Easy),
-                    new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.Normal),
+            ShipAbilities.Add(new Abilities.SecondEdition.HeavyWeaponTurret());
 
-                    new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.Normal),
-                    new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.Normal),
-                    new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Easy),
-                    new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.Normal),
-                    new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.Normal),
-                    new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Left, ManeuverBearing.SegnorsLoop, MovementComplexity.Complex),
-                    new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Right, ManeuverBearing.SegnorsLoop, MovementComplexity.Complex),
+            ModelInfo = new ShipModelInfo
+            (
+                "TIE/SF Fighter",
+                "First Order",
+                previewScale: 2f
+            );
 
-                    new ManeuverInfo(ManeuverSpeed.Speed4, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Normal),
+            DialInfo = new ShipDialInfo
+            (
+                new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.Complex),
+                new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.Easy),
+                new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Easy),
+                new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.Easy),
+                new ManeuverInfo(ManeuverSpeed.Speed1, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.Complex),
 
-                    new ManeuverInfo(ManeuverSpeed.Speed5, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Normal)
-                );
+                new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.Normal),
+                new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.Easy),
+                new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Easy),
+                new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.Easy),
+                new ManeuverInfo(ManeuverSpeed.Speed2, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.Normal),
 
-                SoundInfo = new ShipSoundInfo
-                (
-                    new List<string>()
-                    {
-                        "TIE-Fly1",
-                        "TIE-Fly2",
-                        "TIE-Fly3",
-                        "TIE-Fly4",
-                        "TIE-Fly5",
-                        "TIE-Fly6",
-                        "TIE-Fly7"
-                    },
-                    "TIE-Fire", 2
-                );
+                new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Left, ManeuverBearing.Turn, MovementComplexity.Normal),
+                new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Left, ManeuverBearing.Bank, MovementComplexity.Normal),
+                new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Easy),
+                new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Right, ManeuverBearing.Bank, MovementComplexity.Normal),
+                new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Right, ManeuverBearing.Turn, MovementComplexity.Normal),
+                new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Left, ManeuverBearing.SegnorsLoop, MovementComplexity.Complex),
+                new ManeuverInfo(ManeuverSpeed.Speed3, ManeuverDirection.Right, ManeuverBearing.SegnorsLoop, MovementComplexity.Complex),
 
-                ShipIconLetter = 'S';
-            }
+                new ManeuverInfo(ManeuverSpeed.Speed4, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Normal),
+
+                new ManeuverInfo(ManeuverSpeed.Speed5, ManeuverDirection.Forward, ManeuverBearing.Straight, MovementComplexity.Normal)
+            );
+
+            SoundInfo = new ShipSoundInfo
+            (
+                new List<string>()
+                {
+                    "TIE-Fly1",
+                    "TIE-Fly2",
+                    "TIE-Fly3",
+                    "TIE-Fly4",
+                    "TIE-Fly5",
+                    "TIE-Fly6",
+                    "TIE-Fly7"
+                },
+                "TIE-Fire", 2
+            );
+
+            ShipIconLetter = 'S';
         }
     }
 }
@@ -145,6 +142,38 @@ namespace Abilities.SecondEdition
                     }
                 }
             }
+        }
+    }
+
+    public class HeavyWeaponTurretEoD : HeavyWeaponTurret
+    {
+        // Adds free white rotate action after taking an action to standard Heavy Weapon Turret
+        // Do not remove HeavyWeaponTurret, this is used in conjunction with
+
+        public override void ActivateAbility()
+        {
+            HostShip.OnActionIsPerformed += RegisterFreeRotate;
+        }
+
+        public override void DeactivateAbility()
+        {
+            HostShip.OnActionIsPerformed -= RegisterFreeRotate;
+        }
+
+        private void RegisterFreeRotate(GenericAction action)
+        {
+            RegisterAbilityTrigger(TriggerTypes.OnActionIsPerformed, AskFreeRotate);
+        }
+
+        private void AskFreeRotate(object sender, EventArgs e)
+        {
+            HostShip.AskPerformFreeAction(
+                new RotateArcAction(),
+                Triggers.FinishTrigger,
+                "Heavy Weapon Turret",
+                "You may perform a white rotate turret action",
+                HostShip
+            );
         }
     }
 }

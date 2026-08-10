@@ -2,28 +2,26 @@
 using Remote;
 using Ship;
 using SquadBuilderNS;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
-public static class ShipFactory {
+public static class ShipFactory
+{
 
     //private static GameManagerScript Game;
 
     public static int lastId;
 
-	public static readonly Vector3 ROTATION_FORWARD = new Vector3 (0, 0, 0);
-    public static readonly Vector3 ROTATION_BACKWARD = new Vector3 (0, 180, 0);
+    public static readonly Vector3 ROTATION_FORWARD = new(0, 0, 0);
+    public static readonly Vector3 ROTATION_BACKWARD = new(0, 180, 0);
 
     public static void Initialize()
     {
         lastId = 1;
     }
 
-	//TODO: REWRITE ASAP
-	public static GenericShip SpawnShip(SquadListShip shipConfig)
+    //TODO: REWRITE ASAP
+    public static GenericShip SpawnShip(SquadListShip shipConfig)
     {
         Vector3 position = Vector3.zero;
 
@@ -68,7 +66,7 @@ public static class ShipFactory {
         Edition.Current.SubScribeToGenericShipEvents(newShipContainer);
 
         return newShipContainer;
-	}
+    }
 
     public static GenericRemote SpawnRemote(GenericRemote remote, Vector3 position, Quaternion rotation)
     {
@@ -78,7 +76,9 @@ public static class ShipFactory {
         remote.OnPositionFinish += Rules.OffTheBoard.CheckOffTheBoard;
         remote.OnShipIsRemoved_System += Rules.Destruction.WhenShipIsRemoved;
 
-        remote.BeforeTokenIsAssigned += Rules.Remotes.AllowOnlyLocks;
+        remote.BeforeTokenIsAssigned += Rules.Remotes.AllowOnlyLocksAndCharges;
+        remote.OnRoundEnd += Rules.Force.RegenerateForce;
+        remote.OnRoundEnd += Rules.Charge.RegenerateCharge;
         remote.OnTokenIsAssigned += Roster.UpdateTokensIndicator;
         remote.OnTokenIsRemoved += Roster.UpdateTokensIndicator;
         remote.AfterAssignedDamageIsChanged += Roster.UpdateRosterHullDamageIndicators;

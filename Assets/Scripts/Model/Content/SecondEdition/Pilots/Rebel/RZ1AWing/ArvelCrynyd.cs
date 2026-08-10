@@ -45,7 +45,7 @@ namespace Ship.SecondEdition.RZ1AWing
         public ArvelCrynydXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 9;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 7;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Talent,

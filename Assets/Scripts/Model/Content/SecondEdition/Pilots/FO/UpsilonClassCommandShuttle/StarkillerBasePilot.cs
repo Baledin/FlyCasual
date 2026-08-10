@@ -36,7 +36,7 @@ namespace Ship.SecondEdition.UpsilonClassCommandShuttle
         public StarkillerBasePilotXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 15;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Crew,

@@ -40,7 +40,8 @@ namespace RulesList
                         Name = "Collision: Roll for damage",
                         TriggerType = TriggerTypes.OnMovementFinish,
                         TriggerOwner = Selection.ThisShip.Owner.PlayerNo,
-                        EventHandler = StartRollForDamage
+                        EventHandler = StartRollForDamage,
+                        IsPriority = true
                     }
                 );
             }
@@ -55,7 +56,8 @@ namespace RulesList
                         Name = "Collision: Perform Red Action",
                         TriggerType = TriggerTypes.OnMovementFinish,
                         TriggerOwner = Selection.ThisShip.Owner.PlayerNo,
-                        EventHandler = AskPerformRedAction
+                        EventHandler = AskPerformRedAction,
+                        IsPriority = true
                     }
                 );
             }
@@ -73,6 +75,7 @@ namespace RulesList
                     Phases.FinishSubPhase(typeof(OverlappedFriendlyShipDamageCheckSubPhase));
                     Triggers.FinishTrigger();
                 });
+
             newPhase.TheShip = Selection.ThisShip;
             newPhase.Start();
         }
@@ -81,15 +84,15 @@ namespace RulesList
         {
             if (!Selection.ThisShip.IsStressed)
             {
-                List<GenericAction> actionsToPerform = new ();
+                List<GenericAction> actionsToPerform = new();
 
                 bool hasFocus = false;
                 bool hasCalculate = false;
-                
+
                 if (Selection.ThisShip.ActionBar.AllActions.Any(n => n is FocusAction))
                 {
                     actionsToPerform.Add(new FocusAction()
-                        {HostShip = Selection.ThisShip, Color = Actions.ActionColor.Red});
+                    { HostShip = Selection.ThisShip, Color = Actions.ActionColor.Red });
                     hasFocus = true;
                 }
 
@@ -103,7 +106,7 @@ namespace RulesList
                 if (hasFocus) message = "You may perform a Focus action as red";
                 if (hasCalculate) message = "You may perform a Calculate action as red";
                 if (hasFocus & hasCalculate) message = "You may perform a Focus or Calculate action as red";
-                
+
                 Selection.ThisShip.AskPerformFreeAction
                 (
                     actionsToPerform,
@@ -114,7 +117,7 @@ namespace RulesList
             }
             else
             {
-                Messages.ShowErrorToHuman($"{Selection.ThisShip.PilotInfo} is stressed, cannot perform action after bump");
+                Messages.ShowErrorToHuman($"{Selection.ThisShip.PilotInfo.PilotName} is stressed, cannot perform action after bump");
                 Triggers.FinishTrigger();
             }
         }
@@ -151,9 +154,9 @@ namespace RulesList
 
         public void CanPerformAttack(ref bool result, List<string> stringList)
         {
-            if (!Edition.Current.CanAttackBumpedTarget && 
-                Selection.ThisShip.IsBumped && 
-                Selection.ThisShip.ShipsBumped.Contains(Selection.AnotherShip) && 
+            if (!Edition.Current.CanAttackBumpedTarget &&
+                Selection.ThisShip.IsBumped &&
+                Selection.ThisShip.ShipsBumped.Contains(Selection.AnotherShip) &&
                 Selection.AnotherShip.ShipsBumped.Contains(Selection.ThisShip))
             {
                 if (!Selection.ThisShip.CanAttackBumpedTarget(Selection.AnotherShip))
@@ -168,7 +171,6 @@ namespace RulesList
 
 namespace SubPhases
 {
-
     public class OverlappedFriendlyShipDamageCheckSubPhase : DiceRollCheckSubPhase
     {
         private readonly GenericShip prevActiveShip = Selection.ActiveShip;

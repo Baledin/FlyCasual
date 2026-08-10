@@ -50,14 +50,14 @@ namespace Ship.SecondEdition.ScavengedYT1300
     {
         public ChewbaccaXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 17;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
+            (PilotInfo as PilotCardInfo25).Cost = 16;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 14;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Talent,
                 UpgradeType.Crew,
                 UpgradeType.Crew,
-                UpgradeType.Gunner,
+                UpgradeType.Crew,
                 UpgradeType.Gunner,
                 UpgradeType.Illicit,
                 UpgradeType.Illicit,
