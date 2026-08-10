@@ -34,7 +34,7 @@ namespace UpgradesList.SecondEdition
     {
         public SeventhFleetGunnerXWA() : base()
         {
-            UpgradeInfo.Cost = 9;
+            UpgradeInfo.Cost = 10;
             UpgradeInfo.LegalityInfo = new() { Legality.XWA };
         }
     }
