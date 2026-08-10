@@ -31,7 +31,7 @@ namespace UpgradesList.SecondEdition
         {
             IsHidden = false;
 
-            UpgradeInfo.Cost = 4;
+            UpgradeInfo.Cost = 6;
             UpgradeInfo.LegalityInfo = new List<Legality>() { Legality.XWA };
         }
     }
