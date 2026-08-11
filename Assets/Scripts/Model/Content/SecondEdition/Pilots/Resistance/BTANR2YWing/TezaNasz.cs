@@ -47,8 +47,8 @@ namespace Ship.SecondEdition.BTANR2YWing
     {
         public TezaNaszXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 8;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+            (PilotInfo as PilotCardInfo25).Cost = 9;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,
