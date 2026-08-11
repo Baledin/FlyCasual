@@ -51,8 +51,8 @@ namespace Ship.SecondEdition.ModifiedYT1300LightFreighter
     {
         public HanSoloXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 19;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
+            (PilotInfo as PilotCardInfo25).Cost = 21;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 26;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Talent,
