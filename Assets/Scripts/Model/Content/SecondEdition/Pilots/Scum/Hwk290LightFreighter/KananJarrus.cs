@@ -53,7 +53,7 @@ namespace Ship
         {
             public KananJarrusXWA() : base()
             {
-                (PilotInfo as PilotCardInfo25).Cost = 9;
+                (PilotInfo as PilotCardInfo25).Cost = 10;
                 (PilotInfo as PilotCardInfo25).LoadoutValue = 7;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
