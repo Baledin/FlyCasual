@@ -46,7 +46,7 @@ namespace Ship.SecondEdition.BTANR2YWing
         public CaiThrenalliXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 7;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 4;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,
