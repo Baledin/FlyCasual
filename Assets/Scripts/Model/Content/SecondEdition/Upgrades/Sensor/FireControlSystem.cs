@@ -15,9 +15,9 @@ namespace UpgradesList.SecondEdition
                 UpgradeType.Sensor,
                 cost: 2,
                 abilityType: typeof(Abilities.SecondEdition.FireControlSystemAbility),
-                seImageNumber: 25
+                seImageNumber: 25,
+                legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
-            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal };
         }
     }
 

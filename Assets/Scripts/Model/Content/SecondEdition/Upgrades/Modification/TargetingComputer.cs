@@ -14,9 +14,9 @@ namespace UpgradesList.SecondEdition
                 "Targeting Computer",
                 UpgradeType.Modification,
                 cost: 1,
-                addAction: new ActionInfo(typeof(TargetLockAction))
+                addAction: new ActionInfo(typeof(TargetLockAction)),
+                legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
-            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal };
         }
     }
 
