@@ -53,7 +53,7 @@ namespace AI.Aggressor
 
             if (isBumpedEnemy) Priority -= 500;
 
-            if (isBumpedFriendly) Priority -= 1000;
+            if (isBumpedFriendly) Priority -= 1200;
 
             if (Selection.ThisShip.Damage.HasCrit(typeof(DamageDeckCardSE.LooseStabilizer)) && movement.Bearing != ManeuverBearing.Straight)
             {
