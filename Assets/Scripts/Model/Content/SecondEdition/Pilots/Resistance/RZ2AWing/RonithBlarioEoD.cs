@@ -15,7 +15,7 @@ namespace Ship.SecondEdition.RZ2AWing
                 "Evacuation of D'Qar",
                 Faction.Resistance,
                 2,
-                9,
+                8,
                 0,
                 isLimited: true,
                 abilityType: typeof(Abilities.SecondEdition.RonithBlarioAbility),

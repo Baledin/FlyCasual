@@ -43,8 +43,8 @@ namespace Ship.SecondEdition.RZ1AWing
     {
         public WedgeAntillesXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 10;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 12;
+            (PilotInfo as PilotCardInfo25).Cost = 9;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 6;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Talent,

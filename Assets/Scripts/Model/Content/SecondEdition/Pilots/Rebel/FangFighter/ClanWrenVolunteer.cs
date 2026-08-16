@@ -44,7 +44,7 @@ namespace Ship
             public ClanWrenVolunteerXWA() : base()
             {
                 (PilotInfo as PilotCardInfo25).Cost = 10;
-                (PilotInfo as PilotCardInfo25).LoadoutValue = 10;
+                (PilotInfo as PilotCardInfo25).LoadoutValue = 8;
                 (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
                 {
                     UpgradeType.Talent,

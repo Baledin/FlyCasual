@@ -52,7 +52,7 @@ namespace Ship.SecondEdition.BTLA4YWing
         public DutchVanderXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 11;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 20;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
                 {
                     UpgradeType.Talent,

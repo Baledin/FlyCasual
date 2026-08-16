@@ -21,8 +21,8 @@ namespace Ship.SecondEdition.TIEInterceptor
                 "Royal Guard",
                 Faction.Imperial,
                 5,
-                12,
-                4,
+                13,
+                16,
                 isLimited: true,
                 force: 1,
                 regensForce: 1,
@@ -30,6 +30,7 @@ namespace Ship.SecondEdition.TIEInterceptor
                 extraUpgradeIcons: new List<UpgradeType>()
                 {
                     UpgradeType.ForcePower,
+                    UpgradeType.Modification,
                     UpgradeType.Modification,
                     UpgradeType.Configuration
                 },

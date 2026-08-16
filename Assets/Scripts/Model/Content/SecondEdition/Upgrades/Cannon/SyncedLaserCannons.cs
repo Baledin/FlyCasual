@@ -48,7 +48,7 @@ namespace UpgradesList.SecondEdition
     {
         public SyncedLaserCannonsXWA() : base()
         {
-            UpgradeInfo.Cost = 8;
+            UpgradeInfo.Cost = 9;
             UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
         }
     }
