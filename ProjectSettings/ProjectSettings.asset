@@ -164,7 +164,7 @@ PlayerSettings:
     Standalone: com.Baledin.Fly-Casual
   buildNumber:
     Bratwurst: 0
-    Standalone: 2.5.20260426.04
+    Standalone: 2.5.20260816.01
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 0
