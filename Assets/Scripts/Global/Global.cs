@@ -18,7 +18,7 @@ public class Global : MonoBehaviour
     public static int LatestVersionInt = 0;
 
     // Used for json exports, update when vendor version changes
-    public static string CurrentXWAVersion = "50P-2.2";
+    public static string CurrentXWAVersion = "50P-2.1";
     public static string CurrentAMGVersion = "2.8.0";
 
     public static SquadBuilder SquadBuilder { get; set; }
