@@ -13,7 +13,7 @@ public class Global : MonoBehaviour
 
     private static bool isAlreadyInitialized;
 
-    public static string CurrentVersion = "v2.5.20260817.01";
+    public static string CurrentVersion = "v2.5.20260816.01";
     public static int CurrentVersionInt = 102509001;  // literal(10) XwingVersion(25) MajorUpdate#(increments) MinorUpdate#(increments)
     public static int LatestVersionInt = 0;
 
