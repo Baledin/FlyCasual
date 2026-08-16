@@ -1,10 +1,12 @@
 using Abilities.SecondEdition;
+using Actions;
 using ActionsList;
 using Content;
 using Movement;
 using Ship;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Upgrade;
 
 namespace Ship.SecondEdition.VCX100LightFreighter
@@ -74,8 +76,18 @@ namespace Abilities.SecondEdition
 
         private void AskUseAbility(object sender, EventArgs e)
         {
-            HeraSyndullaLegendsAndRelicsCoordinateAction action = new();
-            action.IsRealAction = false;
+            if (!HostShip.Owner.Ships.Values.Any(s => HostShip.GetRangeToShip(s) >= 1 && HostShip.GetRangeToShip(s) <= 3))
+            {
+                Triggers.FinishTrigger();
+                return;
+            }
+
+            HeraSyndullaLegendsAndRelicsCoordinateAction action = new()
+            {
+                IsRealAction = false
+            };
+
+            HostShip.OnCheckCoordinateModeModification += SetCustomCoordinateMode;
 
             HostShip.AskPerformFreeAction(
                 action,
@@ -85,12 +97,14 @@ namespace Abilities.SecondEdition
             );
         }
 
-        private class HeraSyndullaLegendsAndRelicsCoordinateAction : CoordinateAction
+
+        private void SetCustomCoordinateMode(ref CoordinateActionData coordinateActionData)
         {
-            public HeraSyndullaLegendsAndRelicsCoordinateAction() : base()
-            {
-                IsRealAction = false;
-            }
+            coordinateActionData.MaxRange = 3;
+            HostShip.OnCheckCoordinateModeModification -= SetCustomCoordinateMode;
         }
+
+
+        private class HeraSyndullaLegendsAndRelicsCoordinateAction : CoordinateAction { }
     }
 }
