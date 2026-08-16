@@ -47,7 +47,7 @@ namespace Ship.SecondEdition.TIEDDefender
         public DarthVaderXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 22;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 14;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 18;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
