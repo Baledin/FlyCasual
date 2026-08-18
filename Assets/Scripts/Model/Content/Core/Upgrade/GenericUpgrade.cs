@@ -71,7 +71,7 @@ namespace Upgrade
 
         public List<GenericAbility> UpgradeAbilities = new List<GenericAbility>();
 
-        public bool isPlaceholder = false;
+        public bool IsPlaceholder = false;
 
         public string NamePostfix;
 
