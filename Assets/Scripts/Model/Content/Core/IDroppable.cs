@@ -1,7 +1,7 @@
 ﻿using BoardTools;
 using System.Collections.Generic;
 
-namespace UpgradesList.SecondEdition
+namespace Upgrade
 {
     public interface IDroppable
     {
