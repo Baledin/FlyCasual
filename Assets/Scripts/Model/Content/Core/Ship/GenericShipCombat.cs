@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Tokens;
 using UnityEngine;
 using Upgrade;
+using UpgradesList.SecondEdition;
 
 namespace Ship
 {
@@ -817,7 +818,11 @@ namespace Ship
         public List<ManeuverTemplate> GetAvailableBombDropTemplates(GenericUpgrade upgrade)
         {
             List<ManeuverTemplate> availableTemplates = new();
-            availableTemplates.AddRange(upgrade.GetDefaultDropTemplates());
+
+            if(upgrade is IDroppable droppableUpgrade)
+            {
+                availableTemplates.AddRange(droppableUpgrade.GetDefaultDropTemplates());
+            }            
 
             OnGetAvailableBombDropTemplatesNoConditions?.Invoke(availableTemplates, upgrade);
             OnGetAvailableBombDropTemplatesTwoConditions?.Invoke(availableTemplates, upgrade);
@@ -831,7 +836,11 @@ namespace Ship
         public List<ManeuverTemplate> GetAvailableDeviceLaunchTemplates(GenericUpgrade upgrade)
         {
             List<ManeuverTemplate> availableTemplates = new();
-            availableTemplates.AddRange(upgrade.GetDefaultLaunchTemplates());
+
+            if(upgrade is IDroppable launchableUpgrade)
+            {
+                availableTemplates.AddRange(launchableUpgrade.GetDefaultLaunchTemplates());
+            }
 
             OnGetAvailableBombLaunchTemplates?.Invoke(availableTemplates, upgrade);
 
