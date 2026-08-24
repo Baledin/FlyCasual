@@ -38,14 +38,14 @@ namespace Abilities.SecondEdition
         {
             HostShip.OnShipIsDestroyed += TryRegisterDestructionAbility;
             HostShip.OnAttackFinishAsAttacker += RegisterFirstAbility;
-            HostShip.OnRoundEnd += ResetAbilityUsed;
+            Phases.Events.OnRoundEnd += ClearIsAbilityUsedFlag;
         }
 
         public override void DeactivateAbility()
         {
             HostShip.OnAttackFinishAsAttacker -= RegisterFirstAbility;
             HostShip.OnShipIsDestroyed -= TryRegisterDestructionAbility;
-            HostShip.OnRoundEnd -= ResetAbilityUsed;
+            Phases.Events.OnRoundEnd -= ClearIsAbilityUsedFlag;
         }
 
         private void RegisterFirstAbility(GenericShip ship)
@@ -130,11 +130,6 @@ namespace Abilities.SecondEdition
             );
 
             Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, Triggers.FinishTrigger);
-        }
-
-        private void ResetAbilityUsed(GenericShip ship)
-        {
-            IsAbilityUsed = false;
         }
 
         private class PageTicoAbilityDecision : DecisionSubPhase { };
