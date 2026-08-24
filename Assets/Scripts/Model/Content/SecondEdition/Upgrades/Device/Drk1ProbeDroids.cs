@@ -8,7 +8,7 @@ using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
-    public class Drk1ProbeDroids : GenericUpgrade
+    public class Drk1ProbeDroids : GenericUpgrade, IDroppable
     {
         public Drk1ProbeDroids() : base()
         {
@@ -27,7 +27,7 @@ namespace UpgradesList.SecondEdition
             );
         }
 
-        public override List<ManeuverTemplate> GetDefaultDropTemplates()
+        public List<ManeuverTemplate> GetDefaultDropTemplates()
         {
             return new List<ManeuverTemplate>()
             {
@@ -39,7 +39,7 @@ namespace UpgradesList.SecondEdition
             };
         }
 
-        public override List<ManeuverTemplate> GetDefaultLaunchTemplates()
+        public List<ManeuverTemplate> GetDefaultLaunchTemplates()
         {
             return new List<ManeuverTemplate>()
             {

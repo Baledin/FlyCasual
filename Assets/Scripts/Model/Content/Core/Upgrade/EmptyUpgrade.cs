@@ -10,7 +10,7 @@ namespace UpgradesList
     {
         public EmptyUpgrade( ) : base()
         {
-            isPlaceholder = true;
+            IsPlaceholder = true;
         }
 
         public void SetUpgradeInfo(UpgradeType type, string Name, int Cost )

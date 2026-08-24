@@ -125,7 +125,7 @@ namespace Upgrade
         public List<GenericUpgrade> GetUpgradesAll()
         {
             List<GenericUpgrade> result = new List<GenericUpgrade>();
-            result.AddRange(InstalledUpgradesAll_System.Where(n => !n.isPlaceholder));
+            result.AddRange(InstalledUpgradesAll_System.Where(n => !n.IsPlaceholder));
             return result;
         }
 

@@ -1,14 +1,15 @@
-﻿using UnityEngine;
+﻿using BoardTools;
+using Bombs;
+using Movement;
 using Ship;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Bombs;
+using UpgradesList.SecondEdition;
 
 namespace Upgrade
 {
 
-    abstract public class GenericBomb : GenericUpgrade
+    abstract public class GenericBomb : GenericUpgrade, IDroppable
     {
         public string bombPrefabPath;
 
@@ -19,14 +20,22 @@ namespace Upgrade
         public bool IsDiscardedAfterDropped;
         public int detonationRange = 0;
 
-        public List<GenericDeviceGameObject> CurrentBombObjects = new List<GenericDeviceGameObject>();
+        public List<GenericDeviceGameObject> CurrentBombObjects = new ();
 
         public delegate void SimpleEvent();
         public static SimpleEvent OnBombIsDetonated;
 
-        public GenericBomb() : base()
+        public virtual List<ManeuverTemplate> GetDefaultDropTemplates()
         {
+            return new List<ManeuverTemplate>()
+            {
+                new (ManeuverBearing.Straight, ManeuverDirection.Forward, ManeuverSpeed.Speed1, isBombTemplate: true)
+            };
+        }
 
+        public virtual List<ManeuverTemplate> GetDefaultLaunchTemplates()
+        {
+            return new ();
         }
 
         public override void AttachToShip(GenericShip host)
@@ -99,7 +108,7 @@ namespace Upgrade
             if (!ship.IgnoresBombDetonationEffect)
             {
                 ExplosionEffect(
-                    ship, 
+                    ship,
                     delegate { AfterBombEffect(ship, callBack); }
                 );
             }
