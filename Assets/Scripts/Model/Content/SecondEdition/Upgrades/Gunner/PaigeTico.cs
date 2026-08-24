@@ -1,11 +1,8 @@
 ﻿using ActionsList;
-using Arcs;
-using BoardTools;
 using Bombs;
 using Ship;
 using SubPhases;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Upgrade;
@@ -29,7 +26,7 @@ namespace UpgradesList.SecondEdition
                 Faction.Resistance,
                 new Vector2(295, 1)
             );
-        }        
+        }
     }
 }
 
@@ -41,17 +38,22 @@ namespace Abilities.SecondEdition
         {
             HostShip.OnShipIsDestroyed += TryRegisterDestructionAbility;
             HostShip.OnAttackFinishAsAttacker += RegisterFirstAbility;
+            HostShip.OnRoundEnd += ResetAbilityUsed;
         }
 
         public override void DeactivateAbility()
         {
             HostShip.OnAttackFinishAsAttacker -= RegisterFirstAbility;
             HostShip.OnShipIsDestroyed -= TryRegisterDestructionAbility;
+            HostShip.OnRoundEnd -= ResetAbilityUsed;
         }
 
         private void RegisterFirstAbility(GenericShip ship)
         {
-            RegisterAbilityTrigger(TriggerTypes.OnAttackFinish, AskRotateOrDrop);
+            if (!IsAbilityUsed)
+            {
+                RegisterAbilityTrigger(TriggerTypes.OnAttackFinish, AskRotateOrDrop);
+            }
         }
 
         private void AskRotateOrDrop(object sender, EventArgs e)
@@ -78,6 +80,8 @@ namespace Abilities.SecondEdition
         {
             DecisionSubPhase.ConfirmDecisionNoCallback();
 
+            IsAbilityUsed = true;
+
             new RotateArcAction().DoOnlyEffect(Triggers.FinishTrigger);
         }
 
@@ -91,14 +95,14 @@ namespace Abilities.SecondEdition
 
         private bool HasBombsToDrop()
         {
-            return HostShip.UpgradeBar.GetUpgradesAll().Any(n => 
+            return HostShip.UpgradeBar.GetUpgradesAll().Any(n =>
                 n is GenericBomb
                 && (n as GenericBomb).UpgradeInfo.SubType == UpgradeSubType.Bomb
                 && n.State.Charges > 0
             );
         }
 
-        private void AskDropBomb(object sender, System.EventArgs e)
+        private void AskDropBomb(object sender, EventArgs e)
         {
             Selection.ChangeActiveShip(HostShip);
 
@@ -111,9 +115,11 @@ namespace Abilities.SecondEdition
             );
         }
 
-        private void DropBomb(object sender, System.EventArgs e)
+        private void DropBomb(object sender, EventArgs e)
         {
             DecisionSubPhase.ConfirmDecisionNoCallback();
+
+            IsAbilityUsed = true;
 
             BombsManager.RegisterBombDropTriggerIfAvailable(
                 HostShip,
@@ -126,7 +132,11 @@ namespace Abilities.SecondEdition
             Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, Triggers.FinishTrigger);
         }
 
-        private class PageTicoAbilityDecision : DecisionSubPhase { };
+        private void ResetAbilityUsed(GenericShip ship)
+        {
+            IsAbilityUsed = false;
+        }
 
+        private class PageTicoAbilityDecision : DecisionSubPhase { };
     }
 };

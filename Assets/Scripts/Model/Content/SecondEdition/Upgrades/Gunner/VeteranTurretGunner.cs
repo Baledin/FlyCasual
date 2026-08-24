@@ -50,6 +50,8 @@ namespace Abilities.SecondEdition
         // After you perform a primary attack, you may perform a bonus turret arc
         // attack using a turret arc you did not already attack from this round.
 
+        ArcFacing prevFacing = ArcFacing.None;
+
         public override void ActivateAbility()
         {
             HostShip.OnAttackFinishAsAttacker += CheckAbility;
@@ -72,42 +74,35 @@ namespace Abilities.SecondEdition
 
             if (HostShip.IsCannotAttackSecondTime) return;
 
-            bool availableArcsArePresent = HostShip.ArcsInfo.Arcs.Any(a => a.ArcType == ArcType.SingleTurret && !a.WasUsedForAttackThisRound);
-            if (availableArcsArePresent)
-            {
-                HostShip.OnCombatCheckExtraAttack += RegisterSecondAttackTrigger;
-            }
-            else
-            {
-                Messages.ShowError(HostUpgrade.UpgradeInfo.Name + " does not have any valid arcs to use");
-            }
+            prevFacing = Combat.ArcForShot.Facing;
+
+            HostShip.OnCombatCheckExtraAttack += RegisterExtraAttack;
         }
 
-        private void RegisterSecondAttackTrigger(GenericShip ship)
+        private void RegisterExtraAttack(GenericShip ship)
         {
-            HostShip.OnCombatCheckExtraAttack -= RegisterSecondAttackTrigger;
-
+            HostShip.OnCombatCheckExtraAttack -= RegisterExtraAttack;
             RegisterAbilityTrigger(TriggerTypes.OnCombatCheckExtraAttack, UseGunnerAbility);
         }
 
         private void UseGunnerAbility(object sender, System.EventArgs e)
         {
-            if (!HostShip.IsCannotAttackSecondTime)
+            if (!HostShip.IsCannotAttackSecondTime && HostShip.ArcsInfo.Arcs.Any(a => a.IsTurretArc && a.Facing != prevFacing))
             {
                 HostShip.IsCannotAttackSecondTime = true;
 
                 Combat.StartSelectAttackTarget(
-                    HostShip,
-                    FinishAdditionalAttack,
-                    IsUnusedTurretArcShot,
-                    HostUpgrade.UpgradeInfo.Name,
-                    "You may perform a bonus turret arc attack using another turret arc",
-                    HostUpgrade
+                    ship: HostShip,
+                    callback: FinishAdditionalAttack,
+                    extraAttackFilter: IsUnusedTurretArcShot,
+                    abilityName: HostUpgrade.UpgradeInfo.Name,
+                    description: "You may perform a bonus turret arc attack using another turret arc",
+                    imageSource: HostUpgrade
                 );
             }
             else
             {
-                Messages.ShowErrorToHuman(string.Format("{0} cannot attack an additional time", HostShip.PilotInfo.PilotName));
+                Messages.ShowErrorToHuman($"{HostShip.PilotInfo.PilotName} cannot attack an additional time");
                 Triggers.FinishTrigger();
             }
         }
@@ -125,8 +120,9 @@ namespace Abilities.SecondEdition
 
         private bool IsUnusedTurretArcShot(GenericShip defender, IShipWeapon weapon, bool isSilent)
         {
-            ShotInfo shotInfo = new ShotInfo(HostShip, defender, weapon);
-            if (!shotInfo.ShotAvailableFromArcs.Any(a => a.ArcType == ArcType.SingleTurret && !a.WasUsedForAttackThisRound))
+            ShotInfo shotInfo = new(HostShip, defender, weapon);
+
+            if (!shotInfo.ShotAvailableFromArcs.Any(a => a.IsTurretArc && a.Facing != prevFacing))
             {
                 if (!isSilent) Messages.ShowError("Your attack must use a turret arc you have not already attacked from this round");
                 return false;
@@ -164,8 +160,7 @@ namespace Abilities.SecondEdition
                 IShipWeapon turretWeapon = turretUpgrade as IShipWeapon;
                 if (turretWeapon.WeaponType == WeaponTypes.Turret)
                 {
-                    ShotInfo turretShot = new ShotInfo(HostShip, targetShip, turretWeapon);
-                    if (turretShot.IsShotAvailable)
+                    if (new ShotInfo(HostShip, targetShip, turretWeapon).IsShotAvailable)
                     {
                         return true;
                     }
@@ -179,9 +174,10 @@ namespace Abilities.SecondEdition
         {
             //AI tries to check non-turret weapon first
             IShipWeapon weapon = HostShip.PrimaryWeapons.FirstOrDefault(w => !w.WeaponInfo.ArcRestrictions.Contains(ArcType.SingleTurret));
-            if (weapon == null) weapon = HostShip.PrimaryWeapons.First();
-            ShotInfo primaryShot = new ShotInfo(HostShip, targetShip, weapon);
-            return primaryShot.IsShotAvailable;
+
+            weapon ??= HostShip.PrimaryWeapons.First();
+
+            return new ShotInfo(HostShip, targetShip, weapon).IsShotAvailable;
         }
 
         private void ModifyRotateArcActionPriority(GenericAction action, ref int priority)
@@ -214,8 +210,7 @@ namespace Abilities.SecondEdition
             {
                 foreach (GenericShip enemyShip in HostShip.Owner.EnemyShips.Values)
                 {
-                    ShotInfoArc shotInfoArc = new ShotInfoArc(HostShip, enemyShip, arc);
-                    if (shotInfoArc.IsShotAvailable) return true;
+                    if (new ShotInfoArc(HostShip, enemyShip, arc).IsShotAvailable) return true;
                 }
             }
 
