@@ -3,8 +3,8 @@ using Actions;
 using ActionsList;
 using BoardTools;
 using Content;
-using NUnit.Framework;
 using SubPhases;
+using System;
 using System.Collections.Generic;
 using Tokens;
 using Upgrade;
@@ -75,18 +75,18 @@ namespace Abilities.SecondEdition
             RegisterAbilityTrigger(TriggerTypes.OnBombWillBeDropped, AskUseTurnTemplates);
         }
 
-        private void AskUseTurnTemplates()
+        private void AskUseTurnTemplates(object sender, EventArgs e)
         {
             AskToUseAbility(
                 HostShip.PilotInfo.PilotName,
                 NeverUseByDefault,
                 UseTurnTemplates,
-                dontUseAbility: Triggers.FinishTrigger,
+                dontUseAbility: CleanUp,
                 requiredPlayer: HostShip.Owner.PlayerNo
             );
         }
 
-        private void UseTurnTemplates()
+        private void UseTurnTemplates(object sender, EventArgs e)
         {
             HostShip.OnGetAvailableBombDropTemplatesOneCondition += GetDropTemplates;
             HostShip.Tokens.AssignToken(new StressToken(HostShip), DecisionSubPhase.ConfirmDecision);
@@ -98,9 +98,9 @@ namespace Abilities.SecondEdition
 
             List<ManeuverTemplate> newTemplates = new();
 
-            foreach(ManeuverTemplate template in availableTemplates)
+            foreach (ManeuverTemplate template in availableTemplates)
             {
-                if(template.Bearing == Movement.ManeuverBearing.Straight)
+                if (template.Bearing == Movement.ManeuverBearing.Straight)
                 {
                     newTemplates.Add(new ManeuverTemplate(Movement.ManeuverBearing.Turn, Movement.ManeuverDirection.Left, template.Speed, true));
                     newTemplates.Add(new ManeuverTemplate(Movement.ManeuverBearing.Turn, Movement.ManeuverDirection.Right, template.Speed, true));
@@ -108,6 +108,11 @@ namespace Abilities.SecondEdition
             }
 
             availableTemplates.AddRange(newTemplates);
+        }
+
+        private void CleanUp(object sender, EventArgs e)
+        {
+            Triggers.FinishTrigger();
         }
     }
 }
