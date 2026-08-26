@@ -107,11 +107,11 @@ namespace Abilities.SecondEdition
 
         private int GetAiAbilityPriority(GenericShip ship)
         {
-            var result = 0;
+            int result = 0;
 
             result += ship.PilotInfo.Cost;
 
-            ShotInfo shotInfo = new ShotInfo(HostShip, ship, HostShip.PrimaryWeapons);
+            ShotInfo shotInfo = new(HostShip, ship, HostShip.PrimaryWeapons);
             if (shotInfo.IsShotAvailable)
             {
                 result *= 2;
@@ -126,15 +126,14 @@ namespace Abilities.SecondEdition
         }
         private void AssignStrain()
         {
-            if (TargetShip != null)
-            {
-                TargetShip.Tokens.AssignToken(typeof(Tokens.StrainToken), SelectShipSubPhase.FinishSelection);
-                HostShip.Tokens.RemoveToken(typeof(Tokens.StressToken), delegate { });
-            }
-            else
-            {
-                SelectShipSubPhase.FinishSelection();
-            }
+            if (TargetShip == null) SelectShipSubPhase.FinishSelection();
+
+            TargetShip.Tokens.AssignToken(typeof(Tokens.StrainToken),
+                delegate
+                {
+                    HostShip.Tokens.RemoveToken(typeof(Tokens.StressToken), SelectShipSubPhase.FinishSelection);
+                }
+            );
         }
 
     }
