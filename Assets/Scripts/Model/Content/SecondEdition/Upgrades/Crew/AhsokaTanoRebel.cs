@@ -39,13 +39,13 @@ namespace Abilities.SecondEdition
 
         public override void ActivateAbility()
         {
-            HostShip.OnActivationPhaseStart += AskUseAbility;
+            HostShip.OnMovementActivationStart += AskUseAbility;
             HostShip.OnCheckForceRecurring += SetForceRecurring;
         }
 
         public override void DeactivateAbility()
         {
-            HostShip.OnActivationPhaseStart -= AskUseAbility;
+            HostShip.OnMovementActivationStart -= AskUseAbility;
             HostShip.OnCheckForceRecurring -= SetForceRecurring;
         }
 
