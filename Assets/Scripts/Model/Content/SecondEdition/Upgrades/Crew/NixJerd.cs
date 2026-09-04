@@ -26,7 +26,7 @@ namespace UpgradesList.SecondEdition
 
             IsHidden = true;
         }
-	}
+    }
 }
 
 namespace Abilities.SecondEdition
@@ -47,7 +47,7 @@ namespace Abilities.SecondEdition
 
         private void RegisterAbility(GenericAction action)
         {
-            if(action is ReloadAction)
+            if (action is ReloadAction)
             {
                 RegisterAbilityTrigger(TriggerTypes.OnActionIsPerformed, AskUseAbility);
             }

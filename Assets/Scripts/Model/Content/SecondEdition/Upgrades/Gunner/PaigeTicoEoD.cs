@@ -6,7 +6,6 @@ using SubPhases;
 using System;
 using System.Linq;
 using Tokens;
-using UnityEngine;
 using Upgrade;
 
 namespace UpgradesList.SecondEdition
@@ -57,7 +56,7 @@ namespace Abilities.SecondEdition
 
         private void AllowTurretAttacks(ref bool result)
         {
-            if(HostShip.Tokens.GetTokens<WeaponsDisabledToken>().Count == 1)
+            if (HostShip.Tokens.GetTokens<WeaponsDisabledToken>().Count == 1)
             {
                 result = false;
                 HostShip.OnCheckIsForbiddenWeapon += AllowTurretsOnly;

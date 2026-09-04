@@ -82,7 +82,8 @@ namespace Abilities.SecondEdition
                 NeverUseByDefault,
                 UseTurnTemplates,
                 dontUseAbility: CleanUp,
-                requiredPlayer: HostShip.Owner.PlayerNo
+                requiredPlayer: HostShip.Owner.PlayerNo,
+                descriptionLong: "You may gain 1 stress token to use a left bank or right bank template of the same speed instead as straight."
             );
         }
 
@@ -102,8 +103,8 @@ namespace Abilities.SecondEdition
             {
                 if (template.Bearing == Movement.ManeuverBearing.Straight)
                 {
-                    newTemplates.Add(new ManeuverTemplate(Movement.ManeuverBearing.Turn, Movement.ManeuverDirection.Left, template.Speed, true));
-                    newTemplates.Add(new ManeuverTemplate(Movement.ManeuverBearing.Turn, Movement.ManeuverDirection.Right, template.Speed, true));
+                    newTemplates.Add(new ManeuverTemplate(Movement.ManeuverBearing.Bank, Movement.ManeuverDirection.Left, template.Speed, true));
+                    newTemplates.Add(new ManeuverTemplate(Movement.ManeuverBearing.Bank, Movement.ManeuverDirection.Right, template.Speed, true));
                 }
             }
 
