@@ -59,8 +59,6 @@ namespace Abilities.SecondEdition
     {
         // At the start of the Engagement Phase, you may acquire a lock on an object at range 1-3 that has a friendly lock. If you do, break a friendly lock on that target.
 
-        // TODO: Currently only works with GenericShip, not ITargetLockable
-
         readonly List<ITargetLockable> targets = new();
         ITargetLockable enemyTarget;
 
@@ -100,7 +98,7 @@ namespace Abilities.SecondEdition
             {
                 AskToUseAbility(
                     HostShip.PilotInfo.PilotName,
-                    AlwaysUseByDefault, // TODO: Don't use AlwaysUse
+                    NeverUseByDefault,
                     StealTargetLock,
                     callback: Triggers.FinishTrigger,
                     descriptionLong: $"You may acquire a lock on an object at range 1-3 that has a friendly lock. If you do, break a friendly lock on that target.",
@@ -118,7 +116,7 @@ namespace Abilities.SecondEdition
         {
             SelectTargetForAbility(
                 AcquireLock,
-                GetEnemyTargets,
+                GetEnemyTargets, // TODO: filters don't allow non-ships
                 StealLockAiPriority,
                 HostShip.Owner.PlayerNo,
                 name: HostShip.PilotInfo.PilotName,
@@ -146,7 +144,7 @@ namespace Abilities.SecondEdition
 
         private void AskBreakFriendlyLock()
         {
-            List<RedTargetLockToken> locks = (enemyTarget as GenericShip).Tokens.GetTokens<RedTargetLockToken>('*').Where(t => t.OtherTargetLockTokenOwner != HostShip).ToList();
+            List<RedTargetLockToken> locks = (enemyTarget as GenericShip).Tokens.GetTokens<RedTargetLockToken>('*').Where(t => t.OtherTargetLockTokenOwner != HostShip && Tools.IsFriendly(HostShip, t.OtherTargetLockTokenOwner as GenericShip)).ToList();
 
             if (locks.Count == 1)
             {
@@ -154,24 +152,32 @@ namespace Abilities.SecondEdition
             }
             else
             {
-                SelectTargetForAbility(
-                    BreakFriendlyLock,
-                    HasFriendlyLock,
-                    BreakLockAiPriority,
-                    HostShip.Owner.PlayerNo,
-                    name: HostShip.PilotInfo.PilotName,
-                    description: "Select a target to break lock.",
-                    imageSource: HostShip,
-                    showSkipButton: false,
-                    callback: SelectShipSubPhase.FinishSelection
-                );
-            }
-        }
+                BreakLockDecisionSubPhase subphase = Phases.StartTemporarySubPhaseNew<BreakLockDecisionSubPhase>(
+                    "Select a friendly target lock to break",
+                    delegate
+                    {
 
-        private void BreakFriendlyLock()
-        {
-            BlueTargetLockToken blueLock = TargetShip.Tokens.GetToken<BlueTargetLockToken>(TargetShip.GetTargetLockLetterPairsOn(enemyTarget).First());
-            TargetShip.Tokens.RemoveToken(blueLock, SelectShipSubPhase.FinishSelection);
+                        Triggers.FinishTrigger();
+                    }
+                 );
+
+                subphase.DescriptionShort = "Break target lock";
+                subphase.DescriptionLong = "Select a friendly target lock to break";
+                subphase.ImageSource = HostShip;
+
+                foreach (RedTargetLockToken tlock in locks)
+                {
+                    subphase.AddDecision($"{tlock.Letter}", delegate { BreakFriendlyLock(tlock, BreakLockDecisionSubPhase.ConfirmDecision); });
+                }
+
+                subphase.ShowSkipButton = false;
+
+                subphase.DefaultDecisionName = subphase.GetDecisions().First().Name;
+
+                subphase.CallBack = SelectShipSubPhase.FinishSelection;
+
+                subphase.Start();
+            }
         }
 
         private void BreakFriendlyLock(RedTargetLockToken redLock, Action callback)
@@ -190,23 +196,11 @@ namespace Abilities.SecondEdition
             return 0;
         }
 
-        private int BreakLockAiPriority(GenericShip friendlyShip)
-        {
-            int result = friendlyShip.HasCombatActivation ? 0 : 50;
-
-            result += enemyTarget.GetRangeToShip(friendlyShip) * 10;
-
-            return result;
-        }
-
         private bool GetEnemyTargets(GenericShip ship)
         {
             return targets.Contains(ship);
         }
 
-        private bool HasFriendlyLock(GenericShip ship)
-        {
-            return enemyTarget.GetTargetLockLetterPairsOn(ship).Any();
-        }
+        private class BreakLockDecisionSubPhase : DecisionSubPhase { }
     }
 }
