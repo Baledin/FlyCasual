@@ -18,7 +18,8 @@ namespace UpgradesList.SecondEdition
                     UpgradeType.Modification
                 },
                 cost: 0,
-                restriction: new ShipRestriction(typeof(Ship.SecondEdition.Delta7Aethersprite.Delta7Aethersprite)),
+                restriction: new ShipRestriction(typeof(Ship.SecondEdition.Delta7Aethersprite.Delta7Aethersprite),
+                    typeof(Ship.SecondEdition.NabooRoyalN1Starfighter.NabooRoyalN1Starfighter)),
                 abilityType: typeof(Abilities.SecondEdition.CalibratedLaserTargetingAbility)
             );
         }

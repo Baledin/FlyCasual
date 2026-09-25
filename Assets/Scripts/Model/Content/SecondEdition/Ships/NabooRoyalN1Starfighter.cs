@@ -2,9 +2,11 @@
 using ActionsList;
 using Arcs;
 using Movement;
+using Ship;
 using Ship.CardInfo;
 using System;
 using System.Collections.Generic;
+using Tokens;
 using UnityEngine;
 
 namespace Ship.SecondEdition.NabooRoyalN1Starfighter
@@ -21,7 +23,8 @@ namespace Ship.SecondEdition.NabooRoyalN1Starfighter
                 (
                     new Dictionary<Faction, Type>
                     {
-                        { Faction.Republic, typeof(RicOlie) }
+                        { Faction.Republic, typeof(RicOlie) },
+                        { Faction.Scum, typeof(GavynSykes) }
                     }
                 ),
                 new ShipArcsInfo(ArcType.Front, 2), 2, 3, 2,
@@ -83,6 +86,33 @@ namespace Ship.SecondEdition.NabooRoyalN1Starfighter
             ShipAbilities.Add(new Abilities.SecondEdition.FullThrottleAbility());
 
             ShipIconLetter = '<';
+        }
+    }
+}
+
+namespace Abilities.SecondEdition
+{
+    public class RestoredSpeedsterAbility : GenericAbility
+    {
+        public override void ActivateAbility()
+        {
+            HostShip.OnWeaponsDisabledCheck += AllowBullseyeAttacksWhileDisarmed;
+        }
+
+        public override void DeactivateAbility()
+        {
+            HostShip.OnWeaponsDisabledCheck -= AllowBullseyeAttacksWhileDisarmed;
+        }
+
+        private void AllowBullseyeAttacksWhileDisarmed(ref bool isDisarmed)
+        {
+            if (HostShip.Tokens.GetTokens<WeaponsDisabledToken>().Count == 1
+                && Combat.ChosenWeapon is PrimaryWeaponClass
+                && HostShip.SectorsInfo.IsShipInSector(Selection.AnotherShip, Arcs.ArcType.Bullseye))
+            {
+                Messages.ShowInfo($"Restored Speedster: Primary weapon attacks in the bullseye arc are allowed while disarmed.");
+                isDisarmed = false;
+            }
         }
     }
 }
