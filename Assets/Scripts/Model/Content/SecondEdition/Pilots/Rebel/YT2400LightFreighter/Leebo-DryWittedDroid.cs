@@ -1,7 +1,8 @@
-﻿using Content;
-using Ship;
+﻿using Abilities.SecondEdition;
+using Arcs;
+using Content;
 using System.Collections.Generic;
-using Tokens;
+using System.Linq;
 using Upgrade;
 
 namespace Ship.SecondEdition.YT2400LightFreighter
@@ -38,6 +39,11 @@ namespace Ship.SecondEdition.YT2400LightFreighter
             );
 
             ShipInfo.ActionIcons.SwitchToDroidActions();
+
+            ShipInfo.ArcInfo = new ShipArcsInfo(ArcType.DoubleTurret, 4);
+
+            ShipAbilities.Remove(ShipAbilities.FirstOrDefault(a => a is SensorBlackout));
+            ShipAbilities.Add(new SensorBlindspot());
         }
     }
 
