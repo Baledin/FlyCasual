@@ -21,7 +21,8 @@ namespace Ship.SecondEdition.YT2400LightFreighter
                 (
                     new Dictionary<Faction, System.Type>
                     {
-                        { Faction.Rebel, typeof(DashRendar) }
+                        { Faction.Rebel, typeof(DashRendar) },
+                        { Faction.Scum, typeof(Leebo) }
                     }
                 ),
                 new ShipArcsInfo(ArcType.DoubleTurret, 3), 2, 6, 4,
