@@ -125,7 +125,7 @@ namespace Abilities.SecondEdition
 
         public override void DeactivateAbility()
         {
-            HostShip.AfterGotNumberOfAttackDice += ReduceAttackDice;
+            HostShip.AfterGotNumberOfAttackDice -= ReduceAttackDice;
         }
 
         private void ReduceAttackDice(ref int count)
