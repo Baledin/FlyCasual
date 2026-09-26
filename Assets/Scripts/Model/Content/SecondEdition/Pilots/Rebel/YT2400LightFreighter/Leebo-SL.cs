@@ -1,6 +1,6 @@
-﻿using ActionsList;
-using Content;
+﻿using Content;
 using Ship;
+using SubPhases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +44,7 @@ namespace Ship.SecondEdition.YT2400LightFreighter
 
             ShipInfo.ActionIcons.SwitchToDroidActions();
 
-            //MustHaveUpgrades.Add(typeof(EfficientProcessing));
+            MustHaveUpgrades.Add(typeof(EfficientProcessing));
             MustHaveUpgrades.Add(typeof(SeekerMissiles));
             MustHaveUpgrades.Add(typeof(Outrider));
         }
@@ -97,7 +97,7 @@ namespace Abilities.SecondEdition
 
         private void AskGetLock()
         {
-            if(HostShip.Tokens.HasToken<CalculateToken>() && HostShip.Owner.AnotherPlayer.Ships.Values.Any(s => FilterTargets(s)))
+            if (HostShip.Tokens.HasToken<CalculateToken>() && HostShip.Owner.AnotherPlayer.Ships.Values.Any(s => FilterTargets(s)))
             {
                 RegisterAbilityTrigger(TriggerTypes.OnCombatPhaseEnd, AskAcquireLock);
             }
@@ -105,19 +105,27 @@ namespace Abilities.SecondEdition
 
         private void AskAcquireLock(object sender, EventArgs e)
         {
-            HostShip.OnActionIsPerformed += PayCost;
-
             SelectTargetForAbility(
-                new TargetLockAction(),
+                selectTargetAction: AcquireLock,
                 filterTargets: FilterTargets,
                 getAiPriority: GetAiPriority,
                 subphaseOwnerPlayerNo: HostShip.Owner.PlayerNo,
                 name: HostShip.PilotInfo.PilotName,
                 description: "You may spend a calculate token to acquire a lock on an enemy ship at range 2-3.",
                 imageSource: HostShip,
-                callback: Triggers.FinishTrigger,
-                onSkip: CleanUp
+                callback: Triggers.FinishTrigger
             );
+        }
+
+        private void AcquireLock()
+        {
+
+            ActionsHolder.AcquireTargetLock(HostShip, TargetShip, PayCost, SelectShipSubPhase.FinishSelection);
+        }
+
+        private void PayCost()
+        {
+            HostShip.Tokens.SpendToken(typeof(CalculateToken), SelectShipSubPhase.FinishSelection);
         }
 
         private bool FilterTargets(GenericShip ship)
@@ -125,19 +133,9 @@ namespace Abilities.SecondEdition
             return HostShip.GetRangeToShip(ship) is >= 2 and <= 3;
         }
 
-        private void PayCost(GenericAction action)
-        {
-            HostShip.Tokens.SpendToken(typeof(CalculateToken), CleanUp);
-        }
-
         private int GetAiPriority(GenericShip ship)
         {
             return 100 - HostShip.GetRangeToShip(ship);
-        }
-
-        private void CleanUp()
-        {
-            HostShip.OnActionIsPerformed -= PayCost;
         }
     }
 }
