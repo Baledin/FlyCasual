@@ -119,7 +119,6 @@ namespace Abilities.SecondEdition
 
         private void AcquireLock()
         {
-
             ActionsHolder.AcquireTargetLock(HostShip, TargetShip, PayCost, SelectShipSubPhase.FinishSelection);
         }
 
