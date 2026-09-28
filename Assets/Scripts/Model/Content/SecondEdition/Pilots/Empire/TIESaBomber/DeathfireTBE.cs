@@ -38,7 +38,8 @@ namespace Ship
                         UpgradeType.Device,
                         UpgradeType.Device
                     },
-                    legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
+                    legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal },
+                    abilityText: "After you fully execute a speed 3-5 maneuver, if you have not dropped or launched a device this round, you may spend 2 charges to drop or launch a bomb using the 3-speed forward template."
                 );
                 PilotNameCanonical = "deathfire-swz98";
 
@@ -70,21 +71,18 @@ namespace Abilities.SecondEdition
     {
         public override void ActivateAbility()
         {
-            HostShip.OnMovementFinish += CheckAbility;
+            HostShip.OnMovementFinishSuccessfully += CheckAbility;
         }
 
         public override void DeactivateAbility()
         {
-            HostShip.OnMovementFinish -= CheckAbility;
+            HostShip.OnMovementFinishSuccessfully -= CheckAbility;
         }
 
         private void CheckAbility(GenericShip ship)
         {
-            //AI doesn't use ability
-            if (HostShip.Owner.UsesHotacAiRules) return;
-
             if (HostShip.AssignedManeuver.Speed is >= 3 and <= 5
-                && !HostShip.IsBumped && HostShip.State.Charges > 1
+                && HostShip.State.Charges > 1
                 && !HostShip.IsBombAlreadyDropped)
             {
                 RegisterAbilityTrigger(TriggerTypes.OnMovementFinish, AskUseAbility);
@@ -127,6 +125,8 @@ namespace Abilities.SecondEdition
             if (upgrade.UpgradeInfo.SubType != UpgradeSubType.Bomb) return;
             availableTemplates.Clear();
             availableTemplates.Add(new ManeuverTemplate(ManeuverBearing.Straight, ManeuverDirection.Forward, ManeuverSpeed.Speed3, isBombTemplate: true));
+
+            ResetDelegates();
         }
 
         protected virtual void AddLaunchTemplate(List<ManeuverTemplate> availableTemplates, GenericUpgrade upgrade)
@@ -134,6 +134,14 @@ namespace Abilities.SecondEdition
             if (upgrade.UpgradeInfo.SubType != UpgradeSubType.Bomb) return;
             availableTemplates.Clear();
             availableTemplates.Add(new ManeuverTemplate(ManeuverBearing.Straight, ManeuverDirection.Forward, ManeuverSpeed.Speed3));
+
+            ResetDelegates();
+        }
+
+        private void ResetDelegates()
+        {
+            HostShip.OnGetAvailableBombDropTemplatesNoConditions -= AddDropTemplate;
+            HostShip.OnGetAvailableBombLaunchTemplates -= AddLaunchTemplate;
         }
     }
 }
