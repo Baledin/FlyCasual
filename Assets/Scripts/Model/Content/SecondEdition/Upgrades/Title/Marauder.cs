@@ -1,6 +1,8 @@
-﻿using Arcs;
+﻿using System.Collections.Generic;
+using Arcs;
 using Ship;
 using System.Linq;
+using Content;
 using Upgrade;
 
 namespace UpgradesList.SecondEdition
@@ -20,9 +22,20 @@ namespace UpgradesList.SecondEdition
                     new FactionRestriction(Faction.Scum)
                 ),
                 abilityType: typeof(Abilities.SecondEdition.MarauderAbility),
-                seImageNumber: 150
+                seImageNumber: 150,
+                legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
+            
         }        
+    }
+
+    public class MarauderXWA : Marauder
+    {
+        public MarauderXWA() : base()
+        {
+            UpgradeInfo.Cost = 2;
+            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+        }
     }
 }
 
