@@ -61,13 +61,11 @@ namespace Abilities.SecondEdition
         public override void ActivateAbility()
         {
             Phases.Events.OnCombatPhaseStart_NoTriggers += CheckAbility;
-            HostShip.OnRemoteWasDroppedUpgrade += SpendCosts;
         }
 
         public override void DeactivateAbility()
         {
             Phases.Events.OnCombatPhaseStart_NoTriggers -= CheckAbility;
-            HostShip.OnRemoteWasDroppedUpgrade -= SpendCosts;
         }
 
         private void CheckAbility()
@@ -91,7 +89,7 @@ namespace Abilities.SecondEdition
                     type: HostUpgrade.UpgradeInfo.RemoteType
                 );
 
-                Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, FinishAbility);
+                Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, SpendCosts);
             }
             else
             {
@@ -99,10 +97,10 @@ namespace Abilities.SecondEdition
             }
         }
 
-        private void SpendCosts(GenericUpgrade upgrade)
+        private void SpendCosts()
         {
-            if (upgrade == HostUpgrade)
-                HostShip.Tokens.SpendToken(typeof(CalculateToken), upgrade.State.SpendCharge);
+            HostShip.Tokens.SpendToken(typeof(CalculateToken), HostUpgrade.State.SpendCharge);
+            FinishAbility();
         }
 
         private void FinishAbility()
