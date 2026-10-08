@@ -18,7 +18,7 @@ namespace Ship.SecondEdition.GauntletFighter
                 pilotTitle: "Countess of Clan Wren",
                 faction: Faction.Republic,
                 initiative: 3,
-                cost: 15,
+                cost: 16,
                 loadoutValue: 17,
                 isLimited: true,
                 extraUpgradeIcons: new List<UpgradeType>()

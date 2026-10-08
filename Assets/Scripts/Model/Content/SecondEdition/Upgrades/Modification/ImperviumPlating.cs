@@ -1,6 +1,8 @@
-﻿using Upgrade;
+﻿using Content;
 using Ship;
 using SubPhases;
+using System.Collections.Generic;
+using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
@@ -14,10 +16,18 @@ namespace UpgradesList.SecondEdition
                 cost: 2,
                 restriction: new ShipRestriction(typeof(Ship.SecondEdition.Belbullab22Starfighter.Belbullab22Starfighter)),
                 abilityType: typeof(Abilities.SecondEdition.ImperviumPlatingAbility),
-                charges: 2
+                charges: 2,
+                legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
+        }
+    }
 
-            
+    public class ImperviumPlatingXWA : ImperviumPlating
+    {
+        public ImperviumPlatingXWA() : base()
+        {
+            UpgradeInfo.Cost = 0;
+            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
         }
     }
 }
@@ -25,7 +35,7 @@ namespace UpgradesList.SecondEdition
 namespace Abilities.SecondEdition
 {
     //Before you would be dealt a faceup Ship damage card, you may spend 1 charge to discard it instead.
-    public class ImperviumPlatingAbility : GenericAbility 
+    public class ImperviumPlatingAbility : GenericAbility
     {
         public override void ActivateAbility()
         {

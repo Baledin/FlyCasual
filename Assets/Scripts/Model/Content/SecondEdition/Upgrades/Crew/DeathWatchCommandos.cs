@@ -7,7 +7,7 @@ using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
-    public class DeathWatchCommandos : GenericUpgrade
+    public class DeathWatchCommandos : GenericUpgrade, IDroppable
     {
         public DeathWatchCommandos() : base()
         {
@@ -33,12 +33,17 @@ namespace UpgradesList.SecondEdition
             );
         }
 
-        public override List<ManeuverTemplate> GetDefaultDropTemplates()
+        public List<ManeuverTemplate> GetDefaultDropTemplates()
         {
             return new List<ManeuverTemplate>()
             {
                 new (ManeuverBearing.Straight, ManeuverDirection.Forward, ManeuverSpeed.Speed1, isBombTemplate: true)
             };
+        }
+
+        public List<ManeuverTemplate> GetDefaultLaunchTemplates()
+        {
+            return new List<ManeuverTemplate>();
         }
     }
 }

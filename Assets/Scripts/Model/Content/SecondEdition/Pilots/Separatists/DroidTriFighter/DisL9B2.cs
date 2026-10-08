@@ -1,5 +1,4 @@
 using Abilities.SecondEdition;
-using ActionsList;
 using Content;
 using System;
 using System.Collections.Generic;
@@ -17,8 +16,8 @@ namespace Ship.SecondEdition.DroidTriFighter
                 pilotTitle: "Calculated Risk",
                 faction: Faction.Separatists,
                 initiative: 6,
-                cost: 11,
-                loadoutValue: 11,
+                cost: 10,
+                loadoutValue: 10,
                 isLimited: true,
                 charges: 1,
                 regensCharges: 1,
@@ -94,7 +93,7 @@ namespace Abilities.SecondEdition
 
         private bool HasShipInBullseye()
         {
-            return Roster.AllShips.Values.Any(s => HostShip.SectorsInfo.IsShipInSector(s, Arcs.ArcType.Bullseye) && !Tools.IsFriendly(HostShip,s));
+            return Roster.AllShips.Values.Any(s => HostShip.SectorsInfo.IsShipInSector(s, Arcs.ArcType.Bullseye) && !Tools.IsFriendly(HostShip, s));
         }
 
         private void ResetInitiative(object sender, EventArgs e)

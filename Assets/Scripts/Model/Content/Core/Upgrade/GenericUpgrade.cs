@@ -1,15 +1,11 @@
 ﻿using Abilities;
 using Mods;
+using Ship;
 using SquadBuilderNS;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Ship;
-using Editions;
-using BoardTools;
-using Movement;
 
 namespace Upgrade
 {
@@ -19,11 +15,11 @@ namespace Upgrade
         public Vector2 AvatarOffset;
         public Vector2 AvatarSize;
 
-        public AvatarInfo(Faction faction, Vector2 offset, Vector2 size = default(Vector2))
+        public AvatarInfo(Faction faction, Vector2 offset, Vector2 size = default)
         {
             AvatarFaction = faction;
             AvatarOffset = offset;
-            AvatarSize = (size != default(Vector2)) ? size : new Vector2(100, 100);
+            AvatarSize = (size != default) ? size : new Vector2(100, 100);
         }
     }
 
@@ -69,9 +65,9 @@ namespace Upgrade
         public GenericShip HostShip { get; set; }
         public UpgradeSlot Slot { get; set; }
 
-        public List<GenericAbility> UpgradeAbilities = new List<GenericAbility>();
+        public List<GenericAbility> UpgradeAbilities = new();
 
-        public bool isPlaceholder = false;
+        public bool IsPlaceholder = false;
 
         public string NamePostfix;
 
@@ -132,7 +128,7 @@ namespace Upgrade
             {
                 List<UpgradeSlot> freeSlots = ship.UpgradeBar.GetFreeSlots(UpgradeInfo.UpgradeTypes);
 
-                foreach (var requiredSlotType in UpgradeInfo.UpgradeTypes)
+                foreach (UpgradeType requiredSlotType in UpgradeInfo.UpgradeTypes)
                 {
                     UpgradeSlot freeSlotByType = freeSlots.FirstOrDefault(n => n.Type == requiredSlotType);
                     if (freeSlotByType != null)
@@ -188,9 +184,12 @@ namespace Upgrade
          * @param type the type of upgrade to test.
          * @return true if this upgrade contains the specified type and false otherwise.
          */
-        public bool HasType(UpgradeType type){
-            for (int i = 0; i < UpgradeInfo.UpgradeTypes.Count; i++) {
-                if (UpgradeInfo.UpgradeTypes[i] == type) {
+        public bool HasType(UpgradeType type)
+        {
+            for (int i = 0; i < UpgradeInfo.UpgradeTypes.Count; i++)
+            {
+                if (UpgradeInfo.UpgradeTypes[i] == type)
+                {
                     return true;
                 }
             }
@@ -200,8 +199,10 @@ namespace Upgrade
         /**
          * Returns the type as a string.
          * @return the name of the type.
+         * TODO: Remove SalvagedAstromech from codebase, no longer an upgradetype
          */
-        public string getTypesAsString(){
+        public string getTypesAsString()
+        {
             string name = "";
             /*
             for (int i = 0; i < Types.Count; i++) {
@@ -221,12 +222,13 @@ namespace Upgrade
             }
             */
             UpgradeType type = UpgradeInfo.UpgradeTypes[0];
-            switch (type) {
+            switch (type)
+            {
                 case UpgradeType.SalvagedAstromech:
                     name += "Salvaged Astromech";
                     break;
                 default:
-                    name += type.ToString ();
+                    name += type.ToString();
                     break;
             }
             return name;
@@ -249,7 +251,7 @@ namespace Upgrade
 
         public void ActivateAbility()
         {
-            foreach (var ability in UpgradeAbilities)
+            foreach (GenericAbility ability in UpgradeAbilities)
             {
                 ability.InitializeForSquadBuilder(this);
                 ability.ActivateAbility();
@@ -258,7 +260,7 @@ namespace Upgrade
 
         public void DeactivateAbility()
         {
-            foreach (var ability in UpgradeAbilities)
+            foreach (GenericAbility ability in UpgradeAbilities)
             {
                 ability.DeactivateAbility();
             }
@@ -331,21 +333,5 @@ namespace Upgrade
             Slot.PreInstallUpgrade(newUpgrade, HostShip);
             Slot.TryInstallUpgrade(newUpgrade, HostShip);
         }
-
-        // Default templates to drop devices
-
-        public virtual List<ManeuverTemplate> GetDefaultDropTemplates()
-        {
-            return new List<ManeuverTemplate>()
-            {
-                new ManeuverTemplate(ManeuverBearing.Straight, ManeuverDirection.Forward, ManeuverSpeed.Speed1, isBombTemplate: true)
-            };
-        }
-
-        public virtual List<ManeuverTemplate> GetDefaultLaunchTemplates()
-        {
-            return new List<ManeuverTemplate>();
-        }
     }
-
 }

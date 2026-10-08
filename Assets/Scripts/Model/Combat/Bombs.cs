@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Upgrade;
+using UpgradesList.SecondEdition;
 
 namespace Bombs
 {
@@ -421,6 +422,7 @@ namespace Bombs
         public static List<GenericUpgrade> GetBombsToDrop(GenericShip ship, UpgradeSubType subType = UpgradeSubType.None, Type type = null)
         {
             return ship.UpgradeBar.GetUpgradesOnlyFaceup()
+                .Where(n => n is IDroppable)
                 .Where(n => typeof(GenericBomb).IsAssignableFrom(n.GetType()) || n.UpgradeInfo.SubType == subType)
                 .Where(n => !n.State.UsesCharges || n.State.Charges >= n.UpgradeInfo.ChargesCost)
                 .Where(n => subType == UpgradeSubType.None || n.UpgradeInfo.SubType == subType)

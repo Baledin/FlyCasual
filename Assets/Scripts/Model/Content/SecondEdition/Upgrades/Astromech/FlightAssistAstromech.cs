@@ -20,7 +20,7 @@ namespace UpgradesList.SecondEdition
                 "Flight-Assist Astromech",
                 UpgradeType.Astromech,
                 charges: 2,
-                cost: 3,
+                cost: 4,
                 restriction: new BaseSizeRestriction(BaseSize.Small),
                 abilityType: typeof(FlightAssistAstromechAbility),
                 legalityInfo: new List<Legality> { Legality.XWA }

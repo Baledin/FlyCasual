@@ -40,8 +40,8 @@ namespace Ship.SecondEdition.TIEFoFighter
     {
         public MidnightXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 11;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 19;
+            (PilotInfo as PilotCardInfo25).Cost = 10;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 9;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Talent,

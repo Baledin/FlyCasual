@@ -38,7 +38,7 @@ namespace UpgradesList.SecondEdition
     {
         public SeekerMissilesXWA() : base()
         {
-            UpgradeInfo.Cost = 10;
+            UpgradeInfo.Cost = 12;
             UpgradeInfo.LegalityInfo = new() { Legality.XWA };
             IsHidden = false;
         }

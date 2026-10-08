@@ -13,7 +13,7 @@ namespace UpgradesList.SecondEdition
             UpgradeInfo = new UpgradeCardInfo(
                 name: "Blindspot Targeter",
                 type: UpgradeType.Sensor,
-                cost: 8,
+                cost: 7,
                 abilityType: typeof(BlindspotTargeterAbility),
                 legalityInfo: new List<Legality>() { Legality.XWA }
             );

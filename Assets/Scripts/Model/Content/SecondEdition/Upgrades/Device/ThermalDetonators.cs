@@ -64,14 +64,34 @@ namespace UpgradesList.SecondEdition
             UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
         }
     }
+
+    public class ThermalDetonatorsEoD : ThermalDetonatorsXWA
+    {
+        public ThermalDetonatorsEoD() : base()
+        {
+            IsHidden = true;
+            UpgradeInfo.AbilityTypes.Remove(typeof(Abilities.SecondEdition.ThermalDetonatorsAbility));
+            UpgradeInfo.AbilityTypes.Add(typeof(Abilities.SecondEdition.ThermalDetonatorsEoDAbility));
+        }
+    }
 }
 
 namespace Abilities.SecondEdition
 {
+    public class ThermalDetonatorsEoDAbility : ThermalDetonatorsAbility
+    {
+        public ThermalDetonatorsEoDAbility() : base()
+        {
+            UseReloadBonus = false;
+        }
+    }
+
     public class ThermalDetonatorsAbility : GenericAbility
     {
         private bool IsSecondBombDropped = false;
         private ManeuverTemplate ForbiddenTemplate;
+
+        public bool UseReloadBonus = true;
 
         public override void ActivateAbility()
         {
@@ -80,9 +100,16 @@ namespace Abilities.SecondEdition
             HostShip.OnCheckDropOfSecondDevice += CheckSecondDrop;
         }
 
+        public override void DeactivateAbility()
+        {
+            HostShip.OnGetAvailableBombDropTemplatesNoConditions -= TryToAddSecondTemplate;
+            HostShip.OnGetReloadChargesCount -= CheckAdditionalReload;
+            HostShip.OnCheckDropOfSecondDevice -= CheckSecondDrop;
+        }
+
         private void CheckAdditionalReload(GenericUpgrade upgrade, ref int count)
         {
-            if (upgrade == HostUpgrade && upgrade.State.Charges <= (upgrade.State.MaxCharges - 2))
+            if (upgrade == HostUpgrade && upgrade.State.Charges <= (upgrade.State.MaxCharges - 2) && UseReloadBonus)
             {
                 Messages.ShowInfo("Thermal Detonators: Additional charge is restored during Reload action");
                 count++;
@@ -93,7 +120,7 @@ namespace Abilities.SecondEdition
         {
             if (upgrade == HostUpgrade)
             {
-                ManeuverTemplate secondTemplate = new ManeuverTemplate(
+                ManeuverTemplate secondTemplate = new(
                     ManeuverBearing.Straight,
                     ManeuverDirection.Forward,
                     ManeuverSpeed.Speed2,
@@ -141,7 +168,6 @@ namespace Abilities.SecondEdition
 
             HostShip.OnGetAvailableBombDropTemplatesForbid += RestrictLastTemplate;
 
-            // TODO: Check interactions
             BombsManager.DropSelectedDevice(false);
         }
 
@@ -151,13 +177,6 @@ namespace Abilities.SecondEdition
 
             ManeuverTemplate existingTemplate = availableTemplates.FirstOrDefault(n => n.Name == ForbiddenTemplate?.Name);
             if (existingTemplate != null) availableTemplates.Remove(existingTemplate);
-        }
-
-        public override void DeactivateAbility()
-        {
-            HostShip.OnGetAvailableBombDropTemplatesNoConditions -= TryToAddSecondTemplate;
-            HostShip.OnGetReloadChargesCount -= CheckAdditionalReload;
-            HostShip.OnCheckDropOfSecondDevice -= CheckSecondDrop;
         }
     }
 }
@@ -181,6 +200,7 @@ namespace SubPhases.SecondEdition
             HideDiceResultMenu();
 
             DieSide dieResult = CurrentDiceRoll.ResultsArray.First();
+
             switch (dieResult)
             {
                 case DieSide.Focus:
@@ -215,7 +235,7 @@ namespace SubPhases.SecondEdition
                 $"{Selection.ActiveShip.PilotInfo.PilotName} (ID:{Selection.ActiveShip.ShipId}) " +
                 $"suffered {damageType} damage");
 
-            DamageSourceEventArgs thermalDetonatorsDamage = new DamageSourceEventArgs()
+            DamageSourceEventArgs thermalDetonatorsDamage = new()
             {
                 Source = HostUpgrade,
                 DamageType = DamageTypes.BombDetonation
@@ -234,5 +254,4 @@ namespace SubPhases.SecondEdition
             CallBack();
         }
     }
-
 }

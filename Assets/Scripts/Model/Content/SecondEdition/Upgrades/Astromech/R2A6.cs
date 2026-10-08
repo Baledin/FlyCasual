@@ -30,7 +30,7 @@ namespace UpgradesList.SecondEdition
     {
         public R2A6XWA() : base()
         {
-            UpgradeInfo.Cost = 5;
+            UpgradeInfo.Cost = 7;
             UpgradeInfo.LegalityInfo = new List<Legality>
             {
                 Legality.XWA

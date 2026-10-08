@@ -40,7 +40,7 @@ namespace Ship.SecondEdition.TIEFoFighter
         public LongshotXWA() : base()
         {
             (PilotInfo as PilotCardInfo25).Cost = 7;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 3;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 5;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>
             {
                 UpgradeType.Sensor,

@@ -9,7 +9,7 @@ using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
-    public class DiscordMissiles : GenericUpgrade
+    public class DiscordMissiles : GenericUpgrade, IDroppable
     {
         public DiscordMissiles() : base()
         {
@@ -28,12 +28,12 @@ namespace UpgradesList.SecondEdition
             );
         }
 
-        public override List<ManeuverTemplate> GetDefaultDropTemplates()
+        public List<ManeuverTemplate> GetDefaultDropTemplates()
         {
             return new List<ManeuverTemplate>();
         }
 
-        public override List<ManeuverTemplate> GetDefaultLaunchTemplates()
+        public List<ManeuverTemplate> GetDefaultLaunchTemplates()
         {
             return new List<ManeuverTemplate>()
             {

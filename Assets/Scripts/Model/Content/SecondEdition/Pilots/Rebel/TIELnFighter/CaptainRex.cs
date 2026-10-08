@@ -45,8 +45,8 @@ namespace Ship.SecondEdition.TIELnFighter
     {
         public CaptainRexXWA() : base()
         {
-            (PilotInfo as PilotCardInfo25).Cost = 7;
-            (PilotInfo as PilotCardInfo25).LoadoutValue = 9;
+            (PilotInfo as PilotCardInfo25).Cost = 6;
+            (PilotInfo as PilotCardInfo25).LoadoutValue = 4;
             (PilotInfo as PilotCardInfo25).ExtraUpgrades = new List<UpgradeType>()
             {
                 UpgradeType.Talent,
