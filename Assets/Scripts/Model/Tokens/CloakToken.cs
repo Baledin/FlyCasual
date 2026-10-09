@@ -1,11 +1,6 @@
-﻿using ActionsList;
-using Editions;
-using Ship;
+﻿using Ship;
 using SubPhases;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Tokens
 {
@@ -56,15 +51,22 @@ namespace Tokens
 
         private void AskDecloak()
         {
-            Phases.StartTemporarySubPhaseOld(
-                "Decloak Decision",
-                typeof(DecloakDecisionSubPhase),
-                delegate
-                {
-                    Phases.FinishSubPhase(typeof(DecloakDecisionSubPhase));
-                    Triggers.FinishTrigger();
-                }
-            );
+            if (Selection.ThisShip.IsBombAlreadyDropped)
+            {
+                Triggers.FinishTrigger();
+            }
+            else
+            {
+                Phases.StartTemporarySubPhaseOld(
+                    "Decloak Decision",
+                    typeof(DecloakDecisionSubPhase),
+                    delegate
+                    {
+                        Phases.FinishSubPhase(typeof(DecloakDecisionSubPhase));
+                        Triggers.FinishTrigger();
+                    }
+                );
+            }
         }
 
         private void CannotAttackWhileCloaked(ref bool result, List<string> stringList)
@@ -81,9 +83,9 @@ namespace Tokens
             Host.OnSystemsAbilityActivation -= RegisterAskDecloak;
             Host.OnCheckSystemsAbilityActivation -= CheckDecloak;
 
+            Host.IsBombAlreadyDropped = true;
+
             Host.ToggleCloaked(false);
         }
-
     }
-
 }

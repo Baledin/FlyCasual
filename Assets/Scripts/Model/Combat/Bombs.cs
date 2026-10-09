@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Upgrade;
-using UpgradesList.SecondEdition;
 
 namespace Bombs
 {
@@ -289,6 +288,12 @@ namespace Bombs
 
         public static void CreateAskBombDropSubPhase(GenericShip ship, UpgradeSubType subType = UpgradeSubType.None, Type type = null, bool onlyDrop = false)
         {
+            if (ship.IsBombAlreadyDropped)
+            {
+                Triggers.FinishTrigger();
+                return;
+            }
+
             Selection.ChangeActiveShip("ShipId:" + ship.ShipId);
 
             BombDecisionSubPhase selectBombToDrop = (BombDecisionSubPhase)Phases.StartTemporarySubPhaseNew(
