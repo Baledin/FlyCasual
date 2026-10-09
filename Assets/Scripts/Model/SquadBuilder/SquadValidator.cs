@@ -189,7 +189,7 @@ namespace SquadBuilderNS
 
             foreach (KeyValuePair<string, GenericUpgrade> standardizedPair in standardizedUpgradesFound)
             {
-                foreach (SquadListShip shipConfig in squad.Ships)
+                foreach (SquadListShip shipConfig in squad.Ships.Where(s => !(s.Instance.PilotInfo as PilotCardInfo25).IsStandardLayout))
                 {
                     if (shipConfig.Instance.ShipInfo.ShipName == standardizedPair.Key)
                     {
