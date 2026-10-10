@@ -2,6 +2,7 @@
 using Bombs;
 using Content;
 using Movement;
+using Ship;
 using System;
 using System.Collections.Generic;
 using Tokens;
@@ -82,6 +83,9 @@ namespace Abilities.SecondEdition
             {
                 Selection.ChangeActiveShip(HostShip);
 
+                HostShip.BeforeBombWillBeDropped += SpendCosts;
+                HostShip.OnCombatActivation += Cleanup;
+
                 BombsManager.RegisterBombDropTriggerIfAvailable(
                     HostShip,
                     TriggerTypes.OnAbilityDirect,
@@ -89,7 +93,7 @@ namespace Abilities.SecondEdition
                     type: HostUpgrade.UpgradeInfo.RemoteType
                 );
 
-                Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, SpendCosts);
+                Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, FinishAbility);
             }
             else
             {
@@ -100,13 +104,18 @@ namespace Abilities.SecondEdition
         private void SpendCosts()
         {
             HostShip.Tokens.SpendToken(typeof(CalculateToken), HostUpgrade.State.SpendCharge);
-            FinishAbility();
         }
 
         private void FinishAbility()
         {
             Selection.DeselectThisShip();
             Triggers.FinishTrigger();
+        }
+
+        private void Cleanup(GenericShip ship)
+        {
+            HostShip.OnCombatActivation -= Cleanup;
+            HostShip.BeforeBombWillBeDropped -= SpendCosts;
         }
     }
 }
