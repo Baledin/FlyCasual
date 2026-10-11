@@ -54,7 +54,7 @@ namespace Abilities.SecondEdition
         {
             if (HostUpgrade.State.Charges > 0 && Roster.AllShips.Values.Any(s => Tools.IsAnotherTeam(HostShip, s) && IsInArc(s)))
             {
-                RegisterAbilityTrigger(TriggerTypes.OnMovementFinish, UseAbility);
+                RegisterAbilityTrigger(TriggerTypes.OnMovementFinish, AskUseAbility);
             }
         }
 
@@ -62,47 +62,68 @@ namespace Abilities.SecondEdition
         {
             if (HostUpgrade.State.Charges > 0 && (action is BarrelRollAction || action is BoostAction) && Roster.AllShips.Values.Any(s => Tools.IsAnotherTeam(HostShip, s) && IsInArc(s)))
             {
-                RegisterAbilityTrigger(TriggerTypes.OnActionIsPerformed, UseAbility);
+                RegisterAbilityTrigger(TriggerTypes.OnActionIsPerformed, AskUseAbility);
             }
         }
 
-        private void UseAbility(object sender, EventArgs e)
+        private void AskUseAbility(object sender, EventArgs e)
         {
             AskToUseAbility(
-                HostUpgrade.UpgradeInfo.Name,
-                AlwaysUseByDefault,
-                StrainAndTargetLockShip,
-                callback: Triggers.FinishTrigger,
-                descriptionLong: $"You may spend 1 charge. If you do, you may strain 1 ship in your bullseye arc and acquire a target lock on it."
+                descriptionShort: HostUpgrade.UpgradeInfo.Name,
+                useByDefault: AlwaysUseByDefault,
+                useAbility: SelectTarget,
+                descriptionLong: $"You may spend 1 charge to strain 1 ship in your bullseye arc, if you do, you may acquire a target lock on it.",
+                imageHolder: HostUpgrade,
+                requiredPlayer: HostShip.Owner.PlayerNo
             );
         }
 
-        private void StrainAndTargetLockShip(object sender, EventArgs e)
+        private void SelectTarget(object sender, EventArgs e)
         {
-            HostShip.OnTargetLockIsAcquired += ApplyStrain;
-
-            HostShip.ChooseTargetToAcquireTargetLock(
-                delegate
-                {
-                    HostUpgrade.State.SpendCharge();
-                    DecisionSubPhase.ConfirmDecision();
-                },
-                "Choose a target to acquire a lock and apply 1 strain.",
-                HostUpgrade,
-                IsInArc
+            SelectTargetForAbility(
+                selectTargetAction: ApplyStrain,
+                filterTargets: IsInArc,
+                getAiPriority: GetAiPriority,
+                subphaseOwnerPlayerNo: HostShip.Owner.PlayerNo,
+                name: HostUpgrade.UpgradeInfo.Name,
+                description: $"Select a ship to strain.",
+                imageSource: HostUpgrade,
+                callback: DecisionSubPhase.ConfirmDecision
             );
         }
 
-        private void ApplyStrain(ITargetLockable target)
+        private void ApplyStrain()
         {
-            HostShip.OnTargetLockIsAcquired -= ApplyStrain;
+            HostUpgrade.State.SpendCharge();
+            TargetShip.Tokens.AssignToken(typeof(StrainToken), AskAcquireLock);
+        }
 
-            (target as GenericShip).Tokens.AssignToken(typeof(StrainToken), delegate { });
+        private void AskAcquireLock()
+        {
+            AskToUseAbility(
+                descriptionShort: HostUpgrade.UpgradeInfo.Name,
+                useByDefault: AlwaysUseByDefault,
+                useAbility: AcquireLock,
+                callback: SelectShipSubPhase.FinishSelection,
+                descriptionLong: $"Would you like to acquire a lock on {TargetShip.PilotInfo.PilotName}?",
+                imageHolder: HostUpgrade,
+                requiredPlayer: HostShip.Owner.PlayerNo
+            );
+        }
+
+        private void AcquireLock(object sender, EventArgs e)
+        {
+            ActionsHolder.AcquireTargetLock(HostShip, TargetShip, DecisionSubPhase.ConfirmDecision, DecisionSubPhase.ConfirmDecision);
         }
 
         private bool IsInArc(GenericShip ship)
         {
             return HostShip.SectorsInfo.IsShipInSector(ship, ArcType.Bullseye);
+        }
+
+        private int GetAiPriority(GenericShip ship)
+        {
+            return 10 - HostShip.GetRangeToShip(ship);
         }
     }
 }

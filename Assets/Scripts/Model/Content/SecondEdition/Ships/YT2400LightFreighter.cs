@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Actions;
+﻿using Actions;
 using ActionsList;
 using Arcs;
-using Content;
 using Movement;
+using Ship;
 using Ship.CardInfo;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Ship.SecondEdition.YT2400LightFreighter
@@ -21,7 +21,8 @@ namespace Ship.SecondEdition.YT2400LightFreighter
                 (
                     new Dictionary<Faction, System.Type>
                     {
-                        { Faction.Rebel, typeof(DashRendar) }
+                        { Faction.Rebel, typeof(DashRendar) },
+                        { Faction.Scum, typeof(Leebo) }
                     }
                 ),
                 new ShipArcsInfo(ArcType.DoubleTurret, 3), 2, 6, 4,
@@ -112,6 +113,37 @@ namespace Abilities.SecondEdition
         {
             if (Combat.ShotInfo.Range < 2) count -= 1;
         }
+    }
 
+    public class SensorBlindspot : GenericAbility
+    {
+        // While you perform a primary attack at range 0-1, do not apply the range 0-1 bonus and roll 1 fewer attack die.
+
+        public override void ActivateAbility()
+        {
+            HostShip.AfterGotNumberOfAttackDice += ReduceAttackDice;
+        }
+
+        public override void DeactivateAbility()
+        {
+            HostShip.AfterGotNumberOfAttackDice -= ReduceAttackDice;
+        }
+
+        private void ReduceAttackDice(ref int count)
+        {
+            if (Combat.ChosenWeapon is not PrimaryWeaponClass) return;
+
+            switch (Combat.ShotInfo.Range)
+            {
+                case 1:
+                    Messages.ShowInfoToHuman($"Sensor Blindspot: {HostShip.PilotInfo.PilotName} loses Range 1 bonus and -1 attack die.");
+                    count -= 2; // Remove +1 for range, plus further -1
+                    break;
+                case 0:
+                    Messages.ShowInfoToHuman($"Sensor Blindspot: {HostShip.PilotInfo.PilotName} gets -1 attack die.");
+                    count -= 1;
+                    break;
+            }
+        }
     }
 }

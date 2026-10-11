@@ -54,7 +54,7 @@ namespace Abilities.SecondEdition
 
         private void RegisterSingleChargeAbility(GenericAction action, ref bool canBePerformed)
         {
-            if (HostUpgrade.State.Charges > 0 && (action is JamAction || action is CoordinateAction))
+            if (!IsAbilityUsed && HostUpgrade.State.Charges > 0 && (action is JamAction || action is CoordinateAction))
             {
                 savedAction = action;
 
@@ -123,9 +123,11 @@ namespace Abilities.SecondEdition
         {
             HostShip.OnActionIsPerformed += SpendCharges;
 
+            IsAbilityUsed = true;
+
             HostShip.AskPerformFreeAction(
                 GetAbilityActions(),
-                Triggers.FinishTrigger,
+                Cleanup,
                 HostUpgrade.UpgradeInfo.Name,
                 descriptionLong: $"Would you like to spend 2 charges to perform a Jam or Cooridinate action, treating it as red?",
                 imageHolder: HostUpgrade
@@ -144,6 +146,13 @@ namespace Abilities.SecondEdition
         private void SpendCharges(GenericAction action)
         {
             HostUpgrade.State.SpendCharges(2);
+        }
+
+        private void Cleanup()
+        {
+            IsAbilityUsed = false;
+            HostShip.OnActionIsPerformed -= SpendCharges;
+            Triggers.FinishTrigger();
         }
     }
 }

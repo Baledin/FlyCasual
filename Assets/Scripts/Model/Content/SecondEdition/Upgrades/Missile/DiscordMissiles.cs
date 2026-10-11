@@ -2,6 +2,7 @@
 using Bombs;
 using Content;
 using Movement;
+using Ship;
 using System;
 using System.Collections.Generic;
 using Tokens;
@@ -61,13 +62,11 @@ namespace Abilities.SecondEdition
         public override void ActivateAbility()
         {
             Phases.Events.OnCombatPhaseStart_NoTriggers += CheckAbility;
-            HostShip.OnRemoteWasDroppedUpgrade += SpendCosts;
         }
 
         public override void DeactivateAbility()
         {
             Phases.Events.OnCombatPhaseStart_NoTriggers -= CheckAbility;
-            HostShip.OnRemoteWasDroppedUpgrade -= SpendCosts;
         }
 
         private void CheckAbility()
@@ -84,6 +83,9 @@ namespace Abilities.SecondEdition
             {
                 Selection.ChangeActiveShip(HostShip);
 
+                HostShip.BeforeBombWillBeDropped += SpendCosts;
+                HostShip.OnCombatActivation += Cleanup;
+
                 BombsManager.RegisterBombDropTriggerIfAvailable(
                     HostShip,
                     TriggerTypes.OnAbilityDirect,
@@ -99,16 +101,21 @@ namespace Abilities.SecondEdition
             }
         }
 
-        private void SpendCosts(GenericUpgrade upgrade)
+        private void SpendCosts()
         {
-            if (upgrade == HostUpgrade)
-                HostShip.Tokens.SpendToken(typeof(CalculateToken), upgrade.State.SpendCharge);
+            HostShip.Tokens.SpendToken(typeof(CalculateToken), HostUpgrade.State.SpendCharge);
         }
 
         private void FinishAbility()
         {
             Selection.DeselectThisShip();
             Triggers.FinishTrigger();
+        }
+
+        private void Cleanup(GenericShip ship)
+        {
+            HostShip.OnCombatActivation -= Cleanup;
+            HostShip.BeforeBombWillBeDropped -= SpendCosts;
         }
     }
 }
