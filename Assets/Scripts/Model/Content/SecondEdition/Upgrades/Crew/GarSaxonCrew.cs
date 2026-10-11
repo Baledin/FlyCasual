@@ -27,7 +27,7 @@ namespace UpgradesList.SecondEdition
     {
         public GarSaxonCrewXWA() : base()
         {
-            UpgradeInfo.Restrictions.AddRestriction = new BaseSizeRestriction(Ship.BaseSize.Large, BaseSize.Huge);
+            UpgradeInfo.Restrictions.AddRestriction(new BaseSizeRestriction(Ship.BaseSize.Large, BaseSize.Huge));
             UpgradeInfo.LegalityInfo = new() { Legality.XWA };
         }
     }
