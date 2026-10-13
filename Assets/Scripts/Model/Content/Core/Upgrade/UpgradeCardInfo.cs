@@ -22,13 +22,13 @@ namespace Upgrade
         public int Limited { get; set; }
         public bool IsLimited { get { return Limited != 0; } }
         public bool FeIsLimitedPerShip { get; private set; }
-        public bool IsSolitary { get; private set; }
-        public bool IsStandardized { get; private set; }
-        public List<Type> AbilityTypes { get; private set; }
-        public int Charges { get; private set; }
-        public int ChargesCost { get; private set; }
-        public int RegensChargesCount { get; private set; }
-        public bool CannotBeRecharged { get; private set; }
+        public bool IsSolitary { get; set; }
+        public bool IsStandardized { get; set; }
+        public List<Type> AbilityTypes { get; set; }
+        public int Charges { get; set; }
+        public int ChargesCost { get; set; }
+        public int RegensChargesCount { get; set; }
+        public bool CannotBeRecharged { get; set; }
         public int SEImageNumber { get; private set; }
         public UpgradeCardRestrictions Restrictions { get; private set; }
         public SpecialWeaponInfo WeaponInfo { get; private set; }
