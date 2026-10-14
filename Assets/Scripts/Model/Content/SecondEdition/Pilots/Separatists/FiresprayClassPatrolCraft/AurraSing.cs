@@ -1,5 +1,4 @@
-﻿using BoardTools;
-using Content;
+﻿using Content;
 using Ship;
 using SubPhases;
 using System;
@@ -72,8 +71,8 @@ namespace Abilities.SecondEdition
 {
     public class AurraSingAbility : GenericAbility
     {
-        public List<GenericShip> SelectedShips = new List<GenericShip>();
-        public List<GenericToken> ShipTokens = new List<GenericToken>();
+        private readonly List<GenericShip> SelectedShips = new();
+        private readonly List<GenericToken> ShipTokens = new();
 
         public int TokenIndex = 0;
 
@@ -91,14 +90,17 @@ namespace Abilities.SecondEdition
         {
             if (HasEnoughTargets() && HostShip.State.Force > 0)
             {
+                SelectedShips.Clear();
+                ShipTokens.Clear();
+                TokenIndex = 0;
+
                 RegisterAbilityTrigger(TriggerTypes.OnCombatActivation, AskToUseOwnAbility);
             }
         }
 
         private bool HasEnoughTargets()
         {
-            return BoardTools.Board.GetShipsAtRange(HostShip, new UnityEngine.Vector2(0, 1), Team.Type.Enemy)
-                .Count() >= 2;
+            return HostShip.Owner.AnotherPlayer.Ships.Values.Where(s => FilterMultiSelection(s)).Count() >= 2;
         }
 
         private void AskToUseOwnAbility(object sender, EventArgs e)
@@ -144,7 +146,7 @@ namespace Abilities.SecondEdition
                 ShipTokens.AddRange(SelectedShips[1].Tokens.GetTokensByColor(TokenColors.Red, TokenColors.Orange));
                 if (ShipTokens.Count() > 0)
                 {
-                    AskTransferToken(TokenIndex, callback);
+                    AskTransferToken(callback);
                 }
                 else
                 {
@@ -155,7 +157,7 @@ namespace Abilities.SecondEdition
             }
         }
 
-        private void AskTransferToken(int tokenIndex, Action callback)
+        private void AskTransferToken(Action callback)
         {
             GenericToken token = ShipTokens[TokenIndex];
 
@@ -193,7 +195,7 @@ namespace Abilities.SecondEdition
             TokenIndex++;
             if (TokenIndex < ShipTokens.Count())
             {
-                AskTransferToken(TokenIndex, callback);
+                AskTransferToken(callback);
             }
             else
             {
@@ -203,8 +205,7 @@ namespace Abilities.SecondEdition
 
         private bool FilterMultiSelection(GenericShip ship)
         {
-            DistanceInfo distInfo = new DistanceInfo(HostShip, ship);
-            return distInfo.Range >= 0 && distInfo.Range <= 1 && ship.Owner != HostShip.Owner;
+            return HostShip.GetRangeToShip(ship) <= 1 && ship.Owner != HostShip.Owner;
         }
 
         private int GetAiPriority(GenericShip ship)
