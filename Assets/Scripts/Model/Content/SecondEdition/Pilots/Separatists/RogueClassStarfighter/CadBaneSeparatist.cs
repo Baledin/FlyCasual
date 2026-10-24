@@ -1,6 +1,7 @@
 ﻿using ActionsList;
 using BoardTools;
 using Content;
+using Remote;
 using Ship;
 using System.Collections.Generic;
 using Upgrade;
@@ -85,8 +86,8 @@ namespace Abilities.SecondEdition
         }
         private void RegisterAbility(GenericShip ship, bool flag)
         {
-            // Check if Cad Bane is the one being destroyed--ability states "another ship"
-            if (ship == HostShip) return;
+            // Check if Cad Bane is the one being destroyed--ability states "another ship, exclude remotes"
+            if (ship == HostShip || ship is GenericRemote) return;
 
             destroyedShip = ship;
             RegisterAbilityTrigger(TriggerTypes.OnShipIsDestroyed, PerformAction);
