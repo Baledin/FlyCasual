@@ -164,8 +164,8 @@ namespace Abilities.SecondEdition
             GenericShip ship = SelectedShips[0].Equals(token.Host) ? SelectedShips[0] : SelectedShips[1];
             GenericShip target = SelectedShips[0].Equals(token.Host) ? SelectedShips[1] : SelectedShips[0];
 
-            AuraSingDecisonSubphase subphase = Phases.StartTemporarySubPhaseNew<AuraSingDecisonSubphase>(
-                "Aura Sing token decision",
+            AurraSingDecisionSubphase subphase = Phases.StartTemporarySubPhaseNew<AurraSingDecisionSubphase>(
+                "Aurra Sing token decision",
                 Phases.CurrentSubPhase.CallBack
             );
 
@@ -189,7 +189,7 @@ namespace Abilities.SecondEdition
             if (transfer)
             {
                 ActionsHolder.ReassignToken(token, ship, target, delegate { });
-                Messages.ShowInfo("Token: " + token.Name + " transfered from " + ship.PilotInfo.PilotName + " to " + target.PilotInfo.PilotName);
+                Messages.ShowInfo("Token: " + token.Name + " transferred from " + ship.PilotInfo.PilotName + " to " + target.PilotInfo.PilotName);
             }
 
             TokenIndex++;
@@ -213,6 +213,6 @@ namespace Abilities.SecondEdition
             return 0;
         }
 
-        private class AuraSingDecisonSubphase : DecisionSubPhase { }
+        private class AurraSingDecisionSubphase : DecisionSubPhase { }
     }
 }
