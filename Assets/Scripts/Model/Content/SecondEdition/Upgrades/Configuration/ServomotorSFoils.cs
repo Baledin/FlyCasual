@@ -1,10 +1,9 @@
-﻿using Upgrade;
-using Ship;
+﻿using Actions;
 using ActionsList;
-using System;
+using Ship;
 using SubPhases;
-using System.Collections.Generic;
-using Actions;
+using System;
+using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
@@ -60,12 +59,12 @@ namespace Abilities.SecondEdition
         protected void TurnSFoilsToClosedPosition()
         {
             Phases.Events.OnGameStart -= TurnSFoilsToClosedPosition;
-            HostShip.WingsClose();
+            (HostShip as IMovableWings).WingsClose();
         }
 
         protected void TurnSFoilsToAttackPosition(GenericShip ship)
         {
-            HostShip.WingsOpen();
+            (HostShip as IMovableWings).WingsOpen();
         }
 
         private void RegisterAskToUseFlip(GenericShip ship)

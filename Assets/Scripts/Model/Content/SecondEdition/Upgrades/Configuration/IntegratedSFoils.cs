@@ -57,12 +57,12 @@ namespace Abilities.SecondEdition
         protected void TurnSFoilsToClosedPosition()
         {
             Phases.Events.OnGameStart -= TurnSFoilsToClosedPosition;
-            HostShip.WingsClose();
+            (HostShip as IMovableWings).WingsClose();
         }
 
         protected void TurnSFoilsToAttackPosition(GenericShip ship)
         {
-            HostShip.WingsOpen();
+            (HostShip as IMovableWings).WingsOpen();
         }
 
         private void RegisterAskToUseFlip(GenericShip ship)
