@@ -11,7 +11,7 @@ namespace Ship.SecondEdition.GauntletFighter
 {
     public class GauntletFighter : GenericShip, IMovableWings
     {
-        public WingsPositions CurrentWingsPosition { get; set; }
+        public WingPosition CurrentWingPosition { get; set; }
 
         public GauntletFighter() : base()
         {
