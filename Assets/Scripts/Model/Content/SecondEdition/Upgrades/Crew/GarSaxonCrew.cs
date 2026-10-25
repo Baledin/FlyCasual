@@ -62,9 +62,9 @@ namespace Abilities.SecondEdition
         {
             bool result = Tools.IsSameTeam(Combat.Attacker, HostShip);
 
-            result = result && HostShip.GetRangeToShip(Combat.Attacker) >= 1 && HostShip.GetRangeToShip(Combat.Attacker) <= 3;
+            result = result && HostShip.GetRangeToShip(Combat.Attacker) is >= 1 and <= 3;
 
-            result = result && HostShip.State.Initiative <= 4;
+            result = result && Combat.Attacker.State.Initiative <= 4;
 
             result = result && HostShip.Tokens.GetTokens<BlueTargetLockToken>('*').Any(t => t.OtherTargetLockTokenOwner == Combat.Defender);
 
