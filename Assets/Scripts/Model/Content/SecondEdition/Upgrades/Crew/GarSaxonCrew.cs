@@ -43,7 +43,7 @@ namespace Abilities.SecondEdition
         {
             AddDiceModification(
                 name: HostUpgrade.UpgradeInfo.Name,
-                isAvailable: IsAvilable,
+                isAvailable: IsAvailable,
                 count: 1,
                 aiPriority: AiPriority,
                 modificationType: DiceModificationType.Change,
@@ -58,7 +58,7 @@ namespace Abilities.SecondEdition
             RemoveDiceModification();
         }
 
-        private bool IsAvilable()
+        private bool IsAvailable()
         {
             bool result = Tools.IsSameTeam(Combat.Attacker, HostShip);
 
