@@ -89,7 +89,7 @@ namespace Abilities.FirstEdition
 
         private void DoFlipSide(object sender, EventArgs e)
         {
-            HostShip.WingsClose();
+            (HostShip as IMovableWings).WingsClose();
             (HostUpgrade as GenericDualUpgrade).Flip();
             DecisionSubPhase.ConfirmDecision();
         }
@@ -98,7 +98,7 @@ namespace Abilities.FirstEdition
         {
             Phases.Events.OnGameStart -= ChangeInitialWingsPosition;
 
-            HostShip.WingsOpen();
+            (HostShip as IMovableWings).WingsOpen();
         }
     }
 
@@ -113,7 +113,7 @@ namespace Abilities.FirstEdition
 
         public override void DeactivateAbility()
         {
-            HostShip.WingsOpen();
+            (HostShip as IMovableWings).WingsOpen();
             HostShip.OnMovementFinish -= RegisterAskToFlip;
             HostShip.OnManeuverIsRevealed -= RegisterAskToRotate;
         }
@@ -138,7 +138,7 @@ namespace Abilities.FirstEdition
 
         private void DoFlipSide(object sender, EventArgs e)
         {
-            HostShip.WingsOpen();
+            (HostShip as IMovableWings).WingsOpen();
             (HostUpgrade as GenericDualUpgrade).Flip();
             DecisionSubPhase.ConfirmDecision();
         }
@@ -169,7 +169,7 @@ namespace Abilities.FirstEdition
 
         protected void ChangeInitialWingsPosition()
         {
-            HostShip.WingsClose();
+            (HostShip as IMovableWings).WingsClose();
         }
     }
 }
@@ -239,8 +239,8 @@ namespace Abilities.SecondEdition
             RegisterAbilityTrigger(TriggerTypes.OnMovementActivationStart, AskToFlip);
         }
 
-        public override void ActivateAbilityForSquadBuilder() {}
-        public override void DeactivateAbilityForSquadBuilder() {}
+        public override void ActivateAbilityForSquadBuilder() { }
+        public override void DeactivateAbilityForSquadBuilder() { }
     }
 
     public class PivotWingClosedAbility : Abilities.FirstEdition.PivotWingLandingAbility
@@ -257,7 +257,7 @@ namespace Abilities.SecondEdition
 
         public override void DeactivateAbility()
         {
-            HostShip.WingsOpen();
+            (HostShip as IMovableWings).WingsOpen();
             HostShip.OnMovementActivationStart -= RegisterAskToFlip;
             HostShip.OnMovementExecuted -= RegisterAskToRotate;
 

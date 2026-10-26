@@ -14,7 +14,7 @@ namespace Ship
         public float PreviewScale { get; }
         public bool IsMetallic { get; }
 
-        public ShipModelInfo(string modelName, string skinName, Vector3 previewCameraPosition = default, float previewScale = 0, WingsPositions wingsPositions = WingsPositions.None, bool isMetallic = false)
+        public ShipModelInfo(string modelName, string skinName, Vector3 previewCameraPosition = default, float previewScale = 0, WingPosition wingsPositions = WingPosition.None, bool isMetallic = false)
         {
             ModelName = modelName;
             SkinName = skinName;

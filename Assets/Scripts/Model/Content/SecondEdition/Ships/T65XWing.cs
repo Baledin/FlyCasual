@@ -12,7 +12,7 @@ namespace Ship.SecondEdition.T65XWing
 {
     public class T65XWing : GenericShip, IMovableWings
     {
-        public WingsPositions CurrentWingsPosition { get; set; }
+        public WingPosition CurrentWingPosition { get; set; }
 
         public T65XWing() : base()
         {
@@ -44,7 +44,7 @@ namespace Ship.SecondEdition.T65XWing
                 "Red",
                 new Vector3(-3.62f, 7.62f, 5.55f),
                 1.5f,
-                wingsPositions: WingsPositions.Closed
+                wingsPositions: WingPosition.Closed
             );
 
             DialInfo = new ShipDialInfo
