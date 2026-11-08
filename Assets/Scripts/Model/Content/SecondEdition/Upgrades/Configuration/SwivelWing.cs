@@ -71,7 +71,7 @@ namespace Abilities.SecondEdition
 
         protected void ChangeInitialWingsPosition()
         {
-            HostShip.WingsOpen();
+            (HostShip as IMovableWings).WingsOpen();
         }
 
         protected virtual void RegisterAskToUseFlip(GenericShip ship)
@@ -97,12 +97,12 @@ namespace Abilities.SecondEdition
         private void DoFlipSide(object sender, EventArgs e)
         {
             (HostUpgrade as GenericDualUpgrade).Flip();
-            HostShip.WingsClose();
+            (HostShip as IMovableWings).WingsClose();
             DecisionSubPhase.ConfirmDecision();
         }
 
-        public override void ActivateAbilityForSquadBuilder() {}
-        public override void DeactivateAbilityForSquadBuilder() {}
+        public override void ActivateAbilityForSquadBuilder() { }
+        public override void DeactivateAbilityForSquadBuilder() { }
     }
 
     public class SwivelWingDownAbility : GenericAbility
@@ -121,7 +121,7 @@ namespace Abilities.SecondEdition
         protected void ChangeInitialWingsPosition()
         {
             Phases.Events.OnGameStart -= ChangeInitialWingsPosition;
-            HostShip.WingsClose();
+            (HostShip as IMovableWings).WingsClose();
         }
 
         protected void RegisterAskToRotate(GenericShip ship)

@@ -88,7 +88,7 @@ namespace Ship
         public GameObject GetModelOrientation()
         {
             return Model.transform.Find("RotationHelper/RotationHelper2").gameObject;
-        }           
+        }
 
         // ROTATION HELPERS
 
@@ -173,44 +173,6 @@ namespace Ship
         public void RotateModelDuringBarrelRoll(float progress, float turningDirection)
         {
             modelCenter.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(0, turningDirection * 360, progress));
-        }
-
-        // S-Foils
-
-        public void WingsOpen()
-        {
-            if ((this as IMovableWings).CurrentWingsPosition == WingsPositions.Closed)
-            {
-                WingsChangePosition("Open");
-                (this as IMovableWings).CurrentWingsPosition = WingsPositions.Opened;
-            }
-        }
-
-        public void WingsClose()
-        {
-            if ((this as IMovableWings).CurrentWingsPosition == WingsPositions.Opened)
-            {
-                WingsChangePosition("Close");
-                (this as IMovableWings).CurrentWingsPosition = WingsPositions.Closed;
-            }
-        }
-
-        private void WingsChangePosition(string wingPosition)
-        {
-            if (this is not IMovableWings)
-            {
-                return;
-            }
-
-            Sounds.PlayShipSound("Servomotors", this);
-
-            foreach (Transform transform in GetModelTransform())
-            {
-                if (!transform.name.StartsWith("Wing")) continue;
-
-                Animation wingAnimator = transform.GetComponent<Animation>();
-                wingAnimator.Play(transform.name + "_" + wingPosition);
-            }
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Ship
                     "Attack Shuttle",
                     "Attack Shuttle",
                     previewScale: 1.18f,
-                    wingsPositions: WingsPositions.Opened
+                    wingsPositions: WingPosition.Opened
                 );
 
                 DialInfo = new ShipDialInfo

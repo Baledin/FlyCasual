@@ -15,7 +15,7 @@ namespace Ship
     {
         public class T70XWing : GenericShip, IMovableWings
         {
-            public WingsPositions CurrentWingsPosition { get; set; }
+            public WingPosition CurrentWingPosition { get; set; }
 
             public T70XWing() : base()
             {

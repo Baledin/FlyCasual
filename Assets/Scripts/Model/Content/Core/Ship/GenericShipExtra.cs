@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Mods;
-using ActionsList;
-using Upgrade;
+﻿using ActionsList;
 using Editions;
-using SquadBuilderNS;
-using Tokens;
-using System.Linq;
+using Mods;
 using Obstacles;
+using SquadBuilderNS;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Tokens;
+using UnityEngine;
+using Upgrade;
 
 namespace Ship
 {
-    public enum WingsPositions { Opened, Closed, None };
-
-    public interface IMovableWings
-    {
-        WingsPositions CurrentWingsPosition { get; set; }
-    }
-
     public partial class GenericShip
     {
         public Dictionary<Faction, Type> IconicPilots;
@@ -366,7 +358,7 @@ namespace Ship
              */
 
             var blueManeuverCount = this.Maneuvers.Values.Count(m => m == Movement.MovementComplexity.Easy);
-            var result = -50 + blueManeuverCount; 
+            var result = -50 + blueManeuverCount;
 
             if (OnModifyAIStressPriority != null) OnModifyAIStressPriority(this, ref result);
 
