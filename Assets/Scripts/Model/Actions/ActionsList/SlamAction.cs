@@ -3,19 +3,12 @@ using Tokens;
 
 namespace ActionsList
 {
-
     public class SlamAction : GenericAction
     {
-        public SlamAction()
+        public SlamAction(GenericShip hostShip = null)
         {
             Name = DiceModificationName = "SLAM";
-            ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/SlamAction.png";
-        }
-
-        public SlamAction(GenericShip hostShip)
-        {
-            Name = DiceModificationName = "SLAM";
-            ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/SlamAction.png";
+            ImageUrl = "Reference/SlamAction";
             HostShip = hostShip;
         }
 
@@ -83,7 +76,5 @@ namespace ActionsList
             int result = 0;
             return result;
         }
-
     }
-
 }

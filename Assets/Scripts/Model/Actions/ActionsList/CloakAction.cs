@@ -1,19 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using BoardTools;
-using Tokens;
-using SubPhases;
+﻿using Tokens;
 
 namespace ActionsList
 {
-
     public class CloakAction : GenericAction
     {
         public CloakAction()
         {
             Name = "Cloak";
-            ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/CloakAction.png";
+            ImageUrl = "Reference/CloakAction";
         }
 
         public override void ActionTake()
@@ -30,8 +24,5 @@ namespace ActionsList
         {
             Phases.GoBack();
         }
-
     }
-
 }
-

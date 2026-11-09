@@ -1,22 +1,17 @@
-﻿using System.Collections;
+﻿using SubPhases;
 using System.Collections.Generic;
-using UnityEngine;
-using Upgrade;
-using Tokens;
 using System.Linq;
-using Editions;
-using SubPhases;
+using Tokens;
+using Upgrade;
 
 namespace ActionsList
 {
-
     public class ReloadAction : GenericAction
     {
-
         public ReloadAction()
         {
             Name = DiceModificationName = "Reload";
-            ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/ReloadActionAndJamTokens.png";
+            ImageUrl = "Reference/ReloadActionAndJamTokens";
         }
 
         public override void ActionTake()
@@ -101,7 +96,5 @@ namespace ActionsList
         }
 
         public class ReloadDecisionSubphase : DecisionSubPhase { }
-
     }
-
 }
