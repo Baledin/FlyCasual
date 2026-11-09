@@ -3,7 +3,6 @@ using System;
 
 namespace DamageDeckCardSE
 {
-
     public class FuelLeak : GenericDamageCard
     {
         private bool IgnoredSelf;
@@ -12,7 +11,7 @@ namespace DamageDeckCardSE
         {
             Name = "Fuel Leak";
             Type = CriticalCardType.Ship;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/27_damagecard.png";
+            ImageUrl = "DamageCards/FuelLeak";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -48,7 +47,7 @@ namespace DamageDeckCardSE
 
         private void SufferAdditionalDamage(object sender, System.EventArgs e)
         {
-            Messages.ShowInfo("Fuel Leak causes " + Host.PilotInfo.PilotName + " to suffer 1 additional Hit");
+            Messages.ShowInfo($"{Name} causes {Host.PilotInfo.PilotName} to suffer 1 additional Hit");
 
             DamageSourceEventArgs fuelleakDamage = new DamageSourceEventArgs()
             {
@@ -68,7 +67,6 @@ namespace DamageDeckCardSE
             Host.Tokens.RemoveCondition(typeof(Tokens.FuelLeakCritToken));
         }
     }
-
 }
 
 namespace Tokens
@@ -77,7 +75,7 @@ namespace Tokens
     {
         public FuelLeakCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/27_damagecard.png";
+            Tooltip = "DamageCards/FuelLeak";
         }
     }
 }

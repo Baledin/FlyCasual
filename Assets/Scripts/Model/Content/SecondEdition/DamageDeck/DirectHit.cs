@@ -11,7 +11,7 @@ namespace DamageDeckCardSE
             Name = "Direct Hit";
             Type = CriticalCardType.Ship;
             AiAvoids = true;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/29_damagecard.png";
+            ImageUrl = "DamageCards/DirectHit";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -21,7 +21,7 @@ namespace DamageDeckCardSE
 
         private void SufferAdditionalDamage()
         {
-            Messages.ShowInfo("A Direct Hit causes " + Host.PilotInfo.PilotName + " to suffer 1 additional damage");
+            Messages.ShowInfo($"{Name} causes {Host.PilotInfo.PilotName} to suffer 1 additional damage");
 
             DamageSourceEventArgs directhitDamage = new DamageSourceEventArgs()
             {
@@ -46,9 +46,6 @@ namespace DamageDeckCardSE
         public override void DiscardEffect()
         {
             base.DiscardEffect();
-
-            // Do nothing;
         }
     }
-
 }
