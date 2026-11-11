@@ -5,7 +5,13 @@ namespace ActionsList
 {
     public class SlamAction : GenericAction
     {
-        public SlamAction(GenericShip hostShip = null)
+        public SlamAction()
+        {
+            Name = DiceModificationName = "SLAM";
+            ImageUrl = "Reference/SlamAction";
+        }
+
+        public SlamAction(GenericShip hostShip)
         {
             Name = DiceModificationName = "SLAM";
             ImageUrl = "Reference/SlamAction";
@@ -63,7 +69,7 @@ namespace ActionsList
         private bool IsSameSpeed(string maneuverString)
         {
             bool result = false;
-            Movement.ManeuverHolder movementStruct = new Movement.ManeuverHolder(maneuverString);
+            Movement.ManeuverHolder movementStruct = new(maneuverString);
             if (movementStruct.Speed == Selection.ThisShip.AssignedManeuver.ManeuverSpeed)
             {
                 result = true;
