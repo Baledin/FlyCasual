@@ -19,7 +19,7 @@ namespace Remote
             RemoteInfo = new RemoteInfo(
                 "DRK-1 Probe Droid",
                 0, 3, 1,
-                "https://vignette.wikia.nocookie.net/xwing-miniatures-second-edition/images/c/c9/Swz30_probe-card.png",
+                "Remotes/drk1probedroid",
                 typeof(Abilities.SecondEdition.Drk1ProbeDroidAbility)
             );
         }
@@ -134,7 +134,8 @@ namespace Abilities.SecondEdition
                 HostShip.Damage.TryResolveDamage(
                     1,
                     0,
-                    new DamageSourceEventArgs() {
+                    new DamageSourceEventArgs()
+                    {
                         DamageType = DamageTypes.CardAbility,
                         Source = HostShip
                     },
@@ -185,7 +186,8 @@ namespace Abilities.SecondEdition
                 int jointIndex = i;
                 jointDecisionSubphase.AddDecision(
                     "Direction " + jointIndex,
-                    delegate {
+                    delegate
+                    {
                         SelectDirection(jointIndex);
                         PrepareNextButton();
                     },
@@ -198,7 +200,7 @@ namespace Abilities.SecondEdition
             jointDecisionSubphase.DefaultDecisionName = "Direction 1";
             SelectDirection(1, isSilent: true);
 
-            jointDecisionSubphase.Start();   
+            jointDecisionSubphase.Start();
         }
 
         private void CallSubphaseCallback()

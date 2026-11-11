@@ -22,7 +22,7 @@ namespace Remote
                 arcInfo: new ShipArcsInfo(ArcType.None, 0), 
                 agility: 1, 
                 hull: 1,
-                imageUrl: "https://infinitearenas.com/xw2/images/remotes/buzzdroidswarm.png",
+                imageUrl: "Remotes/buzzdroidswarm",
                 abilityType: typeof(Abilities.SecondEdition.BuzzDroidSwarmAbiliy)
             );
         }

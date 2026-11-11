@@ -25,7 +25,7 @@ namespace Remote
                 arcInfo: new ShipArcsInfo(ArcType.Front, 2),
                 agility: 2,
                 hull: 2,
-                imageUrl: "https://infinitearenas.com/xw2xwa/images/remotes/imperialsupercommandos.png",
+                imageUrl: "Remotes/imperialsupercommandos",
                 abilityType: typeof(Abilities.SecondEdition.CommandoTeam),
                 charges: 2,
                 soundInfo: new ShipSoundInfo(
