@@ -39,8 +39,6 @@ namespace Ship.SecondEdition.T65XWing
             MustHaveUpgrades.Add(typeof(PlasmaTorpedoes));
             MustHaveUpgrades.Add(typeof(StabilizingAstromech));
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/yendor-battleoverendor.png";
-
             PilotNameCanonical = "yendor-battleoverendor";
         }
     }
@@ -51,8 +49,6 @@ namespace Ship.SecondEdition.T65XWing
         {
             (PilotInfo as PilotCardInfo25).Cost = 12;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
-
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/quickbuilds/yendor-battleoverendor.png";
         }
     }
 }

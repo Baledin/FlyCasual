@@ -37,7 +37,7 @@ namespace Ship.SecondEdition.NabooRoyalN1Starfighter
 
             if (ModsManager.Mods[typeof(LimitedEditionNabooRoyalN1StarfighterMod)].IsOn)
             {
-                ImageUrl = "https://images-cdn.fantasyflightgames.com/filer_public/e8/c1/e8c1866f-a83a-469f-b2c0-a144c166fced/swzp02_padme-amidala.jpg";
+                ImageUrl = "Pilots/padmeamidala-silver";
                 ModelInfo.SkinName = "Silver";
             }
         }

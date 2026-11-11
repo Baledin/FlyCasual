@@ -45,8 +45,6 @@ namespace Ship.SecondEdition.ASF01BWing
                 legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/ginamoonsong-battleoverendor.png";
-
             ShipInfo.Shields++;
 
             MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.ItsATrap));

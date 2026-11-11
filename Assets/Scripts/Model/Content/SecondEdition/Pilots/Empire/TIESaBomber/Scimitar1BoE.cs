@@ -44,7 +44,6 @@ namespace Ship
                 MustHaveUpgrades.Add(typeof(IonBombs));
 
                 PilotNameCanonical = "scimitar1-battleoverendor";
-                ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/scimitar1-battleoverendor.png";
             }
         }
 

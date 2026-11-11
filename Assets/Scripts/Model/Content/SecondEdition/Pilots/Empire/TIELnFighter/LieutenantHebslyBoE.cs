@@ -47,7 +47,6 @@ namespace Ship
                 MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.NoEscape));
 
                 PilotNameCanonical = "lieutenanthebsly-battleoverendor";
-                ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/lieutenanthebsly-battleoverendor.png";
             }
         }
 
