@@ -21,7 +21,6 @@ namespace UpgradesList.SecondEdition
                 ),
                 abilityType: typeof(Abilities.SecondEdition.GarSaxonGunner)
             );
-            NameCanonical = "garsaxon-gunner";
         }
     }
 }

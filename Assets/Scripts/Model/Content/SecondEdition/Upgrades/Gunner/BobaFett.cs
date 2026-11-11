@@ -25,8 +25,6 @@ namespace UpgradesList.SecondEdition
                 Faction.Scum,
                 new Vector2(233, 12)
             );
-
-            NameCanonical = "bobafett-gunner";
         }
     }
 

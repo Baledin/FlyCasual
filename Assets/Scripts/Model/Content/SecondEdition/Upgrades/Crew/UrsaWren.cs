@@ -19,7 +19,9 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(Abilities.SecondEdition.UrsaWrenAbility),
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
-        }        
+
+            NameCanonical = "ursawren-rebel-crew";
+        }
     }
 
     public class UrsaWrenXWA : UrsaWren
@@ -52,7 +54,7 @@ namespace Abilities.SecondEdition
         }
 
         private void CheckAbility(GenericShip activeShip, ITargetLockable lockedShip)
-        {            
+        {
             if (lockedShip is GenericShip && !Tools.IsFriendly(HostShip, activeShip) && BoardTools.Board.GetShipsAtRange(HostShip, new Vector2(0, 3), Team.Type.Friendly).Contains(lockedShip as GenericShip))
             {
                 RegisterAbilityTrigger(TriggerTypes.OnTargetLockIsAcquired, AcquireSecondTargetLock);
@@ -64,7 +66,8 @@ namespace Abilities.SecondEdition
             Selection.ThisShip = HostShip;
 
             HostShip.ChooseTargetToAcquireTargetLock(
-                delegate {
+                delegate
+                {
                     Selection.ThisShip = previousSelectedShip;
                     Triggers.FinishTrigger();
                 },

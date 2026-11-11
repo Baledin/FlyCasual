@@ -21,7 +21,7 @@ namespace UpgradesList.SecondEdition
 
             IsHidden = true;
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/tomaxbren-swz98.png";
+            ImageUrl = "Pilots/tomaxbren-swz98";
         }
     }
 }

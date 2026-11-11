@@ -22,8 +22,6 @@ namespace UpgradesList.SecondEdition
                 restriction: new FactionRestriction(Faction.Rebel),
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
-
-            NameCanonical = "sabinewren-gunner";
         }
     }
 

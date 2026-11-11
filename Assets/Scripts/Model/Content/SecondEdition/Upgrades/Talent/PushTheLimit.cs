@@ -17,7 +17,8 @@ namespace UpgradesList.SecondEdition
             );
 
             IsHidden = true;
-            ImageUrl = "https://infinitearenas.com/xw2/images/upgrades/pushthelimit.png";
+
+            ImageUrl = "Pilots/coloneljendon-battleoverendor";
         }
     }
 }

@@ -4,7 +4,6 @@ using Bombs;
 using Movement;
 using Ship;
 using SubPhases;
-using System;
 using System.Collections.Generic;
 using Upgrade;
 
@@ -18,10 +17,12 @@ namespace UpgradesList.SecondEdition
                 name: "Top Cover",
                 type: UpgradeType.Talent,
                 cost: 0,
-                abilityType: typeof(TopCoverAbility));
+                abilityType: typeof(TopCoverAbility)
+            );
+
             IsHidden = true;
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/captainjonus-swz98.png";
+            ImageUrl = "Pilots/captainjonus-swz98";
         }
     }
 }

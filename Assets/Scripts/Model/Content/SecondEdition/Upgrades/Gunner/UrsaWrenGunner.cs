@@ -18,7 +18,6 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(Abilities.SecondEdition.UrsaWrenGunnerAbility),
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
-            NameCanonical = "ursawren-gunner";
         }
     }
 

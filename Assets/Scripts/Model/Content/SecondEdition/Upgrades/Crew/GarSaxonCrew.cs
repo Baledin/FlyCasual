@@ -20,6 +20,8 @@ namespace UpgradesList.SecondEdition
                 restriction: new FactionRestriction(Faction.Imperial),
                 legalityInfo: new() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
+
+            NameCanonical = "garsaxon-crew";
         }
     }
 

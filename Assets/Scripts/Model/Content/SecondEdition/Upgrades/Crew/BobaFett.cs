@@ -28,6 +28,8 @@ namespace UpgradesList.SecondEdition
                 }
             );
 
+            NameCanonical = "bobafett-crew";
+
             Avatar = new AvatarInfo(
                 Faction.Scum,
                 new Vector2(447, 1),

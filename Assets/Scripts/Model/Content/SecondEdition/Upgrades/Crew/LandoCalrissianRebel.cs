@@ -23,6 +23,8 @@ namespace UpgradesList.SecondEdition
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
+            NameCanonical = "landocalrissian-crew-rebel";
+
             Avatar = new AvatarInfo(
                 Faction.Rebel,
                 new Vector2(379, 8),

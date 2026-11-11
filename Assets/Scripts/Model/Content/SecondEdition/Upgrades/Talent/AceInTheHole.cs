@@ -20,7 +20,7 @@ namespace UpgradesList.SecondEdition
 
             IsHidden = true;
 
-            ImageUrl = "https://raw.githubusercontent.com/sampson-matt/FlyCasualLegacyCustomCards/refs/heads/main/BattleOverEndor/AceInTheHole.jpg";
+            ImageUrl = "Pilots/landocalrissian-battleoverendor";
         }
     }
 }
@@ -50,7 +50,8 @@ namespace Abilities.SecondEdition
 
         private void AskToUseOwnAbility(object sender, EventArgs e)
         {
-            if (HostShip.CanPerformFreeAction(new BarrelRollAction())) {
+            if (HostShip.CanPerformFreeAction(new BarrelRollAction()))
+            {
                 Selection.ChangeActiveShip(HostShip);
 
                 AskToUseAbility(
@@ -82,7 +83,7 @@ namespace Abilities.SecondEdition
             SubPhases.DecisionSubPhase.ConfirmDecisionNoCallback();
 
             HostUpgrade.State.SpendCharge();
-            HostShip.Tokens.AssignToken(new JamToken(HostShip, HostShip.Owner), PerformBarrelRollAction);        
+            HostShip.Tokens.AssignToken(new JamToken(HostShip, HostShip.Owner), PerformBarrelRollAction);
         }
 
         private void PerformBarrelRollAction()
@@ -95,5 +96,5 @@ namespace Abilities.SecondEdition
         }
     }
 
-        
+
 }

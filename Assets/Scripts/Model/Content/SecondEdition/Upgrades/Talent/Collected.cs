@@ -18,7 +18,8 @@ namespace UpgradesList.SecondEdition
             );
 
             IsHidden = true;
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/lieutenanthebsly-battleoverendor.png";
+
+            ImageUrl = "Pilots/lieutenanthebsly-battleoverendor";
         }
     }
 }

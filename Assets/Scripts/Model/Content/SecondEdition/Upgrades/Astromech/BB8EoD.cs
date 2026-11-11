@@ -25,7 +25,7 @@ namespace UpgradesList.SecondEdition
             );
 
             IsHidden = true;
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/poedameron-evacuationofdqar.png";
+            ImageUrl = "Pilots/poedameron-evacuationofdqar";
         }
     }
 }
@@ -106,7 +106,8 @@ namespace Abilities.SecondEdition
                     descriptionLong: "Do you want to spend 1 charge and receive 1 Strain Token to remove 1 Disarm Token?",
                     imageHolder: HostUpgrade
                 );
-            } else
+            }
+            else
             {
                 Triggers.FinishTrigger();
             }

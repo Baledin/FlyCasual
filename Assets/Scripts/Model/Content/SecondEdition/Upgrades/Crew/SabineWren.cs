@@ -29,6 +29,8 @@ namespace UpgradesList.SecondEdition
                 }
             );
 
+            NameCanonical = "sabinewren-crew";
+
             Avatar = new AvatarInfo(
                 Faction.Rebel,
                 new Vector2(474, 13)

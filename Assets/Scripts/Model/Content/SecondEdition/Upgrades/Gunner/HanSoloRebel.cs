@@ -1,13 +1,8 @@
 ﻿using Ship;
-using Upgrade;
-using Movement;
-using Actions;
-using ActionsList;
 using System;
-using BoardTools;
-using Tokens;
 using System.Linq;
 using UnityEngine;
+using Upgrade;
 
 namespace UpgradesList.SecondEdition
 {
@@ -25,12 +20,14 @@ namespace UpgradesList.SecondEdition
                 seImageNumber: 97
             );
 
+            NameCanonical = "hansolo-rebel";
+
             Avatar = new AvatarInfo(
                 Faction.Rebel,
                 new Vector2(477, 4),
                 new Vector2(150, 150)
             );
-        }        
+        }
     }
 }
 
