@@ -25,8 +25,6 @@ namespace SubPhases
             AddDecision("Yes", Decloak);
             AddDecision("No", SkipDecloak);
 
-            AddTooltip("Yes", "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/Decloak.png");
-
             DefaultDecisionName = "No";
 
             callBack();

@@ -1,13 +1,9 @@
 ﻿using Editions;
 using Ship;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Tokens
 {
-
     public class IonToken : GenericToken
     {
         public IonToken(GenericShip host) : base(host)
@@ -17,7 +13,6 @@ namespace Tokens
             TokenColor = TokenColors.Red;
             TokenShape = TokenShapes.Square;
             PriorityUI = 35;
-            Tooltip = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/IonToken.png";
         }
 
         public override void WhenAssigned()
@@ -42,7 +37,5 @@ namespace Tokens
                 Host.ToggleIonized(false);
             }
         }
-
     }
-
 }
