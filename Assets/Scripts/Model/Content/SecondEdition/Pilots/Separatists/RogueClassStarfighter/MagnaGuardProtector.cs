@@ -156,7 +156,7 @@ namespace Conditions
         {
             Name = ImageName = "Guarded Condition";
             Temporary = false;
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/guarded.png";
+            Tooltip = "Conditions/guarded";
         }
 
         public override void WhenAssigned()

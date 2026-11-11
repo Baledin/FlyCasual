@@ -145,7 +145,7 @@ namespace Conditions
             Name = ImageName = "Primed For Speed Condition";
             Temporary = false;
 
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/primedforspeed.png";
+            Tooltip = "Conditions/primedforspeed";
         }
 
         public override void WhenAssigned()
