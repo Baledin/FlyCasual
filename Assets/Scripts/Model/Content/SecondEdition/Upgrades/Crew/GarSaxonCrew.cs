@@ -21,7 +21,9 @@ namespace UpgradesList.SecondEdition
                 legalityInfo: new() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            NameCanonical = "garsaxon-crew";
+            NameCanonical = "garsaxon";
+
+            ImageUrl = "Upgrades/garsaxon-crew";
         }
     }
 
@@ -31,6 +33,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo.Restrictions.AddRestriction(new BaseSizeRestriction(Ship.BaseSize.Large, BaseSize.Huge));
             UpgradeInfo.LegalityInfo = new() { Legality.XWA };
+            NameCanonical = "garsaxon-crew";
         }
     }
 }

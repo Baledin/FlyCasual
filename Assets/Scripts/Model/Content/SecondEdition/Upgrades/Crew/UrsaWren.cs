@@ -20,7 +20,9 @@ namespace UpgradesList.SecondEdition
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            NameCanonical = "ursawren-rebel-crew";
+            NameCanonical = "ursawren";
+
+            ImageUrl = "Upgrades/ursawren-rebel-crew";
         }
     }
 
@@ -30,6 +32,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo.Cost = 8;
             UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            NameCanonical = "ursawren-rebel-crew";
         }
     }
 }
@@ -39,8 +42,8 @@ namespace Abilities.SecondEdition
     public class UrsaWrenAbility : GenericAbility
     {
         //You can maintain up to 2 locks. Each lock must be on a different object.
-
         //After a friendly ship at range 0-3 is locked, you may acquire a lock on an enemy ship.
+
         public override void ActivateAbility()
         {
             HostShip.TwoTargetLocksOnDifferentTargetsAreAllowed.Add(HostShip);
@@ -62,7 +65,7 @@ namespace Abilities.SecondEdition
         }
         private void AcquireSecondTargetLock(object sender, System.EventArgs e)
         {
-            var previousSelectedShip = Selection.ThisShip;
+            GenericShip previousSelectedShip = Selection.ThisShip;
             Selection.ThisShip = HostShip;
 
             HostShip.ChooseTargetToAcquireTargetLock(

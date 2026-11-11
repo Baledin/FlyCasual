@@ -21,6 +21,10 @@ namespace UpgradesList.SecondEdition
                 legalityInfo: new() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
+            NameCanonical = "bobafett-gunner";
+
+            ImageUrl = "Upgrades/bobafett";
+
             Avatar = new AvatarInfo(
                 Faction.Scum,
                 new Vector2(233, 12)
@@ -34,6 +38,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo.Cost = 4;
             UpgradeInfo.LegalityInfo = new() { Legality.XWA };
+            NameCanonical = "bobafett";
         }
     }
 }

@@ -28,7 +28,9 @@ namespace UpgradesList.SecondEdition
                 }
             );
 
-            NameCanonical = "bobafett-crew";
+            NameCanonical = "bobafett";
+
+            ImageUrl = "Upgrades/bobafett-crew";
 
             Avatar = new AvatarInfo(
                 Faction.Scum,
@@ -44,6 +46,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo.Cost = 7;
             UpgradeInfo.LegalityInfo = new() { Legality.XWA };
+            NameCanonical = "bobafett-crew";
         }
     }
 }

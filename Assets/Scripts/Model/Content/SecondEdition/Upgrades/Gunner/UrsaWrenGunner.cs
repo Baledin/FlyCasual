@@ -18,6 +18,10 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(Abilities.SecondEdition.UrsaWrenGunnerAbility),
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
+
+            NameCanonical = "ursawren-gunner";
+
+            ImageUrl = "Upgrades/ursawren";
         }
     }
 
@@ -26,10 +30,8 @@ namespace UpgradesList.SecondEdition
         public UrsaWrenGunnerXWA() : base()
         {
             UpgradeInfo.Cost = 3;
-            UpgradeInfo.LegalityInfo = new List<Legality>
-            {
-                Legality.XWA
-            };
+            UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            NameCanonical = "ursawren";
         }
     }
 }

@@ -22,13 +22,15 @@ namespace UpgradesList.SecondEdition
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
+            NameCanonical = "r2d2-crew";
+
+            ImageUrl = "Upgrades/r2d2";
+
             Avatar = new AvatarInfo(
                 Faction.Rebel,
                 new Vector2(435, 2),
                 new Vector2(200, 200)
             );
-
-            NameCanonical = "r2d2-crew";
         }
     }
 
@@ -38,6 +40,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo.Cost = 6;
             UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            NameCanonical = "r2d2";
         }
     }
 }

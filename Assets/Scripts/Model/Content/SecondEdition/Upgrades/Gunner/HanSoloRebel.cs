@@ -1,5 +1,7 @@
-﻿using Ship;
+﻿using Content;
+using Ship;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Upgrade;
@@ -17,16 +19,28 @@ namespace UpgradesList.SecondEdition
                 isLimited: true,
                 restriction: new FactionRestriction(Faction.Rebel),
                 abilityType: typeof(Abilities.SecondEdition.HanSoloRebelGunnerAbility),
-                seImageNumber: 97
+                seImageNumber: 97,
+                legalityInfo: new List<Legality>() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            NameCanonical = "hansolo-rebel";
+            NameCanonical = "hansolo";
+
+            ImageUrl = "Upgrades/hansolo-rebel";
 
             Avatar = new AvatarInfo(
                 Faction.Rebel,
                 new Vector2(477, 4),
                 new Vector2(150, 150)
             );
+        }
+    }
+
+    public class HanSoloRebelXWA : HanSoloRebel
+    {
+        public HanSoloRebelXWA() : base()
+        {
+            UpgradeInfo.LegalityInfo = new() { Legality.XWA };
+            NameCanonical = "hansolo-rebel";
         }
     }
 }
