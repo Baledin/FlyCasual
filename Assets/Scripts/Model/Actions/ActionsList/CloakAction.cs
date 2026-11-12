@@ -7,7 +7,6 @@ namespace ActionsList
         public CloakAction()
         {
             Name = "Cloak";
-            ImageUrl = "Reference/CloakAction";
         }
 
         public override void ActionTake()

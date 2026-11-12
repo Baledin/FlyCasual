@@ -11,7 +11,6 @@ namespace ActionsList
         public ReinforceAction()
         {
             Name = DiceModificationName = "Reinforce";
-            ImageUrl = "Reference/ReinforceAction";
         }
 
         public override void ActionTake()

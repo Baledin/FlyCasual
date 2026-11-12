@@ -11,7 +11,6 @@ namespace ActionsList
         public ReloadAction()
         {
             Name = DiceModificationName = "Reload";
-            ImageUrl = "Reference/ReloadActionAndJamTokens";
         }
 
         public override void ActionTake()

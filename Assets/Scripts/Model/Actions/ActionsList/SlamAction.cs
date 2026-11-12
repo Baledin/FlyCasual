@@ -8,13 +8,11 @@ namespace ActionsList
         public SlamAction()
         {
             Name = DiceModificationName = "SLAM";
-            ImageUrl = "Reference/SlamAction";
         }
 
         public SlamAction(GenericShip hostShip)
         {
             Name = DiceModificationName = "SLAM";
-            ImageUrl = "Reference/SlamAction";
             HostShip = hostShip;
         }
 

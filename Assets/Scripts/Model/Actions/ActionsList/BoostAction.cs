@@ -25,7 +25,6 @@ namespace ActionsList
         public BoostAction()
         {
             Name = "Boost";
-            ImageUrl = "Reference/BoostAction";
         }
 
         public override void ActionTake()
