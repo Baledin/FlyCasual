@@ -37,7 +37,6 @@ namespace Ship.SecondEdition.YT2400LightFreighter
                 legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/pilots/leebo-wisdomofages.png";
             PilotNameCanonical = "leebo-swz103-rebelalliance";
 
             ShipInfo.ActionIcons.SwitchToDroidActions();

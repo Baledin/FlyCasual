@@ -36,8 +36,6 @@ namespace Ship.SecondEdition.RZ1AWing
                 legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/arvelcrynyd-battleoverendor.png";
-
             PilotNameCanonical = "arvelcrynyd-battleoverendor";
 
             ShipInfo.Shields++;

@@ -1,7 +1,4 @@
 ﻿using Upgrade;
-using System.Collections.Generic;
-using Ship;
-using System.Linq;
 
 namespace UpgradesList.SecondEdition
 {
@@ -17,8 +14,6 @@ namespace UpgradesList.SecondEdition
                 cost: 0,
                 abilityType: typeof(Abilities.SecondEdition.ImprovedInitiativeAbility)
             );
-
-            
         }
     }
 }
@@ -29,7 +24,7 @@ namespace Abilities.SecondEdition
     {
         public override void ActivateAbility()
         {
-            
+
         }
 
         public override void ActivateAbilityForSquadBuilder()
@@ -39,7 +34,7 @@ namespace Abilities.SecondEdition
 
         public override void DeactivateAbility()
         {
-            
+
         }
 
         public override void DeactivateAbilityForSquadBuilder()

@@ -105,7 +105,7 @@ namespace Conditions
             Name = ImageName = "Hunted Condition";
             Temporary = false;
 
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/hunted.png";
+            Tooltip = "Conditions/hunted";
         }
 
         public override void WhenAssigned()

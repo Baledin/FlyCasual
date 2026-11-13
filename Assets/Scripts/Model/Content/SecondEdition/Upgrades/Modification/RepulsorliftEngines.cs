@@ -21,7 +21,8 @@ namespace UpgradesList.SecondEdition
             );
 
             IsHidden = true;
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/caithrenalli-evacuationofdqar.png";
+
+            ImageUrl = "Pilots/caithrenalli-evacuationofdqar";
         }
     }
 }
@@ -65,7 +66,7 @@ namespace Abilities.SecondEdition
 
         private void GainStrain(object sender, EventArgs e)
         {
-            HostShip.Tokens.AssignToken(new StrainToken(HostShip),Triggers.FinishTrigger);
+            HostShip.Tokens.AssignToken(new StrainToken(HostShip), Triggers.FinishTrigger);
         }
     }
 }

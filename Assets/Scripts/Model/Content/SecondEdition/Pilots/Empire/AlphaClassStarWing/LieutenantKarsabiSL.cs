@@ -90,7 +90,7 @@ namespace UpgradesList.SecondEdition
 
             IsHidden = true;
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/pilots/lieutenantkarsabi-ssl.png";
+            ImageUrl = "Pilots/lieutenantkarsabi-ssl";
         }
     }
 }

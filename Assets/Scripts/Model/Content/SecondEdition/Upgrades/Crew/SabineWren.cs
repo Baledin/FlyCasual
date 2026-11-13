@@ -29,6 +29,10 @@ namespace UpgradesList.SecondEdition
                 }
             );
 
+            NameCanonical = "sabinewren";
+
+            ImageUrl = "Upgrades/sabinewren-crew";
+
             Avatar = new AvatarInfo(
                 Faction.Rebel,
                 new Vector2(474, 13)
@@ -42,6 +46,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo.Cost = 6;
             UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            NameCanonical = "sabinewren-crew";
         }
     }
 }
@@ -50,7 +55,7 @@ namespace Abilities.SecondEdition
 {
     public class SabineWrenCrewAbility : GenericAbility
     {
-        Dictionary<GenericToken, string> ReadyTokens = new Dictionary<GenericToken, string>()
+        readonly Dictionary<GenericToken, string> ReadyTokens = new()
         {
             { new IonToken(null), "I" },
             { new JamToken(null, null), "J" },
@@ -81,7 +86,7 @@ namespace Abilities.SecondEdition
         private void UpdateName()
         {
             string postfix = "";
-            foreach (var item in ReadyTokens)
+            foreach (KeyValuePair<GenericToken, string> item in ReadyTokens)
             {
                 if (ReadyTokens.Last().Key != item.Key)
                 {
@@ -124,7 +129,7 @@ namespace Abilities.SecondEdition
                     Triggers.FinishTrigger
                 );
 
-                foreach (var item in ReadyTokens)
+                foreach (KeyValuePair<GenericToken, string> item in ReadyTokens)
                 {
                     subphase.AddDecision(
                         item.Key.Name,

@@ -9,7 +9,7 @@ namespace DamageDeckCardSE
         {
             Name = "Loose Stabilizer";
             Type = CriticalCardType.Ship;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/21_damagecard.png";
+            ImageUrl = "DamageCards/LooseStabilizer";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -25,7 +25,7 @@ namespace DamageDeckCardSE
         {
             base.DiscardEffect();
 
-            Messages.ShowInfo("The Loose Stabilizer has been locked down:  " + Host.PilotInfo.PilotName + " no longer takes damage after performing non-straight maneuvers");
+            Messages.ShowInfo($"{Name} has been locked down: {Host.PilotInfo.PilotName} no longer takes damage after performing non-straight maneuvers");
 
             Host.Tokens.RemoveCondition(typeof(Tokens.LooseStabilizerSECritToken));
             Host.OnMovementFinish -= PlanDamageAfterNonStraightManeuvers;
@@ -47,7 +47,7 @@ namespace DamageDeckCardSE
         {
             if (Host.GetLastManeuverBearing() != Movement.ManeuverBearing.Straight)
             {
-                Messages.ShowInfo("A Loose Stabilizer causes " + Host.PilotInfo.PilotName + " to suffer 1 damage because they performed a non-straight maneuver.");
+                Messages.ShowInfo($"A {Name} causes {Host.PilotInfo.PilotName} to suffer 1 damage because they performed a non-straight maneuver.");
 
                 DamageSourceEventArgs looseDamage = new DamageSourceEventArgs()
                 {
@@ -77,7 +77,7 @@ namespace Tokens
     {
         public LooseStabilizerSECritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/21_damagecard.png";
+            Tooltip = "DamageCards/LooseStabilizer";
         }
     }
 }

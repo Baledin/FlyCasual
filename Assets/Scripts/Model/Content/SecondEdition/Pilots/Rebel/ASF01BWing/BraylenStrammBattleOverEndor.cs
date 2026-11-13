@@ -46,8 +46,6 @@ namespace Ship.SecondEdition.ASF01BWing
 
             ShipInfo.Shields++;
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/braylenstramm-battleoverendor.png";
-
             MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.ItsATrap));
             MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.HomingMissiles));
             MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.ProtonBombs));

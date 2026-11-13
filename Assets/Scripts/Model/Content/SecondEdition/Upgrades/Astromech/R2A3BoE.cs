@@ -21,7 +21,7 @@ namespace UpgradesList.SecondEdition
 
             NameCanonical = "r2a3-battleoverendor";
 
-            ImageUrl = "https://raw.githubusercontent.com/sampson-matt/FlyCasualLegacyCustomCards/refs/heads/main/BattleOverEndor/R2A3BoE.jpg";
+            ImageUrl = "Pilots/wedgeantilles-battleoverendor";
         }
     }
 }

@@ -20,7 +20,8 @@ namespace UpgradesList.SecondEdition
             );
 
             IsHidden = true;
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/stomeronistarck-evacuationofdqar.png";
+
+            ImageUrl = "Pilots/stomeronistarck-evacuationofdqar";
         }
     }
 }
@@ -42,7 +43,8 @@ namespace Abilities.SecondEdition
 
         private void AcceleratedSensorArrayEffect(GenericShip host)
         {
-            GenericAction newAction = new ActionsList.SecondEdition.AcceleratedSensorArrayEffect() {
+            GenericAction newAction = new ActionsList.SecondEdition.AcceleratedSensorArrayEffect()
+            {
                 HostShip = host,
                 ImageUrl = HostUpgrade.ImageUrl,
             };
@@ -58,7 +60,7 @@ namespace ActionsList.SecondEdition
     {
         public AcceleratedSensorArrayEffect() : base()
         {
-            Name = DiceModificationName =  "Accelerated Sensor Array";
+            Name = DiceModificationName = "Accelerated Sensor Array";
         }
 
         public override void ActionEffect(Action callBack)

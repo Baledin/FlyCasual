@@ -25,7 +25,6 @@ namespace ActionsList
         public BoostAction()
         {
             Name = "Boost";
-            ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/BoostAction.png";
         }
 
         public override void ActionTake()
@@ -85,7 +84,6 @@ namespace ActionsList
 
 namespace SubPhases
 {
-
     public class BoostPlanningSubPhase : GenericSubPhase
     {
         public GenericAction HostAction;

@@ -39,8 +39,7 @@ namespace Ship.SecondEdition.YT2400LightFreighter
                 legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/quickbuilds/leebo-hethinkshesfunny-rebelalliance.png";
-            PilotNameCanonical = "leebo-hethinkshesfunny-rebelalliance";
+            PilotNameCanonical = "leebo-swz103-sl-rebelalliance";
 
             ShipInfo.ActionIcons.SwitchToDroidActions();
 
@@ -64,8 +63,7 @@ namespace Ship.SecondEdition.YT2400LightFreighter
         public LeeboSLScum() : base()
         {
             PilotInfo.Faction = Faction.Scum;
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/quickbuilds/leebo-hethinkshesfunny-scumandvillainy.png";
-            PilotNameCanonical = "leebo-hethinkshesfunny-scumandvillainy";
+            PilotNameCanonical = "leebo-swz103-sl-scumandvillainy";
         }
     }
 

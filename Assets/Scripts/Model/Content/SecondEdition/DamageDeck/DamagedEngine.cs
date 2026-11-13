@@ -3,21 +3,20 @@ using System;
 
 namespace DamageDeckCardSE
 {
-
     public class DamagedEngine : GenericDamageCard
     {
         public DamagedEngine()
         {
             Name = "Damaged Engine";
             Type = CriticalCardType.Ship;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/11_damagecard.png";
+            ImageUrl = "DamageCards/DamagedEngine";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
         {
             Host.AfterGetManeuverColorIncreaseComplexity += TurnManeuversAreHarder;
 
-            Host.Tokens.AssignCondition(typeof(Tokens.DamagedEngineSECritToken));
+            Host.Tokens.AssignCondition(typeof(Tokens.DamagedEngineCritToken));
             Triggers.FinishTrigger();
         }
 
@@ -25,8 +24,8 @@ namespace DamageDeckCardSE
         {
             base.DiscardEffect();
 
-            Messages.ShowInfo("Damaged Engine has been repaired,  " + Host.PilotInfo.PilotName + "'s turn maneuvers regained normal colors");
-            Host.Tokens.RemoveCondition(typeof(Tokens.DamagedEngineSECritToken));
+            Messages.ShowInfo($"{Name} has been repaired, {Host.PilotInfo.PilotName}'s turn maneuvers regained normal colors");
+            Host.Tokens.RemoveCondition(typeof(Tokens.DamagedEngineCritToken));
 
             Host.AfterGetManeuverColorIncreaseComplexity -= TurnManeuversAreHarder;
         }
@@ -46,11 +45,11 @@ namespace DamageDeckCardSE
 
 namespace Tokens
 {
-    public class DamagedEngineSECritToken : CritToken
+    public class DamagedEngineCritToken : CritToken
     {
-        public DamagedEngineSECritToken(GenericShip host) : base(host)
+        public DamagedEngineCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/11_damagecard.png";
+            Tooltip = "DamageCards/DamagedEngine";
         }
     }
 }

@@ -153,7 +153,7 @@ namespace Conditions
             Name = ImageName = "Compromising Intel Condition";
             Temporary = false;
 
-            Tooltip = "https://vignette.wikia.nocookie.net/xwing-miniatures-second-edition/images/b/be/Swz45_compromising-intel.png";
+            Tooltip = "Conditions/compromisingintel";
         }
 
         public override void WhenAssigned()

@@ -139,7 +139,7 @@ namespace Conditions
             Name = ImageName = "Debuff Token";
             Temporary = false;
 
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/listeningdevice.png";
+            Tooltip = "Conditions/listeningdevice";
         }
     }
 }

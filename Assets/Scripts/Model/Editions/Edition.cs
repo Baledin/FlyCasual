@@ -1,5 +1,6 @@
 ﻿using ActionsList;
 using Arcs;
+using Editions.RuleSets;
 using Movement;
 using Ship;
 using System;
@@ -7,8 +8,6 @@ using System.Collections.Generic;
 using Tokens;
 using UnityEngine;
 using Upgrade;
-using Editions.RuleSets;
-using Obstacles;
 
 namespace Editions
 {
@@ -30,7 +29,6 @@ namespace Editions
         public abstract Dictionary<BaseSize, int> NegativeTokensToAffectShip { get; }
         public abstract Dictionary<string, string> PreGeneratedAiSquadrons { get; }
         public abstract string PathToSavedSquadrons { get; }
-        public abstract string RootUrlForImages { get; }
         public abstract Vector2 UpgradeCardSize { get; }
         public abstract Vector2 UpgradeCardCompactOffset { get; }
         public abstract Vector2 UpgradeCardCompactSize { get; }

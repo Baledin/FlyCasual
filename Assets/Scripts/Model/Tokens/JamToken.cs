@@ -15,9 +15,7 @@ namespace Tokens
             TokenColor = TokenColors.Orange;
             TokenShape = TokenShapes.Cirular;
             PriorityUI = 40;
-            Tooltip = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/ReloadActionAndJamTokens.png";
             Assigner = assigner;
         }
     }
-
 }

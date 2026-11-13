@@ -42,6 +42,7 @@ namespace UpgradesList.SecondEdition
             UpgradeInfo.Cost = 3;
             UpgradeInfo.Limited = 4;
             UpgradeInfo.LegalityInfo = new() { Legality.XWA };
+            ImageUrl = "Upgrades/energyshellcharges-xwa";
         }
     }
 }

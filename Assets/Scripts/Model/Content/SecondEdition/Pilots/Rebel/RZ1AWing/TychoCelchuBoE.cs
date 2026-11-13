@@ -27,7 +27,7 @@ namespace Ship.SecondEdition.RZ1AWing
                 {
                     Tags.AWing
                 },
-                extraUpgradeIcons: new List<UpgradeType> 
+                extraUpgradeIcons: new List<UpgradeType>
                 {
                     UpgradeType.Talent,
                     UpgradeType.Talent,
@@ -39,9 +39,7 @@ namespace Ship.SecondEdition.RZ1AWing
                 legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/tychocelchu-battleoverendor.png";
-
-            PilotNameCanonical = "tychocelchu-battleoverendor-lsl";
+            PilotNameCanonical = "tychocelchu-battleoverendor";
 
             ShipInfo.Shields++;
 

@@ -219,7 +219,7 @@ namespace UpgradesList.SecondEdition
 
             NameCanonical = "swivelwingdownhark";
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/upgrades/swivelwing.png";
+            ImageUrl = "Upgrades/swivelwing";
 
             AnotherSide = typeof(SwivelWingHarkUp);
         }
@@ -244,7 +244,7 @@ namespace UpgradesList.SecondEdition
 
             NameCanonical = "swivelwinguphark";
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/upgrades/swivelwing-sideb.png";
+            ImageUrl = "Upgrades/swivelwing-sideb";
 
             IsSecondSide = true;
 

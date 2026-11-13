@@ -132,7 +132,7 @@ namespace Conditions
         {
             Name = ImageName = "Fearful Prey";
             Temporary = false;
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/fearfulprey.png";
+            Tooltip = "Conditions/fearfulprey";
         }
 
         public override void WhenAssigned()

@@ -135,7 +135,7 @@ namespace Conditions
         {
             Name = ImageName = "Broken Trust Condition";
             Temporary = false;
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/brokentrust.png";
+            Tooltip = "Conditions/brokentrust";
         }
 
         public override void WhenAssigned()

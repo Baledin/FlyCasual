@@ -3,14 +3,13 @@ using System;
 
 namespace DamageDeckCardSE
 {
-
     public class HullBreach : GenericDamageCard
     {
         public HullBreach()
         {
             Name = "Hull Breach";
             Type = CriticalCardType.Ship;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/15_damagecard.png";
+            ImageUrl = "DamageCards/HullBreach";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -26,8 +25,7 @@ namespace DamageDeckCardSE
         {
             if (!isCritical)
             {
-                Messages.ShowInfo(
-                    "Due to a Hull Breach, the ship has suffered a Critical Hit instead of a normal Hit!");
+                Messages.ShowInfo($"{Name}: the ship has suffered a Critical Hit instead of a normal Hit!");
                 isCritical = true;
             }
         }
@@ -36,8 +34,7 @@ namespace DamageDeckCardSE
         {
             base.DiscardEffect();
 
-            Messages.ShowInfo("Hull Breach has been repaired, Hits are no longer upgraded to Critical Hits against " +
-                              Host.PilotInfo.PilotName);
+            Messages.ShowInfo($"{Name} has been repaired, Hits are no longer upgraded to Critical Hits against {Host.PilotInfo.PilotName}");
             Host.Tokens.RemoveCondition(typeof(Tokens.HullBreachCritToken));
 
             Host.OnSufferDamageDecidingSeverity -= ChangeNormalDamageToCriticalDamage;
@@ -52,7 +49,7 @@ namespace Tokens
     {
         public HullBreachCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/15_damagecard.png";
+            Tooltip = "DamageCards/HullBreach";
         }
     }
 }

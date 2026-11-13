@@ -9,7 +9,7 @@ namespace DamageDeckCardSE
         {
             Name = "Weapons Failure";
             Type = CriticalCardType.Ship;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/13_damagecard.png";
+            ImageUrl = "DamageCards/WeaponsFailure";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -17,7 +17,7 @@ namespace DamageDeckCardSE
             Host.AfterGotNumberOfAttackDice += ReduceNumberOfAttackDice;
             Host.OnGenerateActions += CallAddCancelCritAction;
 
-            Host.Tokens.AssignCondition(typeof(Tokens.WeaponsFailureSECritToken));
+            Host.Tokens.AssignCondition(typeof(Tokens.WeaponsFailureCritToken));
             Triggers.FinishTrigger();
         }
 
@@ -25,16 +25,16 @@ namespace DamageDeckCardSE
         {
             base.DiscardEffect();
 
-            Messages.ShowInfo("Weapons Failure has been repaired, " + Host.PilotInfo.PilotName + "'s attack dice have been restored");
+            Messages.ShowInfo($"{Name} has been repaired, {Host.PilotInfo.PilotName}'s attack dice have been restored");
 
-            Host.Tokens.RemoveCondition(typeof(Tokens.WeaponsFailureSECritToken));
+            Host.Tokens.RemoveCondition(typeof(Tokens.WeaponsFailureCritToken));
             Host.AfterGotNumberOfAttackDice -= ReduceNumberOfAttackDice;
             Host.OnGenerateActions -= CallAddCancelCritAction;
         }
 
         private void ReduceNumberOfAttackDice(ref int value)
         {
-            Messages.ShowInfo("Weapons Failure: " + Host.PilotInfo.PilotName + "'s attack dice have been reduced by 1");
+            Messages.ShowInfo($"{Name}: {Host.PilotInfo.PilotName}'s attack dice have been reduced by 1");
 
             value--;
         }
@@ -43,11 +43,11 @@ namespace DamageDeckCardSE
 
 namespace Tokens
 {
-    public class WeaponsFailureSECritToken : CritToken
+    public class WeaponsFailureCritToken : CritToken
     {
-        public WeaponsFailureSECritToken(GenericShip host) : base(host)
+        public WeaponsFailureCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/13_damagecard.png";
+            Tooltip = "DamageCards/WeaponsFailure";
         }
     }
 }

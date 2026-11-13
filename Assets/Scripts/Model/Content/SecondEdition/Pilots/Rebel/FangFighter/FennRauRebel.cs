@@ -41,8 +41,6 @@ namespace Ship
                 );
 
                 PilotNameCanonical = "fennrau-fangfighter";
-
-                ImageUrl = "https://infinitearenas.com/xw2/images/pilots/fennrau-rebel-fang.png";
             }
         }
 

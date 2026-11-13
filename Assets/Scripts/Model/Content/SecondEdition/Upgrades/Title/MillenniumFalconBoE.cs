@@ -18,8 +18,9 @@ namespace UpgradesList.SecondEdition
             );
 
             NameCanonical = "millenniumfalcon-boe";
-            ImageUrl = "https://raw.githubusercontent.com/sampson-matt/FlyCasualLegacyCustomCards/refs/heads/main/BattleOverEndor/MilleniumFalcon.jpg";
-        }        
+
+            ImageUrl = "Pilots/landocalrissian-battleoverendor";
+        }
     }
 }
 

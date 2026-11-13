@@ -21,7 +21,18 @@ namespace UpgradesList.SecondEdition
                 ),
                 abilityType: typeof(Abilities.SecondEdition.GarSaxonGunner)
             );
+
             NameCanonical = "garsaxon-gunner";
+
+            ImageUrl = "Upgrades/garsaxon";
+        }
+
+        public class GarSaxonGunnerXWA : GarSaxonGunner
+        {
+            public GarSaxonGunnerXWA() : base()
+            {
+                NameCanonical = "garsaxon";
+            }
         }
     }
 }

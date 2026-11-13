@@ -44,7 +44,6 @@ namespace Ship.SecondEdition.TIELnFighter
             MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.TargetingMatrix));
 
             PilotNameCanonical = "scythe6-battleoverendor";
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/scythe6-battleoverendor.png";
         }
     }
 
