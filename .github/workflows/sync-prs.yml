@@ -1,0 +1,45 @@
+name: Sync dev into open PRs
+
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  update-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update open PR branches
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { data: pulls } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              base: 'development'
+            });
+
+            for (const pr of pulls) {
+              // Skip PRs from forks for security/permissions reasons
+              if (pr.head.repo.full_name !== context.payload.repository.full_name) {
+                console.log(`Skipping PR #${pr.number} (from fork)`);
+                continue;
+              }
+
+              try {
+                await github.rest.pulls.updateBranch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number
+                });
+                console.log(`Successfully updated PR #${pr.number}`);
+              } catch (error) {
+                console.log(`Failed to update PR #${pr.number} (likely merge conflict): ${error.message}`);
+              }
+            }

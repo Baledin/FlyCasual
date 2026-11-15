@@ -24,7 +24,8 @@ namespace UpgradesList.SecondEdition
             );
 
             IsHidden = true;
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/poedameron-evacuationofdqar.png";
+
+            ImageUrl = "Pilots/poedameron-evacuationofdqar";
         }
     }
 }
@@ -106,14 +107,14 @@ namespace Abilities.SecondEdition
         {
             HostShip.OnActionIsPerformed -= RegisterTrigger1;
             HostShip.OnActionIsReallyFailed -= RegisterTrigger2;
-            RegisterAbilityTrigger(TriggerTypes.OnActionIsPerformed,AskToSwapStressForStrain);
+            RegisterAbilityTrigger(TriggerTypes.OnActionIsPerformed, AskToSwapStressForStrain);
         }
 
         private void RegisterTrigger2(GenericAction action)
         {
             HostShip.OnActionIsPerformed -= RegisterTrigger1;
             HostShip.OnActionIsReallyFailed -= RegisterTrigger2;
-            RegisterAbilityTrigger(TriggerTypes.OnActionIsReallyFailed,AskToSwapStressForStrain);
+            RegisterAbilityTrigger(TriggerTypes.OnActionIsReallyFailed, AskToSwapStressForStrain);
         }
 
         private void AskToSwapStressForStrain(object sender, EventArgs e)
@@ -131,7 +132,7 @@ namespace Abilities.SecondEdition
         {
             HostShip.Tokens.RemoveToken(typeof(StressToken), delegate
             {
-                HostShip.Tokens.AssignToken(new StrainToken(HostShip),DecisionSubPhase.ConfirmDecision);
+                HostShip.Tokens.AssignToken(new StrainToken(HostShip), DecisionSubPhase.ConfirmDecision);
             });
         }
     }

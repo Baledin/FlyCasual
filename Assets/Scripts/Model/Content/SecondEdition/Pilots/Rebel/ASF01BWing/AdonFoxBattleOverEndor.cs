@@ -39,8 +39,6 @@ namespace Ship.SecondEdition.ASF01BWing
                 legality: new List<Legality>() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/adonfox-battleoverendor.png";
-
             MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.ItsATrap));
             MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.PartingGift));
             MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.ProtonRockets));

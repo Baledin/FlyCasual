@@ -54,8 +54,6 @@ namespace Ship.SecondEdition.ModifiedYT1300LightFreighter
             MustHaveUpgrades.Add(typeof(MillenniumFalconBoE));
 
             PilotNameCanonical = "landocalrissian-battleoverendor";
-
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/landocalrissian-battleoverendor.png";
         }
     }
 

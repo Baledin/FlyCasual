@@ -19,7 +19,8 @@ namespace UpgradesList.SecondEdition
             );
 
             IsHidden = true;
-            ImageUrl = "https://infinitearenas.com/xw2/images/upgrades/computerassistedhandling.png";
+
+            ImageUrl = "Pilots/captainyorr-battleoverendor";
         }
     }
 }

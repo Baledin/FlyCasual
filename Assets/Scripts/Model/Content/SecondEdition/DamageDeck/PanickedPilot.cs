@@ -9,7 +9,7 @@ namespace DamageDeckCardSE
         {
             Name = "Panicked Pilot";
             Type = CriticalCardType.Pilot;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/01_damagecard.png";
+            ImageUrl = "DamageCards/PanickedPilot";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -27,6 +27,5 @@ namespace DamageDeckCardSE
             Triggers.FinishTrigger();
             DiscardEffect();
         }
-
     }
 }

@@ -49,7 +49,6 @@ namespace Ship
                 MustHaveUpgrades.Add(typeof(UpgradesList.SecondEdition.SwarmTactics));
 
                 PilotNameCanonical = "majormianda-battleoverendor";
-                ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/majormianda-battleoverendor.png";
             }
         }
 

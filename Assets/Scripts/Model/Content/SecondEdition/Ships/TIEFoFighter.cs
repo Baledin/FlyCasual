@@ -4,7 +4,6 @@ using Arcs;
 using Movement;
 using Ship;
 using Ship.CardInfo;
-using Subphases;
 using SubPhases;
 using System;
 using System.Collections.Generic;
@@ -105,7 +104,7 @@ namespace Abilities.SecondEdition
                 modificationType: DiceModificationType.Reroll,
                 count: 1,
                 sidesCanBeSelected: new() { DieSide.Blank },
-                payAbilityCost: StrainAnotherFriendly
+                payAbilityCost: RegisterStrainAnotherFriendly
             );
         }
 
@@ -114,61 +113,51 @@ namespace Abilities.SecondEdition
             RemoveDiceModification();
         }
 
-        private void StrainAnotherFriendly(Action<bool> callback)
+        private void RegisterStrainAnotherFriendly(Action<bool> callback)
         {
-            MercilessSelectShipSubPhase subphase = Phases.StartTemporarySubPhaseNew<MercilessSelectShipSubPhase>(
-                "Select target to assign strain",
-                Phases.CurrentSubPhase.CallBack
+            RegisterAbilityTrigger(TriggerTypes.OnAbilityDirect, StrainAnotherFriendly);
+
+            Triggers.ResolveTriggers(TriggerTypes.OnAbilityDirect, delegate { callback(true); });
+        }
+
+        private void StrainAnotherFriendly(object sender, EventArgs e)
+        {
+            SelectTargetForAbility(
+                selectTargetAction: AssignStrain,
+                filterTargets: FilterTargets,
+                getAiPriority: AiPriority,
+                subphaseOwnerPlayerNo: Combat.Attacker.Owner.PlayerNo,
+                name: "Merciless: Assign Strain",
+                description: "Select target to assign strain",
+                showSkipButton: false
             );
-            subphase.Defender = Combat.Defender;
-            subphase.ShowSkipButton = false;
-            subphase.Start();
+        }
+
+        private void AssignStrain()
+        {
+            TargetShip.Tokens.AssignToken(new StrainToken(TargetShip), SelectShipSubPhase.FinishSelection);
+        }
+
+        private bool FilterTargets(GenericShip ship)
+        {
+            return Tools.IsAnotherFriendly(Selection.ThisShip, ship) && Combat.Defender.GetRangeToShip(ship) < 2;
         }
 
         private bool IsAvailable()
         {
-            return Combat.AttackStep == CombatStep.Attack && Combat.Attacker == HostShip && Roster.AllShips.Values.Any(s => Tools.IsAnotherFriendly(HostShip, s) && Combat.Defender.GetRangeToShip(s) < 2);
+            return Combat.AttackStep == CombatStep.Attack
+                && Combat.Attacker == HostShip
+                && Roster.AllShips.Values.Any(s => Tools.IsAnotherFriendly(HostShip, s) && Combat.Defender.GetRangeToShip(s) < 2);
         }
 
         private int AiPriority()
         {
             return 0;
         }
-    }
-}
-
-namespace Subphases
-{
-    public class MercilessSelectShipSubPhase : SelectShipSubPhase
-    {
-        public GenericShip Defender;
-
-        public override void Prepare()
-        {
-            PrepareByParameters(
-                SelectStrainTarget,
-                FilterTargets,
-                AiPriority,
-                Selection.ThisShip.Owner.PlayerNo,
-                false,
-                "Merciless: Assign Strain",
-                "Select another friendly ship.\nIt will gain a strain."
-            );
-        }
 
         private int AiPriority(GenericShip ship)
         {
             return 100;
-        }
-
-        private bool FilterTargets(GenericShip ship)
-        {
-            return Tools.IsAnotherFriendly(Selection.ThisShip, ship) && Defender.GetRangeToShip(ship) < 2;
-        }
-
-        protected void SelectStrainTarget()
-        {
-            TargetShip.Tokens.AssignToken(new StrainToken(Selection.ThisShip), SelectShipSubPhase.FinishSelectionNoCallback);
         }
     }
 }

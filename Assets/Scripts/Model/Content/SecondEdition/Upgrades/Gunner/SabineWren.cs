@@ -24,6 +24,8 @@ namespace UpgradesList.SecondEdition
             );
 
             NameCanonical = "sabinewren-gunner";
+
+            ImageUrl = "Upgrades/sabinewren";
         }
     }
 
@@ -33,6 +35,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo.Cost = 1;
             UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            NameCanonical = "sabinewren";
         }
     }
 }
@@ -67,7 +70,7 @@ namespace Abilities.SecondEdition
             PreviousCurrentShip = Selection.ThisShip;
             NumberOfShipsToUseAbility = Combat.DamageCardsWereDealtToDefender;
 
-            EachShipCanDoAction action = new EachShipCanDoAction
+            EachShipCanDoAction action = new
             (
                 EachShipAction,
                 onFinish: FinishAbility,
@@ -77,7 +80,7 @@ namespace Abilities.SecondEdition
                     new RangeToDefenderCondition(0, 3),
                     new HasTokenCondition(tokensList: new List<Type>() { typeof(Tokens.StrainToken), typeof(Tokens.StressToken) })
                 ),
-                description: new Abilities.Parameters.AbilityDescription
+                description: new Parameters.AbilityDescription
                 (
                     HostUpgrade.UpgradeInfo.Name,
                     $"{NumberOfShipsToUseAbility} friendly ship at range 0-3 of the defender may remove 1 strain or stress token",

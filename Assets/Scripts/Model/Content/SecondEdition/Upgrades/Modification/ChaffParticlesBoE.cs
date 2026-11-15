@@ -21,10 +21,10 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(ChaffParticlesBoEAbility)
             );
 
-            ImageUrl = "https://raw.githubusercontent.com/sampson-matt/FlyCasualLegacyCustomCards/refs/heads/main/BattleOverEndor/ChaffParticles.jpg";
+            ImageUrl = "Pilots/gemmersojan-battleoverendor";
 
             NameCanonical = "chaffparticles-battleoverendor";
-        }        
+        }
     }
 }
 
@@ -45,7 +45,7 @@ namespace Abilities.SecondEdition
 
         private void CheckAbility()
         {
-            if ((HostShip.Tokens.HasTokenByColor(TokenColors.Red) || HostShip.Tokens.HasTokenByColor(TokenColors.Orange)) && 
+            if ((HostShip.Tokens.HasTokenByColor(TokenColors.Red) || HostShip.Tokens.HasTokenByColor(TokenColors.Orange)) &&
                 Combat.DiceRollDefence.Focuses > 0)
             {
                 RegisterAbilityTrigger(TriggerTypes.OnAfterNeutralizeResults, AskToRemove);
@@ -76,17 +76,18 @@ namespace Abilities.SecondEdition
             subphase.ImageSource = HostShip;
 
             subphase.DecisionOwner = HostShip.Owner;
-            subphase.ShowSkipButton = true;            
+            subphase.ShowSkipButton = true;
 
-            List<GenericToken> tokensToRemove = HostShip.Tokens.GetTokensByColor(TokenColors.Red,TokenColors.Orange);
+            List<GenericToken> tokensToRemove = HostShip.Tokens.GetTokensByColor(TokenColors.Red, TokenColors.Orange);
 
             foreach (GenericToken token in tokensToRemove)
             {
                 subphase.AddDecision(
                     token.Name + ((token.GetType() == typeof(RedTargetLockToken)) ? " \"" + (token as RedTargetLockToken).Letter + "\"" : ""),
-                    delegate {
+                    delegate
+                    {
                         tokensToRemove.Add(token);
-                        ActionsHolder.RemoveTokens(tokensToRemove, delegate {DecisionSubPhase.ConfirmDecision(); });
+                        ActionsHolder.RemoveTokens(tokensToRemove, delegate { DecisionSubPhase.ConfirmDecision(); });
                     }
                 );
             }

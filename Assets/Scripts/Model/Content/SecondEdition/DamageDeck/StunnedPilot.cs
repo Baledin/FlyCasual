@@ -9,13 +9,13 @@ namespace DamageDeckCardSE
         {
             Name = "Stunned Pilot";
             Type = CriticalCardType.Pilot;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/07_damagecard.png";
+            ImageUrl = "DamageCards/StunnedPilot";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
         {
             Host.OnMovementFinish += RegisterCheckCollisionDamage;
-            Host.Tokens.AssignCondition(typeof(Tokens.StunnedPilotSECritToken));
+            Host.Tokens.AssignCondition(typeof(Tokens.StunnedPilotCritToken));
             Triggers.FinishTrigger();
         }
 
@@ -35,7 +35,7 @@ namespace DamageDeckCardSE
 
         private void CheckCollisionDamage(object sender, System.EventArgs e)
         {
-            Messages.ShowInfo("Stunned Pilot has caused " + Host.PilotInfo.PilotName + " to suffer 1 Hit");
+            Messages.ShowInfo($"{Name} has caused {Host.PilotInfo.PilotName} to suffer 1 Hit");
 
             DamageSourceEventArgs stunnedpilotDamage = new DamageSourceEventArgs()
             {
@@ -51,20 +51,18 @@ namespace DamageDeckCardSE
             base.DiscardEffect();
 
             Host.OnMovementFinish -= RegisterCheckCollisionDamage;
-            Host.Tokens.RemoveCondition(typeof(Tokens.StunnedPilotSECritToken));
+            Host.Tokens.RemoveCondition(typeof(Tokens.StunnedPilotCritToken));
         }
-
     }
 }
 
 namespace Tokens
 {
-    public class StunnedPilotSECritToken : CritToken
+    public class StunnedPilotCritToken : CritToken
     {
-        public StunnedPilotSECritToken(GenericShip host) : base(host)
+        public StunnedPilotCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/07_damagecard.png";
+            Tooltip = "DamageCards/StunnedPilot";
         }
     }
 }
-

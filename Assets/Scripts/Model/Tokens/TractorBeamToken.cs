@@ -1,8 +1,5 @@
 ﻿using Editions;
 using Ship;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Tokens
 {
@@ -18,7 +15,6 @@ namespace Tokens
             TokenColor = TokenColors.Orange;
             TokenShape = TokenShapes.Cirular;
             PriorityUI = 40;
-            Tooltip = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/TractorBeamToken.png";
             Assigner = assigner;
         }
     }

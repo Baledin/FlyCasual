@@ -1,12 +1,9 @@
 ﻿using SubPhases;
-using System.Collections;
-using System.Collections.Generic;
 using Tokens;
 using UnityEngine;
 
 namespace ActionsList
 {
-
     public class ReinforceAction : GenericAction
     {
         private Direction aiBetterSide = Direction.None;
@@ -14,7 +11,6 @@ namespace ActionsList
         public ReinforceAction()
         {
             Name = DiceModificationName = "Reinforce";
-            ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/ReinforceAction.png";
         }
 
         public override void ActionTake()
@@ -47,20 +43,14 @@ namespace ActionsList
 
         public override int GetActionPriority()
         {
-            int result = 0;
-
             int resultFore = 25 + 30 * ActionsHolder.CountEnemiesTargeting(Selection.ThisShip, 1);
             int resultAft = 25 + 30 * ActionsHolder.CountEnemiesTargeting(Selection.ThisShip, -1);
 
             aiBetterSide = (resultFore >= resultAft) ? Direction.Top : Direction.Bottom;
 
-            result = Mathf.Max(resultFore, resultAft);
-
-            return result;
+            return Mathf.Max(resultFore, resultAft);
         }
 
         private class ReinforceSideSubphase : DecisionSubPhase { }
-
     }
-
 }

@@ -10,14 +10,14 @@ namespace DamageDeckCardSE
             Name = "Structural Damage";
             Type = CriticalCardType.Ship;
             CancelDiceResults.Add(DieSide.Success);
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/17_damagecard.png";
+            ImageUrl = "DamageCards/StructuralDamage";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
         {
             Host.AfterGotNumberOfDefenceDice += DebuffDefenceRolls;
 
-            Host.Tokens.AssignCondition(typeof(Tokens.StructuralDamageSECritToken));
+            Host.Tokens.AssignCondition(typeof(Tokens.StructuralDamageCritToken));
             Triggers.FinishTrigger();
         }
 
@@ -25,7 +25,7 @@ namespace DamageDeckCardSE
         {
             if (Combat.AttackStep == CombatStep.Defence && Combat.Defender.ShipId == Host.ShipId)
             {
-                Messages.ShowInfo("Structural Damage causes " + Combat.Defender.PilotInfo.PilotName + " to roll one fewer defense die");
+                Messages.ShowInfo($"{Name} causes {Combat.Defender.PilotInfo.PilotName} to roll one fewer defense die");
                 dice--;
             }
         }
@@ -34,7 +34,7 @@ namespace DamageDeckCardSE
         {
             base.DiscardEffect();
 
-            Host.Tokens.RemoveCondition(typeof(Tokens.StructuralDamageSECritToken));
+            Host.Tokens.RemoveCondition(typeof(Tokens.StructuralDamageCritToken));
             Host.AfterGotNumberOfDefenceDice -= DebuffDefenceRolls;
         }
     }
@@ -42,11 +42,11 @@ namespace DamageDeckCardSE
 
 namespace Tokens
 {
-    public class StructuralDamageSECritToken : CritToken
+    public class StructuralDamageCritToken : CritToken
     {
-        public StructuralDamageSECritToken(GenericShip host) : base(host)
+        public StructuralDamageCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/17_damagecard.png";
+            Tooltip = "DamageCards/StructuralDamage";
         }
     }
 }

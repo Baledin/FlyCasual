@@ -11,7 +11,7 @@ namespace Ship.SecondEdition.UT60DUWing
 {
     public class UT60DUWing : GenericShip, IMovableWings
     {
-        public WingsPositions CurrentWingsPosition { get; set; }
+        public WingPosition CurrentWingPosition { get; set; }
 
         public UT60DUWing() : base()
         {
@@ -44,7 +44,7 @@ namespace Ship.SecondEdition.UT60DUWing
                 "Blue Squadron",
                 new Vector3(-3.25f, 7.16f, 5.55f),
                 2f,
-                wingsPositions: WingsPositions.Closed
+                wingsPositions: WingPosition.Closed
             );
 
             DialInfo = new ShipDialInfo
@@ -81,7 +81,7 @@ namespace Ship.SecondEdition.UT60DUWing
 
             ShipIconLetter = 'u';
 
-            CurrentWingsPosition = WingsPositions.Closed;
+            CurrentWingPosition = WingPosition.Closed;
         }
     }
 }

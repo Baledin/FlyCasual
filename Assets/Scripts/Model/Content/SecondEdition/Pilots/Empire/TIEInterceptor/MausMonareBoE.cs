@@ -40,6 +40,7 @@ namespace Ship
 
                 );
                 PilotNameCanonical = "mausmonare-battleoverendor";
+
                 ShipInfo.Shields++;
                 AutoThrustersAbility oldAbility = (AutoThrustersAbility)ShipAbilities.First(n => n.GetType() == typeof(AutoThrustersAbility));
                 ShipAbilities.Remove(oldAbility);
@@ -48,8 +49,6 @@ namespace Ship
                 MustHaveUpgrades.Add(typeof(NoEscape));
                 MustHaveUpgrades.Add(typeof(Outmaneuver));
                 MustHaveUpgrades.Add(typeof(FuelInjectionOverride));
-
-                ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/mausmonare-battleoverendor.png";
             }
         }
 

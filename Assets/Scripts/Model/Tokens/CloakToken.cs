@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace Tokens
 {
-
     public class CloakToken : GenericToken
     {
         public CloakToken(GenericShip host) : base(host)
@@ -14,7 +13,6 @@ namespace Tokens
             TokenShape = TokenShapes.Square;
             PriorityUI = 50;
             Temporary = false;
-            Tooltip = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/CloakAction.png";
         }
 
         public override void WhenAssigned()

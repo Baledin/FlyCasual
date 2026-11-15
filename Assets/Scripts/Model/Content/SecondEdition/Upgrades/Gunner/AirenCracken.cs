@@ -22,7 +22,7 @@ namespace UpgradesList.SecondEdition
             );
 
             NameCanonical = "airencracken-boe";
-            ImageUrl = "https://raw.githubusercontent.com/sampson-matt/FlyCasualLegacyCustomCards/refs/heads/main/BattleOverEndor/AirenCracken.jpg";
+            ImageUrl = "Pilots/landocalrissian-battleoverendor";
         }
     }
 }

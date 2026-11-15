@@ -17,7 +17,8 @@ namespace UpgradesList.SecondEdition
             );
 
             IsHidden = true;
-            ImageUrl = "https://infinitearenas.com/xw2/images/upgrades/noescape.png";
+
+            ImageUrl = "Pilots/captainyorr-battleoverendor";
         }
     }
 }

@@ -12,11 +12,12 @@ namespace UpgradesList.SecondEdition
                 UpgradeType.Tech,
                 cost: 0,
                 abilityType: typeof(Abilities.SecondEdition.PrecisionHoloTargeterAbility),
-                legalityInfo: new () { Content.Legality.XWA }
+                legalityInfo: new() { Content.Legality.XWA }
             );
 
             IsHidden = true;
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/zizitlo-evacuationofdqar.png";
+
+            ImageUrl = "Pilots/zizitlo-evacuationofdqar";
         }
     }
 }
@@ -51,7 +52,7 @@ namespace Abilities.SecondEdition
                 return false;
             }
 
-            BoardTools.ShotInfo reverseShotInfo = new BoardTools.ShotInfo(Combat.Defender, Combat.Attacker, Combat.Defender.PrimaryWeapons);
+            BoardTools.ShotInfo reverseShotInfo = new(Combat.Defender, Combat.Attacker, Combat.Defender.PrimaryWeapons);
             return !reverseShotInfo.InArc;
         }
 

@@ -19,6 +19,10 @@ namespace UpgradesList.SecondEdition
                 seImageNumber: 100,
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
+
+            NameCanonical = "r2d2";
+
+            ImageUrl = "Upgrades/r2d2-crew";
         }
     }
 
@@ -28,6 +32,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo.Cost = 8;
             UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            NameCanonical = "r2d2-crew";
         }
     }
 }

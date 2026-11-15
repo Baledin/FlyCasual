@@ -31,8 +31,6 @@ namespace Editions
         public override bool CanAttackBumpedTarget { get { return true; } }
         public override MovementComplexity IonManeuverComplexity { get { return MovementComplexity.Easy; } }
         public override string PathToSavedSquadrons { get { return "SavedSquadrons"; } } //RandomAiSquadrons
-
-        public override string RootUrlForImages { get { return "https://squadbuilder.fantasyflightgames.com/card_images/"; } } // OBSOLETE
         public override Vector2 UpgradeCardSize { get { return new Vector2(418, 300); } }
         public override Vector2 UpgradeCardCompactOffset { get { return new Vector2(168, 2); } }
         public override Vector2 UpgradeCardCompactSize { get { return new Vector2(237, 296); } }
@@ -91,11 +89,6 @@ namespace Editions
             return 1;
         }
 
-        protected bool HasYv666InSquad()
-        {
-            return Global.SquadBuilder.CurrentSquad.Ships.Any(n => n.Instance is Ship.SecondEdition.YV666LightFreighter.YV666LightFreighter);
-        }
-
         public override void EvadeDiceModification(DiceRoll diceRoll)
         {
             if (diceRoll.Blanks > 0)
@@ -141,13 +134,13 @@ namespace Editions
         {
             if (Edition.Current is SecondEdition)
             {
-                if (ship.HotacManeuverTable != null) ship.HotacManeuverTable.AdaptToSecondEdition();
+                ship.HotacManeuverTable?.AdaptToSecondEdition();
             }
         }
 
         public override bool IsWeaponHaveRangeBonus(IShipWeapon weapon)
         {
-            List<WeaponTypes> rangeEffectedWeaponTypes = new List<WeaponTypes>()
+            List<WeaponTypes> rangeEffectedWeaponTypes = new()
             {
                 WeaponTypes.Cannon,
                 WeaponTypes.PrimaryWeapon,
@@ -258,12 +251,12 @@ namespace Editions
 
         public override string GetPilotImageUrl(GenericShip ship, string filename)
         {
-            return "https://infinitearenas.com/xw2/images/pilots/" + ship.PilotNameCanonical + ".png";
+            return "Pilots/" + ship.PilotNameCanonical;
         }
 
         public override string GetUpgradeImageUrl(GenericUpgrade upgrade, string filename = null)
         {
-            return "https://infinitearenas.com/xw2/images/upgrades/" + upgrade.NameCanonical + ".png";
+            return "Upgrades/" + upgrade.NameCanonical;
         }
 
         public override string FactionToXws(Faction faction)
@@ -336,27 +329,17 @@ namespace Editions
 
         public override string UpgradeTypeToXws(UpgradeType upgradeType)
         {
-            string result = "";
-
-            switch (upgradeType)
+            return upgradeType switch
             {
-                case UpgradeType.ForcePower:
-                    result = "force-power";
-                    break;
-                case UpgradeType.TacticalRelay:
-                    result = "tactical-relay";
-                    break;
-                default:
-                    result = upgradeType.ToString().ToLower();
-                    break;
-            }
-
-            return result;
+                UpgradeType.ForcePower => "force-power",
+                UpgradeType.TacticalRelay => "tactical-relay",
+                _ => upgradeType.ToString().ToLower(),
+            };
         }
 
         public override UpgradeType XwsToUpgradeType(string upgradeXws)
         {
-            UpgradeType result = UpgradeType.Astromech;
+            UpgradeType result;
 
             switch (upgradeXws)
             {
@@ -368,7 +351,7 @@ namespace Editions
                     result = UpgradeType.TacticalRelay;
                     break;
                 default:
-                    string capitalizedName = upgradeXws.First().ToString().ToUpper() + upgradeXws.Substring(1);
+                    string capitalizedName = upgradeXws.First().ToString().ToUpper() + upgradeXws[1..];
                     result = (UpgradeType)Enum.Parse(typeof(UpgradeType), capitalizedName);
                     break;
             }

@@ -135,8 +135,8 @@ namespace Abilities.SecondEdition
                 },
                 tooltips: new Dictionary<string, string>()
                 {
-                    { "You Should Thank Me", "https://infinitearenas.com/xw2/images/conditions/youshouldthankme.png" },
-                    { "You'd Better Mean Business", "https://infinitearenas.com/xw2/images/conditions/youdbettermeanbusiness.png" }
+                    { "You Should Thank Me", "Conditions/youshouldthankme" },
+                    { "You'd Better Mean Business", "Conditions/youdbettermeanbusiness" }
                 },
                 defaultDecision: GetDefaultDecision(),
                 requiredPlayer: HostShip.Owner.PlayerNo,
@@ -467,7 +467,7 @@ namespace Conditions
         public YouShouldThankMeCondition(GenericShip host) : base(host)
         {
             Name = "You Should Thank Me";
-            Tooltip = (IsRevealed) ? "https://infinitearenas.com/xw2/images/conditions/youshouldthankme.png" : null;
+            Tooltip = (IsRevealed) ? "Conditions/youshouldthankme" : null;
         }
     }
 
@@ -476,7 +476,7 @@ namespace Conditions
         public YoudBetterMeanBusiness(GenericShip host) : base(host)
         {
             Name = "You'd Better Mean Business";
-            Tooltip = (IsRevealed) ? "https://infinitearenas.com/xw2/images/conditions/youdbettermeanbusiness.png" : null;
+            Tooltip = (IsRevealed) ? "Conditions/youdbettermeanbusiness" : null;
         }
     }
 }
