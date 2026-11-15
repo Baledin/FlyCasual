@@ -302,7 +302,7 @@ namespace Conditions
         {
             Name = ImageName = "I'll Show You The Dark Side Condition";
             Temporary = false;
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/illshowyouthedarkside.png";
+            Tooltip = "Conditions/illshowyouthedarkside";
         }
     }
 

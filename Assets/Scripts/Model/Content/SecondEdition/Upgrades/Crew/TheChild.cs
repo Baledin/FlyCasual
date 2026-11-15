@@ -144,7 +144,7 @@ namespace Conditions
             Name = ImageName = "Merciless Pursuit Condition";
             Temporary = false;
 
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/mercilesspursuit.png";
+            Tooltip = "Conditions/mercilesspursuit";
         }
 
         public override void WhenAssigned()

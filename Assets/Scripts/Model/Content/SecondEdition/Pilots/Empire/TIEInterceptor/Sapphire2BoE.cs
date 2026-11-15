@@ -39,6 +39,7 @@ namespace Ship
 
                 );
                 PilotNameCanonical = "sapphire2-battleoverendor";
+
                 AutoThrustersAbility oldAbility = (AutoThrustersAbility)ShipAbilities.First(n => n.GetType() == typeof(AutoThrustersAbility));
                 ShipAbilities.Remove(oldAbility);
                 ShipAbilities.Add(new SensitiveControlsRealAbility());
@@ -47,8 +48,6 @@ namespace Ship
                 MustHaveUpgrades.Add(typeof(TargetingMatrix));
                 MustHaveUpgrades.Add(typeof(PrimedThrusters));
                 MustHaveUpgrades.Add(typeof(Reckless));
-
-                ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/sapphire2-battleoverendor.png";
             }
         }
 

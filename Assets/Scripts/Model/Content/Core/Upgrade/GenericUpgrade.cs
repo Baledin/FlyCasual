@@ -36,7 +36,6 @@ namespace Upgrade
         Gunner,
         Torpedo,
         Astromech,
-        SalvagedAstromech,
         Device,
         Illicit,
         Modification,
@@ -97,14 +96,6 @@ namespace Upgrade
         }
 
         public bool IsSecondSide;
-
-        public string ImageUrlFE
-        {
-            get
-            {
-                return imageUrl ?? ImageUrls.GetImageUrlOld(this);
-            }
-        }
 
         public AvatarInfo Avatar;
 
@@ -199,39 +190,10 @@ namespace Upgrade
         /**
          * Returns the type as a string.
          * @return the name of the type.
-         * TODO: Remove SalvagedAstromech from codebase, no longer an upgradetype
          */
-        public string getTypesAsString()
+        public string GetTypeAsString()
         {
-            string name = "";
-            /*
-            for (int i = 0; i < Types.Count; i++) {
-                UpgradeType type = Types [i];
-                if (i > 0) {
-                    name += " ";
-                }
-
-                switch (type) {
-                    case UpgradeType.SalvagedAstromech:
-                        name += "Salvaged Astromech";
-                        break;
-                    default:
-                        name += type.ToString ();
-                        break;
-                }
-            }
-            */
-            UpgradeType type = UpgradeInfo.UpgradeTypes[0];
-            switch (type)
-            {
-                case UpgradeType.SalvagedAstromech:
-                    name += "Salvaged Astromech";
-                    break;
-                default:
-                    name += type.ToString();
-                    break;
-            }
-            return name;
+            return UpgradeInfo.UpgradeTypes[0].ToString();
         }
 
         // ATTACH TO SHIP

@@ -3,19 +3,16 @@ using Tokens;
 
 namespace ActionsList
 {
-
     public class SlamAction : GenericAction
     {
         public SlamAction()
         {
             Name = DiceModificationName = "SLAM";
-            ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/SlamAction.png";
         }
 
         public SlamAction(GenericShip hostShip)
         {
             Name = DiceModificationName = "SLAM";
-            ImageUrl = "https://raw.githubusercontent.com/guidokessels/xwing-data/master/images/reference-cards/SlamAction.png";
             HostShip = hostShip;
         }
 
@@ -70,7 +67,7 @@ namespace ActionsList
         private bool IsSameSpeed(string maneuverString)
         {
             bool result = false;
-            Movement.ManeuverHolder movementStruct = new Movement.ManeuverHolder(maneuverString);
+            Movement.ManeuverHolder movementStruct = new(maneuverString);
             if (movementStruct.Speed == Selection.ThisShip.AssignedManeuver.ManeuverSpeed)
             {
                 result = true;
@@ -83,7 +80,5 @@ namespace ActionsList
             int result = 0;
             return result;
         }
-
     }
-
 }

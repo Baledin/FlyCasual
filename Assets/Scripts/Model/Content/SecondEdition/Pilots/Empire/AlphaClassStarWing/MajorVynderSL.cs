@@ -77,7 +77,7 @@ namespace UpgradesList.SecondEdition
                     restriction: new AbilityPresenceRestriction(typeof(MajorVynderSLAbility))
                 );
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/pilots/majorvynder-ssl.png";
+            ImageUrl = "Pilots/majorvynder-ssl";
         }
     }
 
@@ -102,7 +102,7 @@ namespace UpgradesList.SecondEdition
                     restriction: new AbilityPresenceRestriction(typeof(MajorVynderAbility))
                 );
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/pilots/majorvynder-ssl.png";
+            ImageUrl = "Pilots/majorvynder-ssl";
         }
     }
 }

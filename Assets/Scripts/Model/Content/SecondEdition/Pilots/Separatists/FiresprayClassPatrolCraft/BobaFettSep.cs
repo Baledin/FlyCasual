@@ -39,7 +39,7 @@ namespace Ship.SecondEdition.FiresprayClassPatrolCraft
                 legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            PilotNameCanonical = "bobafett-separatistalliance";
+            PilotNameCanonical = "bobafett-firesprayclasspatrolcraft";
         }
     }
 

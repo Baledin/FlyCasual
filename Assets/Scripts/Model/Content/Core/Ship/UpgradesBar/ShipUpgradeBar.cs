@@ -29,7 +29,7 @@ namespace Upgrade
 
         public void AddSlot(UpgradeType slotType)
         {
-            UpgradeSlot slot = new (slotType);
+            UpgradeSlot slot = new(slotType);
             slot.OnPreInstallUpgrade += HostShip.CallOnPreInstallUpgrade;
             slot.OnRemovePreInstallUpgrade += HostShip.CallOnRemovePreInstallUpgrade;
             AddSlot(slot);
@@ -79,7 +79,7 @@ namespace Upgrade
             List<UpgradeSlot> freeSlots = GetFreeSlots(upgrade.UpgradeInfo.UpgradeTypes);
             if (freeSlots.Count != upgrade.UpgradeInfo.UpgradeTypes.Count)
             {
-                Debug.Log("No free slot: " + upgrade.getTypesAsString());
+                Debug.Log("No free slot: " + upgrade.GetTypeAsString());
             }
             else
             {
@@ -102,13 +102,13 @@ namespace Upgrade
         public List<UpgradeSlot> GetFreeSlots(List<UpgradeType> upgradeTypes)
         {
             // clone the list in order to search
-            List<UpgradeSlot> holder = new ();
+            List<UpgradeSlot> holder = new();
             for (int i = 0; i < UpgradeSlots.Count; i++)
             {
                 holder.Add(UpgradeSlots[i]);
             }
 
-            List<UpgradeSlot> results = new ();
+            List<UpgradeSlot> results = new();
             for (int i = 0; i < upgradeTypes.Count; i++)
             {
                 UpgradeType uType = upgradeTypes[i];
@@ -133,7 +133,7 @@ namespace Upgrade
 
         public List<GenericUpgrade> GetUpgradesAll()
         {
-            List<GenericUpgrade> result = new ();
+            List<GenericUpgrade> result = new();
             result.AddRange(InstalledUpgradesAll_System.Where(n => !n.IsPlaceholder));
             return result;
         }
@@ -145,7 +145,7 @@ namespace Upgrade
          */
         public List<GenericUpgrade> GetInstalledUpgrades(UpgradeType type)
         {
-            List<GenericUpgrade> result = new ();
+            List<GenericUpgrade> result = new();
             for (int i = 0; i < GetUpgradesAll().Count; i++)
             {
                 GenericUpgrade upgrade = GetUpgradesAll()[i];
@@ -238,7 +238,7 @@ namespace Upgrade
         public bool HasFreeUpgradeSlot(List<UpgradeType> upgradeTypes)
         {
             // clone the list in order to search
-            List<UpgradeSlot> slots = new ();
+            List<UpgradeSlot> slots = new();
             for (int i = 0; i < UpgradeSlots.Count; i++)
             {
                 slots.Add(UpgradeSlots[i]);

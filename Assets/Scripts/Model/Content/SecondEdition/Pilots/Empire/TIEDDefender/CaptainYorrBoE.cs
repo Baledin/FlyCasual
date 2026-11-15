@@ -38,8 +38,6 @@ namespace Ship.SecondEdition.TIEDDefender
                 legality: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/captainyorr-battleoverendor.png";
-
             ShipInfo.UpgradeIcons.Upgrades.Remove(UpgradeType.Configuration);
             ShipInfo.ActionIcons.AddLinkedAction(new LinkedActionInfo(typeof(EvadeAction), typeof(BarrelRollAction)));
 

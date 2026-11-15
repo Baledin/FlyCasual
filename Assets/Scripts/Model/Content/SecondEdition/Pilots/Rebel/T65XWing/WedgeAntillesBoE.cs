@@ -43,8 +43,6 @@ namespace Ship.SecondEdition.T65XWing
 
             ShipInfo.Shields++;
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/wedgeantilles-battleoverendor.png";
-
             PilotNameCanonical = "wedgeantilles-battleoverendor";
 
             ModelInfo.SkinName = "Wedge Antilles";
@@ -57,8 +55,6 @@ namespace Ship.SecondEdition.T65XWing
         {
             (PilotInfo as PilotCardInfo25).Cost = 15;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
-
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/quickbuilds/wedgeantilles-battleoverendor.png";
         }
     }
 }

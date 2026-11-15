@@ -21,7 +21,7 @@ namespace UpgradesList.SecondEdition
 
             IsHidden = true;
 
-            ImageUrl = "https://raw.githubusercontent.com/sampson-matt/FlyCasualLegacyCustomCards/refs/heads/main/BattleOverEndor/HeroicSacrifice.jpg";
+            ImageUrl = "Pilots/arvelcrynyd-battleoverendor";
         }
     }
 }

@@ -3,11 +3,13 @@ using System;
 
 namespace DamageDeckCardSE
 {
-    public class ConsoleFire : ConsoleFireFE
+    public class ConsoleFire : GenericDamageCard
     {
         public ConsoleFire()
         {
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/09_damagecard.png";
+            Name = "Console Fire";
+            Type = CriticalCardType.Ship;
+            ImageUrl = "DamageCards/ConsoleFire";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -16,7 +18,7 @@ namespace DamageDeckCardSE
             Host.OnGenerateActions += CallAddCancelCritAction;
             Host.OnShipIsDestroyed += DiscardEffect;
 
-            Host.Tokens.AssignCondition(typeof(Tokens.ConsoleFireSECritToken));
+            Host.Tokens.AssignCondition(typeof(Tokens.ConsoleFireCritToken));
             Triggers.FinishTrigger();
         }
 
@@ -24,7 +26,7 @@ namespace DamageDeckCardSE
         {
             base.DiscardEffect();
 
-            Host.Tokens.RemoveCondition(typeof(Tokens.ConsoleFireSECritToken));
+            Host.Tokens.RemoveCondition(typeof(Tokens.ConsoleFireCritToken));
 
             Host.OnCombatActivation -= PlanRollForDamage;
             Host.OnGenerateActions -= CallAddCancelCritAction;
@@ -36,7 +38,7 @@ namespace DamageDeckCardSE
             DiscardEffect();
         }
 
-        protected override void PlanRollForDamage()
+        protected void PlanRollForDamage(GenericShip ship = null)
         {
             Triggers.RegisterTrigger(new Trigger()
             {
@@ -47,74 +49,28 @@ namespace DamageDeckCardSE
             });
         }
 
-        private void PlanRollForDamage(GenericShip ship)
-        {
-            PlanRollForDamage();
-        }
-    }
-
-    public class ConsoleFireFE : GenericDamageCard
-    {
-        public ConsoleFireFE()
-        {
-            Name = "Console Fire";
-            Type = CriticalCardType.Ship;
-        }
-
-        public override void ApplyEffect(object sender, EventArgs e)
-        {
-            Phases.Events.OnCombatPhaseStart_Triggers += PlanRollForDamage;
-            Host.OnGenerateActions += CallAddCancelCritAction;
-            Host.OnShipIsDestroyed += delegate { DiscardEffect(); };
-
-            Host.Tokens.AssignCondition(typeof(Tokens.ConsoleFireCritToken));
-            Triggers.FinishTrigger();
-        }
-
-        protected virtual void PlanRollForDamage()
-        {
-            Triggers.RegisterTrigger(new Trigger()
-            {
-                Name = "#" + Host.ShipId + ": Console Fire Crit",
-                TriggerOwner = Host.Owner.PlayerNo,
-                TriggerType = TriggerTypes.OnCombatPhaseStart,
-                EventHandler = RollForDamage
-            });
-        }
-
         protected void RollForDamage(object sender, EventArgs e)
         {
             Selection.ActiveShip = Host;
             Selection.ThisShip = Host;
+
             Phases.StartTemporarySubPhaseOld(
-                "Console Fire",
+                Name,
                 typeof(SubPhases.ConsoleFireCheckSubPhase),
                 delegate
                 {
                     Phases.FinishSubPhase(typeof(SubPhases.ConsoleFireCheckSubPhase));
                     Triggers.FinishTrigger();
-                });
-        }
-
-        public override void DiscardEffect()
-        {
-            base.DiscardEffect();
-
-            Host.Tokens.RemoveCondition(typeof(Tokens.ConsoleFireCritToken));
-
-            Phases.Events.OnCombatPhaseStart_Triggers -= PlanRollForDamage;
-
-            Host.OnGenerateActions -= CallAddCancelCritAction;
+                }
+            );
         }
     }
 }
 
 namespace SubPhases
 {
-
     public class ConsoleFireCheckSubPhase : DiceRollCheckSubPhase
     {
-
         public override void Prepare()
         {
             DiceKind = DiceKind.Attack;
@@ -137,15 +93,13 @@ namespace SubPhases
             {
                 NoDamage();
             }
-
-
         }
 
         private void SufferDamage()
         {
             Messages.ShowInfo("Console Fire: This ship suffered 1 damage");
 
-            DamageSourceEventArgs consolefireDamage = new DamageSourceEventArgs()
+            DamageSourceEventArgs consolefireDamage = new()
             {
                 Source = "Critical hit card",
                 DamageType = DamageTypes.CriticalHitCard
@@ -160,17 +114,15 @@ namespace SubPhases
             CallBack();
         }
     }
-
 }
 
 namespace Tokens
 {
-    public class ConsoleFireSECritToken : CritToken
+    public class ConsoleFireCritToken : CritToken
     {
-        public ConsoleFireSECritToken(GenericShip host) : base(host)
+        public ConsoleFireCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/09_damagecard.png";
+            Tooltip = "DamageCards/ConsoleFire";
         }
     }
 }
-

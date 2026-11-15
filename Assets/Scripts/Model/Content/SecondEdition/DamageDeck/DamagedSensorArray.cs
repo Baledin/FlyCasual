@@ -4,14 +4,13 @@ using System;
 
 namespace DamageDeckCardSE
 {
-
     public class DamagedSensorArray : GenericDamageCard
     {
         public DamagedSensorArray()
         {
             Name = "Damaged Sensor Array";
             Type = CriticalCardType.Ship;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/19_damagecard.png";
+            ImageUrl = "DamageCards/DamagedSensorArray";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -19,7 +18,7 @@ namespace DamageDeckCardSE
             Host.OnTryAddAction += OnlyCancelCritActionsOrFocus;
             Host.OnGenerateActions += CallAddCancelCritAction;
 
-            Host.Tokens.AssignCondition(typeof(Tokens.DamagedSensorArraySECritToken));
+            Host.Tokens.AssignCondition(typeof(Tokens.DamagedSensorArrayCritToken));
             Triggers.FinishTrigger();
         }
 
@@ -27,8 +26,8 @@ namespace DamageDeckCardSE
         {
             base.DiscardEffect();
 
-            Messages.ShowInfo("Damaged Sensor Array has been repaired,  " + Host.PilotInfo.PilotName + " can perform actions as usual");
-            Host.Tokens.RemoveCondition(typeof(Tokens.DamagedSensorArraySECritToken));
+            Messages.ShowInfo($"{Name} has been repaired, {Host.PilotInfo.PilotName} can perform actions as usual");
+            Host.Tokens.RemoveCondition(typeof(Tokens.DamagedSensorArrayCritToken));
 
             Host.OnTryAddAction -= OnlyCancelCritActionsOrFocus;
             Host.OnGenerateActions -= CallAddCancelCritAction;
@@ -41,18 +40,16 @@ namespace DamageDeckCardSE
                 result = false;
             }
         }
-
     }
-
 }
 
 namespace Tokens
 {
-    public class DamagedSensorArraySECritToken : CritToken
+    public class DamagedSensorArrayCritToken : CritToken
     {
-        public DamagedSensorArraySECritToken(GenericShip host) : base(host)
+        public DamagedSensorArrayCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/19_damagecard.png";
+            Tooltip = "DamageCards/DamagedSensorArray";
         }
     }
 }

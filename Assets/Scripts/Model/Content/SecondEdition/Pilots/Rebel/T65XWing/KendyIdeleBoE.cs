@@ -46,8 +46,6 @@ namespace Ship.SecondEdition.T65XWing
             MustHaveUpgrades.Add(typeof(ModifiedR4PUnit));
             MustHaveUpgrades.Add(typeof(ChaffParticlesBoE));
 
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/kendyidele-battleoverendor.png";
-
             PilotNameCanonical = "kendyidele-battleoverendor";
         }
     }
@@ -58,8 +56,6 @@ namespace Ship.SecondEdition.T65XWing
         {
             (PilotInfo as PilotCardInfo25).Cost = 10;
             (PilotInfo as PilotCardInfo25).LegalityInfo = new List<Legality> { Legality.XWA };
-
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/quickbuilds/kendyidele-battleoverendor.png";
         }
     }
 }

@@ -16,7 +16,7 @@ namespace UpgradesList.SecondEdition
 
             IsHidden = true;
 
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/longshot-evacuationofdqar.png";
+            ImageUrl = "Pilots/longshot-evacuationofdqar";
         }
     }
 }

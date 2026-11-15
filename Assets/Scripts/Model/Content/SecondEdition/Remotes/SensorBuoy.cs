@@ -11,7 +11,7 @@ namespace Remote
             RemoteInfo = new RemoteInfo(
                 "Sensor Buoy",
                 0, 3, 2,
-                "https://infinitearenas.com/xw2/images/remotes/sensorbuoy.png"
+                "Remotes/sensorbuoy"
             );
         }
 

@@ -130,7 +130,7 @@ namespace Conditions
         public CaptainRexCondition(GenericShip host) : base(host)
         {
             Name = ImageName = "Debuff Token";
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/suppressivefire.png";
+            Tooltip = "Conditions/suppressivefire";
 
             Temporary = false;
         }

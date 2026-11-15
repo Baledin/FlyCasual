@@ -19,7 +19,7 @@ namespace UpgradesList.SecondEdition
 
             IsHidden = true;
 
-            ImageUrl = "https://infinitearenas.com/xw2xwa/images/pilots/scorch-evacuationofdqar.png";
+            ImageUrl = "Pilots/scorch-evacuationofdqar";
         }
     }
 }

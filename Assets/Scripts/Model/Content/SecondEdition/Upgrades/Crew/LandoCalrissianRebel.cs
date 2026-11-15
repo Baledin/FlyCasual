@@ -23,6 +23,10 @@ namespace UpgradesList.SecondEdition
                 legalityInfo: new List<Legality> { Legality.StandardLegal, Legality.ExtendedLegal }
             );
 
+            NameCanonical = "landocalrissian";
+
+            ImageUrl = "Upgrades/landocalrissian-crew-rebel";
+
             Avatar = new AvatarInfo(
                 Faction.Rebel,
                 new Vector2(379, 8),
@@ -37,6 +41,7 @@ namespace UpgradesList.SecondEdition
         {
             UpgradeInfo.Cost = 2;
             UpgradeInfo.LegalityInfo = new List<Legality> { Legality.XWA };
+            NameCanonical = "landocalrissian-crew-rebel";
         }
     }
 }
@@ -51,7 +56,7 @@ namespace Abilities.SecondEdition
         {
             if (DiceCheckRoll.Blanks == 2)
             {
-                var phase = Phases.StartTemporarySubPhaseNew<LandoDecisionSubphase>(
+                LandoDecisionSubphase phase = Phases.StartTemporarySubPhaseNew<LandoDecisionSubphase>(
                 "Lando Calrissian: Chose token to gain",
                 AbilityDiceCheck.ConfirmCheck);
                 phase.HostShip = HostShip;

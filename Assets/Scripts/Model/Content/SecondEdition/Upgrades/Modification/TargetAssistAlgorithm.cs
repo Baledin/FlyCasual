@@ -13,8 +13,6 @@ namespace UpgradesList.SecondEdition
     {
         public TargetAssistAlgorithm() : base()
         {
-            IsHidden = true;
-
             UpgradeInfo = new UpgradeCardInfo(
                 "Target-Assist Algorithm",
                 UpgradeType.Modification,
@@ -22,7 +20,9 @@ namespace UpgradesList.SecondEdition
                 abilityType: typeof(TargetAssistAlgorithmAbility)
             );
 
-            ImageUrl = "https://raw.githubusercontent.com/sampson-matt/FlyCasualLegacyCustomCards/refs/heads/main/BattleOverEndor/TargetAssistAlgorithm.jpg";
+            IsHidden = true;
+
+            ImageUrl = "Pilots/gemmersojan-battleoverendor";
         }
     }
 }
@@ -48,7 +48,7 @@ namespace Abilities.SecondEdition
 
         private void CheckConditions(object sender, EventArgs e)
         {
-            if (!HostShip.Tokens.HasGreenTokens && Board.GetShipsInArcAtRange(HostShip, Arcs.ArcType.Front, new Vector2(0, 3),Team.Type.Enemy).Any())
+            if (!HostShip.Tokens.HasGreenTokens && Board.GetShipsInArcAtRange(HostShip, Arcs.ArcType.Front, new Vector2(0, 3), Team.Type.Enemy).Any())
             {
                 Messages.ShowInfo("Target-Assist Algorithm: " + HostShip.PilotInfo.PilotName + " gains a Calculate token)");
                 HostShip.Tokens.AssignTokens(CreateCalculateToken, 1, Triggers.FinishTrigger);

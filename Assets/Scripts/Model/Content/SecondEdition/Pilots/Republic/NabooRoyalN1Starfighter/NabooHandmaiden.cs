@@ -148,7 +148,7 @@ namespace Conditions
         {
             Name = ImageName = "Decoyed Condition";
             Temporary = false;
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/decoyed.png";
+            Tooltip = "Conditions/decoyed";
         }
 
         public override void WhenAssigned()

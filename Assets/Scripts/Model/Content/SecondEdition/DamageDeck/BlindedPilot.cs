@@ -11,7 +11,7 @@ namespace DamageDeckCardSE
             Name = "Blinded Pilot";
             Type = CriticalCardType.Pilot;
             AiAvoids = true;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/03_damagecard.png";
+            ImageUrl = "DamageCards/BlindedPilot";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -19,7 +19,7 @@ namespace DamageDeckCardSE
             Host.OnTryAddAvailableDiceModification += RestrictActionEffectsToForceOnly;
             Host.OnGenerateActions += CallAddCancelCritAction;
 
-            Host.Tokens.AssignCondition(typeof(Tokens.BlindedPilotSECritToken));
+            Host.Tokens.AssignCondition(typeof(Tokens.BlindedPilotCritToken));
             Triggers.FinishTrigger();
         }
 
@@ -27,7 +27,7 @@ namespace DamageDeckCardSE
         {
             if (Combat.AttackStep == CombatStep.Attack
                 && Combat.Attacker.ShipId == Host.ShipId
-                && !(diceModification is ForceAction)
+                && diceModification is not ForceAction
                 && !diceModification.IsNotRealDiceModification)
             {
                 canBeUsed = false;
@@ -40,20 +40,19 @@ namespace DamageDeckCardSE
 
             Host.OnTryAddAvailableDiceModification -= RestrictActionEffectsToForceOnly;
             Host.OnGenerateActions -= CallAddCancelCritAction;
-            Messages.ShowInfo(Host.PilotInfo.PilotName + " is no longer Blinded and may fully modify their attacks");
-            Host.Tokens.RemoveCondition(typeof(Tokens.BlindedPilotSECritToken));
+            Messages.ShowInfo($"{Host.PilotInfo.PilotName} is no longer Blinded and may fully modify their attacks");
+            Host.Tokens.RemoveCondition(typeof(Tokens.BlindedPilotCritToken));
         }
     }
-
 }
 
 namespace Tokens
 {
-    public class BlindedPilotSECritToken : CritToken
+    public class BlindedPilotCritToken : CritToken
     {
-        public BlindedPilotSECritToken(GenericShip host) : base(host)
+        public BlindedPilotCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/03_damagecard.png";
+            Tooltip = "DamageCards/BlindedPilot";
         }
     }
 }

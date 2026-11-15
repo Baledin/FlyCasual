@@ -11,8 +11,6 @@ namespace UpgradesList.SecondEdition
     {
         public IonManeuveringJet() : base()
         {
-            IsHidden = true;
-
             UpgradeInfo = new UpgradeCardInfo(
                 "Ion Maneuvering Jet",
                 UpgradeType.Modification,
@@ -20,8 +18,11 @@ namespace UpgradesList.SecondEdition
                 charges: 2,
                 abilityType: typeof(Abilities.SecondEdition.IonManeuveringJetAbility)
             );
-            ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/scythe6-battleoverendor.png";
-        }        
+
+            IsHidden = true;
+
+            ImageUrl = "Pilots/scythe6-battleoverendor";
+        }
     }
 }
 

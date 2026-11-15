@@ -36,15 +36,6 @@ namespace UpgradesList.SecondEdition
             );
         }
     }
-
-    public class WartimeLoadoutXWA : WartimeLoadout
-    {
-        public WartimeLoadoutXWA() : base()
-        {
-            UpgradeInfo.Cost = 0;
-            UpgradeInfo.LegalityInfo = new() { Legality.XWA };
-        }
-    }
 }
 
 namespace Abilities.SecondEdition

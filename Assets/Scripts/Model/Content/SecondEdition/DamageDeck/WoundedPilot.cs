@@ -11,7 +11,7 @@ namespace DamageDeckCardSE
         {
             Name = "Wounded Pilot";
             Type = CriticalCardType.Pilot;
-            ImageUrl = "https://infinitearenas.com/xw2/images/damagecards/05_damagecard.png";
+            ImageUrl = "DamageCards/WoundedPilot";
         }
 
         public override void ApplyEffect(object sender, EventArgs e)
@@ -38,11 +38,13 @@ namespace DamageDeckCardSE
         {
             Selection.ActiveShip = Host;
             Selection.ThisShip = Host;
-            var subphase = Phases.StartTemporarySubPhaseNew<WoundedPilotCheckSubPhase>("Wounded Pilot", () =>
+
+            WoundedPilotCheckSubPhase subphase = Phases.StartTemporarySubPhaseNew<WoundedPilotCheckSubPhase>("Wounded Pilot", () =>
             {
                 Phases.FinishSubPhase(typeof(WoundedPilotCheckSubPhase));
                 Triggers.FinishTrigger();
             });
+
             subphase.HostShip = Host;
             subphase.Start();
         }
@@ -91,7 +93,6 @@ namespace SubPhases
                     NoStress();
                     break;
             }
-
         }
 
         private void SufferStress()
@@ -106,7 +107,6 @@ namespace SubPhases
             CallBack();
         }
     }
-
 }
 
 namespace Tokens
@@ -115,7 +115,7 @@ namespace Tokens
     {
         public WoundedPilotCritToken(GenericShip host) : base(host)
         {
-            Tooltip = "https://infinitearenas.com/xw2/images/damagecards/05_damagecard.png";
+            Tooltip = "DamageCards/WoundedPilot";
         }
     }
 }

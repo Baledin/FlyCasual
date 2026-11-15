@@ -45,17 +45,17 @@ namespace Ship
                 );
 
                 PilotNameCanonical = "soontirfel-battleoverendor";
+
                 AutoThrustersAbility oldAbility = (AutoThrustersAbility)ShipAbilities.First(n => n.GetType() == typeof(AutoThrustersAbility));
                 ShipAbilities.Remove(oldAbility);
                 ShipAbilities.Add(new SensitiveControlsRealAbility());
+
                 ModelInfo.SkinName = "Red Stripes";
 
                 MustHaveUpgrades.Add(typeof(NoEscape));
                 MustHaveUpgrades.Add(typeof(ApexPredator));
                 MustHaveUpgrades.Add(typeof(BlankSignature));
                 MustHaveUpgrades.Add(typeof(FeedbackEmitter));
-
-                ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/soontirfel-battleoverendor.png";
             }
         }
 

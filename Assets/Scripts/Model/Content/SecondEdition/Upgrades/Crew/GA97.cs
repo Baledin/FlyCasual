@@ -196,7 +196,7 @@ namespace Conditions
             Name = ImageName = "It's The Resistance Condition";
             Temporary = false;
 
-            Tooltip = "https://infinitearenas.com/xw2/images/conditions/itstheresistance.png";
+            Tooltip = "Conditions/itstheresistance";
         }
 
         public override void WhenAssigned()

@@ -45,8 +45,6 @@ namespace Ship
 
                 ShipInfo.ActionIcons.RemoveActions(typeof(ReloadAction));
                 ShipInfo.ActionIcons.AddActions(new ActionInfo(typeof(ReloadAction), ActionColor.White));
-
-                ImageUrl = "https://infinitearenas.com/xw2/images/quickbuilds/captainjonus-swz98.png";
             }
         }
 

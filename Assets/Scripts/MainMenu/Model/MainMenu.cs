@@ -31,6 +31,7 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+        ImageManager.DeleteLegacyImageCache(); // Card images are local now, remove the old download cache (runs once)
         MigrationsManager.PerformMigrations();
         InitializeMenu();
     }
