@@ -31,8 +31,10 @@ namespace AI.Aggressor
 
         public ShipPositionInfo FinalPositionInfo { get; set; }
 
-        public void CalculatePriority()
+        public void CalculatePriority(GenericShip ship)
         {
+            Priority = 0;
+
             if (isOffTheBoard)
             {
                 Priority = int.MinValue;
@@ -54,9 +56,9 @@ namespace AI.Aggressor
 
             if (isBumped) Priority -= 500;
 
-            if (Selection.ThisShip.Damage.HasCrit(typeof(DamageDeckCardSE.LooseStabilizer)) && movement.Bearing != ManeuverBearing.Straight)
+            if (ship.Damage.HasCrit(typeof(DamageDeckCardSE.LooseStabilizer)) && movement.Bearing != ManeuverBearing.Straight)
             {
-                if (Selection.ThisShip.State.HullCurrent + Selection.ThisShip.State.ShieldsCurrent == 1)
+                if (ship.State.HullCurrent + ship.State.ShieldsCurrent == 1)
                 {
                     Priority -= 20000;
                 }
@@ -69,10 +71,10 @@ namespace AI.Aggressor
             switch (movement.ColorComplexity)
             {
                 case MovementComplexity.Easy:
-                    if (Selection.ThisShip.IsStressed) Priority += 500;
+                    if (ship.IsStressed) Priority += 500;
                     break;
                 case MovementComplexity.Complex:
-                    if (Selection.ThisShip.IsStressed)
+                    if (ship.IsStressed)
                     {
                         Priority = int.MinValue;
                     }

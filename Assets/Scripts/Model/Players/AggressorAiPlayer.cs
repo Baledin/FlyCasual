@@ -80,6 +80,21 @@ namespace Players
             }
         }
 
+        public override void AssignManeuverMidgame(GenericShip ship, System.Func<string, bool> filter = null)
+        {
+            if (DebugManager.DebugStraightToCombat)
+            {
+                base.AssignManeuverMidgame(ship, filter);
+                return;
+            }
+
+            AI.Aggressor.NavigationSubSystem.FindBestManeuverOnRealBoard(
+                ship,
+                filter,
+                delegate (string maneuverCode) { SendMidgameManeuver(ship, maneuverCode); }
+            );
+        }
+
         protected override GenericShip SelectTargetForAttack()
         {
             if (DebugManager.DebugNoCombat) return null;

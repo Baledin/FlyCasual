@@ -67,6 +67,11 @@ namespace Players
             Roster.HighlightPlayer(PlayerNo);
         }
 
+        // A maneuver must be assigned to the ship outside of the Planning phase (deployment from a host ship, etc.)
+        // Maneuver selection subphase is already started, the answer is an "AssignManeuver" command
+        // Human player answers using the directions menu, network and replay players answer with their own commands
+        public virtual void AssignManeuverMidgame(GenericShip ship, Func<string, bool> filter = null) { }
+
         public void SetPlayerNo(PlayerNo playerNo)
         {
             PlayerNo = playerNo;

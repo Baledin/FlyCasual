@@ -325,6 +325,45 @@ namespace Players
             callback();
         }
 
+        public override void AssignManeuverMidgame(GenericShip ship, Func<string, bool> filter = null)
+        {
+            base.AssignManeuverMidgame(ship, filter);
+
+            SendMidgameManeuver(ship, GetSimpleManeuver(ship, filter));
+        }
+
+        protected void SendMidgameManeuver(GenericShip ship, string maneuverCode)
+        {
+            if (!(Phases.CurrentSubPhase is ManeuverSelectionSubphase))
+            {
+                Debug.LogError("AI cannot assign a maneuver: selection of a maneuver is not expected now");
+                return;
+            }
+
+            if (maneuverCode == null)
+            {
+                Messages.ShowError("No available maneuvers!");
+                DirectionsMenu.FinishManeuverSelections();
+                return;
+            }
+
+            Selection.ChangeActiveShip(ship);
+            ShipMovementScript.SendAssignManeuverCommand(maneuverCode);
+        }
+
+        // Safe choice that doesn't require any calculations: slow straight maneuver if possible
+        public static string GetSimpleManeuver(GenericShip ship, Func<string, bool> filter = null)
+        {
+            return ship.GetManeuvers()
+                .Where(n => n.Value != Movement.MovementComplexity.None && (filter == null || filter(n.Key)))
+                .Select(n => new { Code = n.Key, Complexity = n.Value, Holder = new Movement.ManeuverHolder(n.Key, ship) })
+                .OrderBy(n => n.Complexity == Movement.MovementComplexity.Complex && ship.IsStressed)
+                .ThenBy(n => n.Holder.Bearing != Movement.ManeuverBearing.Straight)
+                .ThenBy(n => Math.Abs(n.Holder.SpeedIntUnsigned - 2))
+                .Select(n => n.Code)
+                .FirstOrDefault();
+        }
+
         public override void StartExtraAttack()
         {
             GenericShip targetForAttack = SelectTargetForAttack();

@@ -23,7 +23,7 @@ namespace AI.Aggressor
         public VirtualShipInfo(GenericShip ship)
         {
             Ship = ship;
-            RealPositionInfo = new ShipPositionInfo(ship.GetPosition(), ship.GetAngles());
+            RealPositionInfo = VirtualPositionInfo = new ShipPositionInfo(ship.GetPosition(), ship.GetAngles());
         }
 
         public void UpdateSimpleManeuverPrediction(ShipPositionInfo virtualPositionInfo, string maneuverCode)
@@ -72,61 +72,82 @@ namespace AI.Aggressor
     public class VirtualBoard
     {
         public Dictionary<GenericShip, VirtualShipInfo> Ships;
-        public int Round;
 
+        // A board is a snapshot of the ships that are in play at the moment it is created
         public VirtualBoard()
         {
-            Update();
+            Ships = new Dictionary<GenericShip, VirtualShipInfo>();
+            foreach (GenericShip ship in Roster.AllShips.Values)
+            {
+                Ships.Add(ship, new VirtualShipInfo(ship));
+            }
         }
 
-        public void Update()
+        // Ships can join the game after the snapshot is taken (deployed from a host ship, returned from reserve),
+        // so an unknown ship is registered at its current position instead of causing an exception
+        public VirtualShipInfo GetInfo(GenericShip ship)
         {
-            if (Round < Phases.RoundCounter)
+            if (!Ships.TryGetValue(ship, out VirtualShipInfo info))
             {
-                Ships = new Dictionary<GenericShip, VirtualShipInfo>();
-                foreach (GenericShip ship in Roster.AllShips.Values)
-                {
-                    Ships.Add(ship, new VirtualShipInfo(ship));
-                }
-
-                Round = Phases.RoundCounter;
+                info = new VirtualShipInfo(ship);
+                Ships.Add(ship, info);
             }
+
+            return info;
+        }
+
+        public bool TryGetInfo(GenericShip ship, out VirtualShipInfo info)
+        {
+            info = null;
+            return ship != null && Ships.TryGetValue(ship, out info);
         }
 
         public void SetVirtualPositionInfo(GenericShip ship, ShipPositionInfo virtualPositionInfo, string maneuverCode)
         {
-            Ships[ship].UpdateSimpleManeuverPrediction(virtualPositionInfo, maneuverCode);
+            GetInfo(ship).UpdateSimpleManeuverPrediction(virtualPositionInfo, maneuverCode);
         }
 
         public void UpdatePositionInfo(GenericShip ship)
         {
-            Ships[ship].Clear(new ShipPositionInfo(ship.GetPosition(), ship.GetAngles()));
+            GetInfo(ship).Clear(new ShipPositionInfo(ship.GetPosition(), ship.GetAngles()));
         }
 
         public void SwitchToVirtualPosition(GenericShip ship)
         {
-            if (!DebugManager.DebugMovementShowPlanning)
-            {
-                ShipPositionInfo savedModelPosition = new ShipPositionInfo(ship.GetShipAllPartsTransform().position, ship.GetShipAllPartsTransform().eulerAngles);
-                ship.SetPositionInfo(Ships[ship].VirtualPositionInfo);
-                ship.GetShipAllPartsTransform().position = savedModelPosition.Position;
-                ship.GetShipAllPartsTransform().eulerAngles = savedModelPosition.Angles;
-                ship.GetShipAllPartsTransform().Find("ShipBase/ShipBaseCollider").position = Ships[ship].VirtualPositionInfo.Position;
-                ship.GetShipAllPartsTransform().Find("ShipBase/ShipBaseCollider").localPosition += new Vector3(0, 0.150289f, 1.156069f);
-                ship.GetShipAllPartsTransform().Find("ShipBase/ShipBaseCollider").eulerAngles = Ships[ship].VirtualPositionInfo.Angles;
-            }
-            else
-            {
-                ship.SetPositionInfo(Ships[ship].VirtualPositionInfo);
-            }
+            ApplyVirtualPosition(ship, GetInfo(ship).VirtualPositionInfo);
         }
 
         public void SwitchToRealPosition(GenericShip ship)
         {
+            ApplyRealPosition(ship, GetInfo(ship).RealPositionInfo);
+        }
+
+        // Moves only the logical position and the collider of the ship, the visible model stays where it is
+        public static void ApplyVirtualPosition(GenericShip ship, ShipPositionInfo virtualPositionInfo)
+        {
             if (!DebugManager.DebugMovementShowPlanning)
             {
                 ShipPositionInfo savedModelPosition = new ShipPositionInfo(ship.GetShipAllPartsTransform().position, ship.GetShipAllPartsTransform().eulerAngles);
-                ship.SetPositionInfo(Ships[ship].RealPositionInfo);
+                ship.SetPositionInfo(virtualPositionInfo);
+                ship.GetShipAllPartsTransform().position = savedModelPosition.Position;
+                ship.GetShipAllPartsTransform().eulerAngles = savedModelPosition.Angles;
+                ship.GetShipAllPartsTransform().Find("ShipBase/ShipBaseCollider").position = virtualPositionInfo.Position;
+                ship.GetShipAllPartsTransform().Find("ShipBase/ShipBaseCollider").localPosition += new Vector3(0, 0.150289f, 1.156069f);
+                ship.GetShipAllPartsTransform().Find("ShipBase/ShipBaseCollider").eulerAngles = virtualPositionInfo.Angles;
+            }
+            else
+            {
+                ship.SetPositionInfo(virtualPositionInfo);
+            }
+        }
+
+        // Returns the logical position and the collider of the ship back to its visible model
+        public static void ApplyRealPosition(GenericShip ship, ShipPositionInfo realPositionInfo)
+        {
+            if (!DebugManager.DebugMovementShowPlanning)
+            {
+                ShipPositionInfo savedModelPosition = new ShipPositionInfo(ship.GetShipAllPartsTransform().position, ship.GetShipAllPartsTransform().eulerAngles);
+                ship.SetPositionInfo(realPositionInfo);
                 ship.GetShipAllPartsTransform().position = savedModelPosition.Position;
                 ship.GetShipAllPartsTransform().eulerAngles = savedModelPosition.Angles;
                 ship.GetShipAllPartsTransform().Find("ShipBase/ShipBaseCollider").position = savedModelPosition.Position;
@@ -134,7 +155,7 @@ namespace AI.Aggressor
             }
             else
             {
-                ship.SetPositionInfo(Ships[ship].RealPositionInfo);
+                ship.SetPositionInfo(realPositionInfo);
             }
         }
 
@@ -174,22 +195,22 @@ namespace AI.Aggressor
 
         public bool RequiresCollisionPrediction(GenericShip ship)
         {
-            return Ships[ship].RequiresCollisionPrediction();
+            return GetInfo(ship).RequiresCollisionPrediction();
         }
 
         public bool RequiresFinalPositionPrediction(GenericShip ship)
         {
-            return Ships[ship].RequiresFinalPositionPrediction();
+            return GetInfo(ship).RequiresFinalPositionPrediction();
         }
 
         public bool RequiresManeuverAssignment(GenericShip ship)
         {
-            return Ships[ship].RequiresManeuverAssignment();
+            return GetInfo(ship).RequiresManeuverAssignment();
         }
 
         public void UpdateNavigationResults(GenericShip ship, Dictionary<string, NavigationResult> navigationResults)
         {
-            Ships[ship].UpdateNavigationResults(navigationResults);
+            GetInfo(ship).UpdateNavigationResults(navigationResults);
         }
     }
 }

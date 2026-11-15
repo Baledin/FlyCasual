@@ -288,14 +288,13 @@ namespace RulesList
         {
             Selection.ChangeActiveShip(docked);
 
-            if (Editions.Edition.Current is Editions.SecondEdition)
-            {
-                DirectionsMenu.Show(ShipMovementScript.SendAssignManeuverCommand, delegate { RegisterPerformManeuver(isEmergencyDeploy); }, FilterOnlyForward);
-            }
-            else
-            {
-                DirectionsMenu.Show(ShipMovementScript.SendAssignManeuverCommand, delegate { RegisterPerformManeuver(isEmergencyDeploy); });
-            }
+            Func<string, bool> filter = null;
+            if (Editions.Edition.Current is Editions.SecondEdition) filter = FilterOnlyForward;
+
+            DirectionsMenu.Show(ShipMovementScript.SendAssignManeuverCommand, delegate { RegisterPerformManeuver(isEmergencyDeploy); }, filter);
+
+            // Human player uses the menu, other types of players must answer by themselves
+            docked.Owner.AssignManeuverMidgame(docked, filter);
         }
 
         private bool FilterOnlyForward(string maneuverCode)

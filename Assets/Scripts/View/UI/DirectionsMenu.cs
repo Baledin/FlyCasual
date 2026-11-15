@@ -42,6 +42,8 @@ public static class DirectionsMenu
         }
         else
         {
+            // Value from the previous menu of a human player must not affect other players
+            HasAnyAvailableManeuver = true;
             DirectionsMenu.Hide();
         }
 

@@ -14,11 +14,26 @@ namespace AI.Aggressor
     {
         private static GenericPlayer CurrentPlayer;
 
-        private static Dictionary<PlayerNo, VirtualBoard> VirtualBoards;
+        // Each AI player has its own board. A board is rebuilt at the start of every planning of its owner,
+        // so outside of the Planning phase it can be outdated (ships destroyed, deployed, moved by abilities)
+        // and must only be used through the tolerant lookups below.
+        private static readonly Dictionary<PlayerNo, VirtualBoard> VirtualBoards = new Dictionary<PlayerNo, VirtualBoard>();
+
+        // Board of the player whose navigation is being calculated right now
         private static VirtualBoard VirtualBoard
         {
-            get { return VirtualBoards[CurrentPlayer.PlayerNo]; }
-            set { VirtualBoards[CurrentPlayer.PlayerNo] = value; }
+            get { return GetBoard(CurrentPlayer.PlayerNo); }
+        }
+
+        private static VirtualBoard GetBoard(PlayerNo playerNo)
+        {
+            if (!VirtualBoards.TryGetValue(playerNo, out VirtualBoard board))
+            {
+                board = new VirtualBoard();
+                VirtualBoards[playerNo] = board;
+            }
+
+            return board;
         }
 
         private static int OrderOfActivation;
@@ -29,15 +44,110 @@ namespace AI.Aggressor
         {
             CurrentPlayer = Roster.GetPlayer(Phases.CurrentSubPhase.RequiredPlayer);
 
-            ConfigureVirtualBoards();
+            // Always start from a fresh snapshot of the board
+            VirtualBoards[CurrentPlayer.PlayerNo] = new VirtualBoard();
 
             GameManagerScript.Instance.StartCoroutine
             (
-                StartCalculations(callback)
+                RunGuarded(
+                    StartCalculations(),
+                    callback,
+                    delegate { RecoverFromFailedCalculations(callback); }
+                )
             );
         }
 
-        private static IEnumerator StartCalculations(Action callback)
+        // Runs a coroutine (including nested ones) and reports an exception instead of silently stopping,
+        // because a stopped coroutine never calls its callback and the game hangs.
+        // Callbacks are called outside of the guarded part: their exceptions are not errors of navigation.
+        private static IEnumerator RunGuarded(IEnumerator routine, Action onFinished, Action onError)
+        {
+            Stack<IEnumerator> routines = new Stack<IEnumerator>();
+            routines.Push(routine);
+
+            while (routines.Count > 0)
+            {
+                bool hasNext = false;
+                object yielded = null;
+                Exception error = null;
+
+                try
+                {
+                    hasNext = routines.Peek().MoveNext();
+                    if (hasNext) yielded = routines.Peek().Current;
+                }
+                catch (Exception e)
+                {
+                    error = e;
+                }
+
+                if (error != null)
+                {
+                    Debug.LogException(error);
+
+                    // Dispose suspended routines to run their "finally" blocks
+                    while (routines.Count > 0)
+                    {
+                        try
+                        {
+                            (routines.Pop() as IDisposable)?.Dispose();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogException(e);
+                        }
+                    }
+
+                    onError();
+                    yield break;
+                }
+
+                if (!hasNext)
+                {
+                    routines.Pop();
+                }
+                else if (yielded is IEnumerator nestedRoutine)
+                {
+                    routines.Push(nestedRoutine);
+                }
+                else
+                {
+                    yield return yielded;
+                }
+            }
+
+            onFinished();
+        }
+
+        // Navigation is failed: return the board to its real state and let ships use simple maneuvers
+        private static void RecoverFromFailedCalculations(Action callback)
+        {
+            Debug.LogError("AI navigation is failed, simple maneuvers will be used instead");
+
+            try
+            {
+                RestoreRealBoard();
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+
+            // Drop partial results (planned maneuvers of this board are not verified)
+            VirtualBoards[CurrentPlayer.PlayerNo] = new VirtualBoard();
+
+            foreach (GenericShip ship in CurrentPlayer.Ships.Values)
+            {
+                ship.ClearAssignedManeuver();
+            }
+
+            Selection.DeselectThisShip();
+            ShowCalculationsEnd();
+
+            callback();
+        }
+
+        private static IEnumerator StartCalculations()
         {
             ShowCalculationsStart();
 
@@ -52,8 +162,6 @@ namespace AI.Aggressor
 
             RestoreRealBoard();
             ShowCalculationsEnd();
-
-            callback();
         }
 
         private static void SwitchEnemyShipsToSimpleVirtualPositions()
@@ -158,7 +266,7 @@ namespace AI.Aggressor
                     isOffTheBoard = prediction.IsOffTheBoard,
                     FinalPositionInfo = prediction.FinalPositionInfo
                 };
-                result.CalculatePriority();
+                result.CalculatePriority(ship);
 
                 navigationResults.Add(maneuver.Key, result);
 
@@ -228,6 +336,11 @@ namespace AI.Aggressor
 
         private static IEnumerator FindBestManeuver(GenericShip ship)
         {
+            VirtualShipInfo shipInfo = VirtualBoard.GetInfo(ship);
+
+            // Nothing to choose from: the ship gets a simple maneuver when it is asked to assign one
+            if (shipInfo.NavigationResults == null || shipInfo.NavigationResults.Count == 0) yield break;
+
             Selection.ChangeActiveShip(ship);
 
             int bestPriority = int.MinValue;
@@ -237,8 +350,8 @@ namespace AI.Aggressor
             {
                 VirtualBoard.SwitchToRealPosition(ship);
 
-                bestPriority = VirtualBoard.Ships[ship].NavigationResults.Max(n => n.Value.Priority);
-                maneuverToCheck = VirtualBoard.Ships[ship].NavigationResults.Where(n => n.Value.Priority == bestPriority).First();
+                bestPriority = shipInfo.NavigationResults.Max(n => n.Value.Priority);
+                maneuverToCheck = shipInfo.NavigationResults.Where(n => n.Value.Priority == bestPriority).First();
 
                 GenericMovement movement = ShipMovementScript.MovementFromString(maneuverToCheck.Key);
 
@@ -282,15 +395,15 @@ namespace AI.Aggressor
                     CurrentNavigationResult.enemiesInShotRange = enemiesInShotRange;
                 }
 
-                CurrentNavigationResult.CalculatePriority();
+                CurrentNavigationResult.CalculatePriority(ship);
 
-                VirtualBoard.Ships[ship].NavigationResults[maneuverToCheck.Key] = CurrentNavigationResult;
+                shipInfo.NavigationResults[maneuverToCheck.Key] = CurrentNavigationResult;
 
-                bestPriority = VirtualBoard.Ships[ship].NavigationResults.Max(n => n.Value.Priority);
+                bestPriority = shipInfo.NavigationResults.Max(n => n.Value.Priority);
 
                 VirtualBoard.SwitchToRealPosition(ship);
 
-                maneuverToCheck = VirtualBoard.Ships[ship].NavigationResults.First(n => n.Key == maneuverToCheck.Key);
+                maneuverToCheck = shipInfo.NavigationResults.First(n => n.Key == maneuverToCheck.Key);
 
                 foreach (GenericShip enemyShip in CurrentPlayer.EnemyShips.Values)
                 {
@@ -299,7 +412,7 @@ namespace AI.Aggressor
 
             } while (maneuverToCheck.Value.Priority != bestPriority);
 
-            VirtualBoard.Ships[ship].SetPlannedManeuverCode(maneuverToCheck.Key, ++OrderOfActivation);
+            shipInfo.SetPlannedManeuverCode(maneuverToCheck.Key, ++OrderOfActivation);
             ship.ClearAssignedManeuver();
             Selection.DeselectThisShip();
         }
@@ -318,14 +431,17 @@ namespace AI.Aggressor
                     minDistanceToEnemyShip = distInfo.MinDistance.DistanceReal;
                 }
 
-                ShotInfo shotInfo = new ShotInfo(ship, enemyShip, ship.PrimaryWeapons.First());
-                if (shotInfo.IsShotAvailable)
+                if (ship.PrimaryWeapons.Count > 0)
                 {
-                    enemiesInShotRange++;
-
-                    if (minDistanceToNearestEnemyInShotRange < shotInfo.DistanceReal)
+                    ShotInfo shotInfo = new ShotInfo(ship, enemyShip, ship.PrimaryWeapons.First());
+                    if (shotInfo.IsShotAvailable)
                     {
-                        minDistanceToNearestEnemyInShotRange = shotInfo.DistanceReal;
+                        enemiesInShotRange++;
+
+                        if (minDistanceToNearestEnemyInShotRange < shotInfo.DistanceReal)
+                        {
+                            minDistanceToNearestEnemyInShotRange = shotInfo.DistanceReal;
+                        }
                     }
                 }
 
@@ -362,27 +478,33 @@ namespace AI.Aggressor
                 ship.Maneuvers.Add(temporyManeuver, MovementComplexity.Easy);
             }
             GenericMovement movement = ShipMovementScript.MovementFromString(temporyManeuver);
-
-            // Check maneuver
-            ship.SetAssignedManeuver(movement, isSilent: true);
-            movement.Initialize();
-            movement.IsSimple = true;
-
             MovementPrediction prediction = new MovementPrediction(ship, movement);
-            yield return prediction.CalculateMovementPredicition();
 
-            if (isTemporaryManeuverAdded)
+            // The real maneuver of the enemy ship must be returned even if prediction is failed
+            try
             {
-                ship.Maneuvers.Remove(temporyManeuver);
-            }
+                // Check maneuver
+                ship.SetAssignedManeuver(movement, isSilent: true);
+                movement.Initialize();
+                movement.IsSimple = true;
 
-            if (savedMovement != null)
-            {
-                ship.SetAssignedManeuver(savedMovement, isSilent: true);
+                yield return prediction.CalculateMovementPredicition();
             }
-            else
+            finally
             {
-                ship.ClearAssignedManeuver();
+                if (isTemporaryManeuverAdded)
+                {
+                    ship.Maneuvers.Remove(temporyManeuver);
+                }
+
+                if (savedMovement != null)
+                {
+                    ship.SetAssignedManeuver(savedMovement, isSilent: true);
+                }
+                else
+                {
+                    ship.ClearAssignedManeuver();
+                }
             }
 
             VirtualBoard.SetVirtualPositionInfo(ship, prediction.FinalPositionInfo, temporyManeuver);
@@ -443,11 +565,14 @@ namespace AI.Aggressor
             return bestTurnManeuvers;
         }
 
+        // Requests that can come at any moment of the game.
+        // They don't expect that the ship is known to the board or has a planned maneuver.
+
         public static GenericShip GetNextShipWithoutAssignedManeuver()
         {
             return Roster.GetPlayer(Phases.CurrentSubPhase.RequiredPlayer).Ships.Values
                 .Where(n => n.AssignedManeuver == null)
-                .OrderBy(n => VirtualBoard.Ships[n].OrderToActivate)
+                .OrderBy(n => GetOrderToActivate(n))
                 .FirstOrDefault();
         }
 
@@ -455,28 +580,138 @@ namespace AI.Aggressor
         {
             return Roster.GetPlayer(Phases.CurrentSubPhase.RequiredPlayer).Ships.Values
                 .Where(n => !n.IsManeuverPerformed)
-                .OrderBy(n => VirtualBoard.Ships[n].OrderToActivate)
+                .OrderByDescending(n => n.State.Initiative == Phases.CurrentSubPhase.RequiredInitiative)
+                .ThenBy(n => GetOrderToActivate(n))
                 .FirstOrDefault();
+        }
+
+        // Ships that were not planned (joined the game later) are activated last
+        private static int GetOrderToActivate(GenericShip ship)
+        {
+            return (GetBoard(ship.Owner.PlayerNo).TryGetInfo(ship, out VirtualShipInfo info) && info.OrderToActivate > 0)
+                ? info.OrderToActivate
+                : int.MaxValue;
+        }
+
+        private static string GetPlannedManeuverCode(GenericShip ship)
+        {
+            if (!GetBoard(ship.Owner.PlayerNo).TryGetInfo(ship, out VirtualShipInfo info)) return null;
+
+            // Without an order of activation the code is only a candidate that was checked during calculations
+            return (info.OrderToActivate > 0) ? info.PlannedManeuverCode : null;
         }
 
         public static void AssignPlannedManeuver(Action callBack)
         {
-            ShipMovementScript.SendAssignManeuverCommand(VirtualBoard.Ships[Selection.ThisShip].PlannedManeuverCode);
+            GenericShip ship = Selection.ThisShip;
+
+            string maneuverCode = GetPlannedManeuverCode(ship) ?? GenericAiPlayer.GetSimpleManeuver(ship);
+            if (maneuverCode == null)
+            {
+                Debug.LogError("AI cannot find any maneuver for " + ship.PilotInfo.PilotName + " (ID:" + ship.ShipId + ")");
+                maneuverCode = "2.F.S";
+            }
+
+            ShipMovementScript.SendAssignManeuverCommand(maneuverCode);
             GameManagerScript.Wait(0.2f, delegate { Selection.DeselectThisShip(); callBack(); });
         }
 
-        // Low Priority
-
-        private static void ConfigureVirtualBoards()
+        // Selection of a maneuver outside of the Planning phase (deployment from a host ship, etc.)
+        // Only the real current state of the board is used - virtual boards can be outdated at this moment.
+        // Callback gets null if the ship has no suitable maneuvers.
+        public static void FindBestManeuverOnRealBoard(GenericShip ship, Func<string, bool> filter, Action<string> callback)
         {
-            if (Phases.RoundCounter == 1) VirtualBoards = new Dictionary<PlayerNo, VirtualBoard>()
-            {
-                { PlayerNo.Player1, new VirtualBoard() },
-                { PlayerNo.Player2, new VirtualBoard() }
-            };
+            string simpleManeuver = GenericAiPlayer.GetSimpleManeuver(ship, filter);
+            string bestManeuver = simpleManeuver;
 
-            VirtualBoard.Update();
+            GameManagerScript.Instance.StartCoroutine
+            (
+                RunGuarded(
+                    FindBestManeuverOnRealBoardCoroutine(ship, filter, delegate (string maneuverCode) { bestManeuver = maneuverCode; }),
+                    delegate { callback(bestManeuver); },
+                    delegate { callback(simpleManeuver); }
+                )
+            );
         }
+
+        private static IEnumerator FindBestManeuverOnRealBoardCoroutine(GenericShip ship, Func<string, bool> filter, Action<string> setBestManeuver)
+        {
+            GenericShip savedSelectedShip = Selection.ThisShip;
+            GenericMovement savedMovement = ship.AssignedManeuver;
+            ShipPositionInfo realPositionInfo = new ShipPositionInfo(ship.GetPosition(), ship.GetAngles());
+
+            int bestPriority = int.MinValue;
+
+            try
+            {
+                // Movement templates and collision detectors rely on the selected ship
+                Selection.ThisShip = ship;
+
+                foreach (KeyValuePair<string, MovementComplexity> maneuver in ship.GetManeuvers())
+                {
+                    if (maneuver.Value == MovementComplexity.None) continue;
+                    if (filter != null && !filter(maneuver.Key)) continue;
+
+                    GenericMovement movement = ShipMovementScript.MovementFromString(maneuver.Key);
+                    ship.SetAssignedManeuver(movement, isSilent: true);
+                    movement.Initialize();
+                    movement.IsSimple = true;
+
+                    MovementPrediction prediction = new MovementPrediction(ship, movement);
+                    yield return prediction.CalculateMovementPredicition();
+
+                    NavigationResult result = new NavigationResult()
+                    {
+                        movement = prediction.CurrentMovement,
+                        isBumped = prediction.IsBumped,
+                        isLandedOnObstacle = prediction.IsLandedOnAsteroid,
+                        obstaclesHit = prediction.AsteroidsHit.Count,
+                        isOffTheBoard = prediction.IsOffTheBoard,
+                        minesHit = prediction.MinesHit.Count,
+                        FinalPositionInfo = prediction.FinalPositionInfo
+                    };
+
+                    if (!prediction.IsOffTheBoard)
+                    {
+                        VirtualBoard.ApplyVirtualPosition(ship, prediction.FinalPositionInfo);
+
+                        ProcessHeavyGeometryCalculations(ship, out float minDistanceToEnemyShip, out float minDistanceToNearestEnemyInShotRange, out float minAngle, out int enemiesInShotRange);
+
+                        result.distanceToNearestEnemy = minDistanceToEnemyShip;
+                        result.distanceToNearestEnemyInShotRange = minDistanceToNearestEnemyInShotRange;
+                        result.angleToNearestEnemy = minAngle;
+                        result.enemiesInShotRange = enemiesInShotRange;
+
+                        VirtualBoard.ApplyRealPosition(ship, realPositionInfo);
+                    }
+
+                    result.CalculatePriority(ship);
+
+                    if (result.Priority > bestPriority)
+                    {
+                        bestPriority = result.Priority;
+                        setBestManeuver(maneuver.Key);
+                    }
+                }
+            }
+            finally
+            {
+                VirtualBoard.ApplyRealPosition(ship, realPositionInfo);
+
+                if (savedMovement != null)
+                {
+                    ship.SetAssignedManeuver(savedMovement, isSilent: true);
+                }
+                else
+                {
+                    ship.ClearAssignedManeuver();
+                }
+
+                Selection.ThisShip = savedSelectedShip;
+            }
+        }
+
+        // Low Priority
 
         private static void ShowCalculationsStart()
         {
