@@ -1,6 +1,7 @@
 ﻿using Actions;
 using ActionsList;
 using BoardTools;
+using Content;
 using RulesList;
 using Ship;
 using System.Collections.Generic;
@@ -30,8 +31,18 @@ namespace UpgradesList.SecondEdition
                     new LinkedActionInfo(typeof(BarrelRollAction), typeof(JamAction), ActionColor.White),
                     new LinkedActionInfo(typeof(BoostAction), typeof(JamAction), ActionColor.White)
                 },
-                isStandardized: true
+                isStandardized: true,
+                legalityInfo: new() { Legality.StandardLegal, Legality.ExtendedLegal }
             );
+        }
+    }
+
+    public class EnhancedJammingSuiteXWA : EnhancedJammingSuite
+    {
+        public EnhancedJammingSuiteXWA() : base()
+        {
+            UpgradeInfo.IsStandardized = false;
+            UpgradeInfo.LegalityInfo = new() { Legality.XWA };
         }
     }
 }
